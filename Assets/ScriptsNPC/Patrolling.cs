@@ -95,9 +95,7 @@ public class PatrollingNPC : MonoBehaviour
         {
             SetRandomDestination(); 
         }
-
-        //HandleChasing(); 
-        //HandleAttacking(); 
+ 
     }
 
     // Возврат к патрулированию (для других скриптов)
