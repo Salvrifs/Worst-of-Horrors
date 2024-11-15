@@ -7,9 +7,6 @@ public class ChasingNPC : MonoBehaviour
     private Transform m_player;
     private Animator m_animator;
 
-    private bool isChasing;
-    float time = 0f;
-
     void Start()
     {
        m_animator = GetComponent<Animator>();
@@ -43,7 +40,6 @@ public class ChasingNPC : MonoBehaviour
             //isChasing = true;
             //m_agent.ResetPath();
             m_agent.SetDestination(m_player.position);
-            Debug.Log("Я направление !?");
             //m_animator.SetBool("IsChasing", true);
 
     }
