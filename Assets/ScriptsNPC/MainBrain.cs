@@ -8,32 +8,30 @@ public class MainBrain : MonoBehaviour
 {
     [SerializeField] float Chase_Distance = 30f;
     [SerializeField] float Attack_Distance = 10f;
+    
 
 //Состояния NPC
     public enum NPCState
     {
     Patrolling,
     Chasing,
-    CollectingItems,
-    Attacking,
-    Idle
     }
 
     private NPCState currentState;
     //Переменные
-    Animator m_animator;
+    //Animator m_animator;
     NavMeshAgent m_agent;
     Transform m_player;
-    bool IsChasing, IsAttacking, IsPatrolling;
+    bool IsChasing;
     float current_distance;
 
     void Start()
     {
-        m_animator = GetComponent<Animator>();
+        //m_animator = GetComponent<Animator>();
         InitializeNavMeshAgent();
         InitializePlayer();
 
-        currentState = GetComponent<PatrollingNPC>() != null ? NPCState.Patrolling : NPCState.CollectingItems;
+        currentState = NPCState.Patrolling;
     }
 
     // Update is called once per frame
@@ -49,12 +47,6 @@ public class MainBrain : MonoBehaviour
         case NPCState.Chasing:
             HandleChasing();
             break;
-      /*  case NPCState.CollectingItems:
-            if (TryGetComponent<CollectingNPC>(out var collectBeh))
-            {
-                collectBeh.StartPickUping();
-            } 
-            break; */
 
     }
 }
@@ -71,7 +63,7 @@ private void OnDrawGizmos()
     //Инициализация Player
     private void InitializePlayer()
     {
-        m_player = GameObject.FindGameObjectWithTag("player")?.transform;
+        m_player = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (m_player == null)
         {
             Debug.LogError("Error: Player doesn't exist in this World!");
@@ -88,19 +80,6 @@ private void OnDrawGizmos()
             Debug.LogError("Error: Player hasn't NavMeshAgent component in this World!");
             return;
         }
-    }
-
-    //Корутина для преследования
-    private IEnumerator CoroutinePatrol()
-    {
-        
-        m_agent.ResetPath();
-        yield return new WaitForSeconds(5f);
-        if (TryGetComponent<PatrollingNPC>(out var patrolBehavior))
-        {
-            patrolBehavior.StartPatrolling();
-        }
-        IsPatrolling = true;
     }
 
     //Изменение состояния
@@ -171,11 +150,7 @@ private void OnDrawGizmos()
                 {
                     ChaseBeh.StartChasing();
                 }
-                //атака
-              /*  else if (current_distance <= Attack_Distance && TryGetComponent<AttackNPC>(out var AttackBeh))
-                {
-                    AttackBeh.TakeAttack();
-                }*/
+                
                 //отмена преследования
                 else 
                 {

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5083619787979533406}
   - component: {fileID: 3558000995452879666}
   - component: {fileID: 5148041269166938286}
+  - component: {fileID: 3345630939637939628}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -150,3 +151,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chaseDistance: 0
   attackRadius: 0
+--- !u!195 &3345630939637939628
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2485350570186148833}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5000076
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.9999995
+  m_BaseOffset: 0.99999976
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4

@@ -5,11 +5,11 @@ public class ChasingNPC : MonoBehaviour
 {
     private NavMeshAgent m_agent;
     private Transform m_player;
-    private Animator m_animator;
+    //private Animator m_animator;
 
     void Start()
     {
-       m_animator = GetComponent<Animator>();
+       //m_animator = GetComponent<Animator>();
        InitializeAgent();
        InitializePlayer();
     }
@@ -17,7 +17,7 @@ public class ChasingNPC : MonoBehaviour
     //инициализация игрока
     private void InitializePlayer()
     {
-        m_player = GameObject.FindGameObjectWithTag("player")?.transform;  // Находим игрока
+        m_player = GameObject.FindGameObjectWithTag("Player")?.transform;  // Находим игрока
         if (m_player == null)
         {
             Debug.LogError("Error: Player doesn't exist in this World!");
@@ -35,7 +35,7 @@ public class ChasingNPC : MonoBehaviour
     //начинает преследование
     public void StartChasing()
     {
-        Debug.Log("Меня преследуют!");
+        //Debug.Log("Меня преследуют!");
         
             //isChasing = true;
             //m_agent.ResetPath();

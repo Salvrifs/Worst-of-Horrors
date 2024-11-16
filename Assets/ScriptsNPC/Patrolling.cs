@@ -1,23 +1,22 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Collections;
+using System.Runtime.CompilerServices;
 
 public class PatrollingNPC : MonoBehaviour
 {
-    private Animator m_animator;
-    [SerializeField] private float chaseDistance;
-    [SerializeField] private float attackRadius;
+    //private Animator m_animator;
 
     private List<Transform> m_patrolPoints = new List<Transform>();
     private NavMeshAgent m_agent;
     private Transform m_player;
     int RandInd = 0;
-    private bool isChasing;
 
     void Start()
     {
         
-        m_animator = GetComponent<Animator>();
+        //m_animator = GetComponent<Animator>();
         InitializePlayer();
         InitializeNavMeshAgent();
         InitializePatrolPoints();
@@ -27,7 +26,7 @@ public class PatrollingNPC : MonoBehaviour
     //Инициализация точек
     private void InitializePatrolPoints()
     {
-        Transform pointsContainer = GameObject.FindGameObjectWithTag("Points")?.transform;  //находит точки
+        Transform pointsContainer = GameObject.FindGameObjectWithTag("Points")?.transform;  
         //запоминает в список точки
         if (pointsContainer != null)
         {
@@ -39,7 +38,7 @@ public class PatrollingNPC : MonoBehaviour
 
         if (m_patrolPoints.Count == 0)
         {
-            m_animator.SetBool("IsIdle", true);
+            //m_animator.SetBool("IsIdle", true);
             Debug.LogError("Ошибка: нет точек в списке");
             return;
         }
@@ -50,7 +49,7 @@ public class PatrollingNPC : MonoBehaviour
     //Инициализация Player
     private void InitializePlayer()
     {
-        m_player = GameObject.FindGameObjectWithTag("player")?.transform;
+        m_player = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (m_player == null)
         {
             Debug.LogError("Error: Player doesn't exist in this World!");
@@ -82,28 +81,31 @@ public class PatrollingNPC : MonoBehaviour
         }
     }
 
+    //Корутина для патрулирования
+    private IEnumerator CoroutinePatrol()
+    {
+        m_agent.ResetPath();
+        //m_animator.SetTrigger("Idle");
+        yield return new WaitForSeconds(3f);
+        StartPatrolling();
+    }
+
     /// <summary>
     /// Патрулирование (Main function)
     /// </summary>
     public void StartPatrolling()
     {
         if (m_agent == null || m_patrolPoints.Count == 0 || m_player == null)
-    {
-        return; 
-    }
-        if (m_agent.remainingDistance <= m_agent.stoppingDistance && !isChasing)
         {
-            SetRandomDestination(); 
+        return; 
         }
- 
-    }
 
-    // Возврат к патрулированию (для других скриптов)
-    public void ReturnToPatrolling()
-    {
-        isChasing = false;
-        //m_animator.SetBool("IsChasing", false);
-        //m_animator.SetBool("IsPatrolling", true);
-        SetRandomDestination(); // Возврат к новой цели патрулирования
+        if (m_agent.remainingDistance <= m_agent.stoppingDistance)
+        {
+            if (Random.Range(0, 2) == 1)
+                SetRandomDestination(); 
+            else
+                CoroutinePatrol();
+        }
     }
 }
