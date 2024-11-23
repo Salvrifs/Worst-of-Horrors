@@ -7,7 +7,7 @@ using UnityEngine.XR;
 public class MainBrain : MonoBehaviour
 {
     [SerializeField] float Chase_Distance = 30f;
-    [SerializeField] float Attack_Distance = 10f;
+    //[SerializeField] float Attack_Distance = 10f;
     
 
 //Состояния NPC
