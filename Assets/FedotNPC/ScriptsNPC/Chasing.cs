@@ -40,6 +40,7 @@ public class ChasingNPC : MonoBehaviour
             //isChasing = true;
             //m_agent.ResetPath();
             m_agent.SetDestination(m_player.position);
+            //m_animator.SetTrigger("Chase");
             //m_animator.SetBool("IsChasing", true);
 
     }

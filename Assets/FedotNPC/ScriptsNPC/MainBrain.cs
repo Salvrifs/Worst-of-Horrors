@@ -6,9 +6,8 @@ using UnityEngine.XR;
 
 public class MainBrain : MonoBehaviour
 {
-    [SerializeField] float Chase_Distance = 30f;
-    //[SerializeField] float Attack_Distance = 10f;
-    
+    [SerializeField] float Chase_Distance = 5f;
+    [SerializeField] float Attack_Distance = 2f;
 
 //Состояния NPC
     public enum NPCState
@@ -18,8 +17,9 @@ public class MainBrain : MonoBehaviour
     }
 
     private NPCState currentState;
+    
     //Переменные
-    //Animator m_animator;
+    Animator m_animator;
     NavMeshAgent m_agent;
     Transform m_player;
     bool IsChasing;
@@ -27,7 +27,7 @@ public class MainBrain : MonoBehaviour
 
     void Start()
     {
-        //m_animator = GetComponent<Animator>();
+        m_animator = GetComponent<Animator>();
         InitializeNavMeshAgent();
         InitializePlayer();
 
@@ -42,21 +42,26 @@ public class MainBrain : MonoBehaviour
         switch (currentState)
     {
         case NPCState.Patrolling:
+        {
             HandlePatrolling();
             break;
+        }
         case NPCState.Chasing:
+        {
+            
             HandleChasing();
             break;
-
+        }
     }
 }
 
+//ВСПОМОГАТЕЛЬНАЯ !!!!!!!!!!!!!!!!!!!!!!!
 private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red; // Цвет сферы
-        Gizmos.DrawWireSphere(transform.position, Chase_Distance); // Рисуем сферу
+        Gizmos.color = Color.red; 
+        Gizmos.DrawWireSphere(transform.position, Chase_Distance); 
     }
-
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -91,18 +96,21 @@ private void OnDrawGizmos()
     //Для состояния патрулирования
     private void HandlePatrolling()
     {
-        if (TryGetComponent<ChasingNPC>(out var ChaseBeh))
+        if (GetComponent<ChasingNPC>())
     {
         // Преследование на достаточном расстоянии
         if (current_distance <= Chase_Distance)
         {
             ChangeState(NPCState.Chasing);
+            m_animator.SetBool("IsPatrolling", false);
+            m_animator.SetBool("IsChasing", true);
         }
         else 
         {
             // Проверка наличия PatrollingNPC
             if (TryGetComponent<PatrollingNPC>(out var patrolBeh))
             {
+                m_animator.SetBool("IsPatrolling", true);
                 patrolBeh.StartPatrolling();
             }
             else
@@ -139,6 +147,7 @@ private void OnDrawGizmos()
                     IsChasing = true;
                     ChangeState(NPCState.Chasing);
                     ChaseBeh.StartChasing();
+                    m_animator.SetBool("IsChasing", true);
                 }
             }
 
@@ -148,13 +157,22 @@ private void OnDrawGizmos()
                 //Преследование
                 if (current_distance <= Chase_Distance)
                 {
+                    //m_animator.SetTrigger("Chase"); //!!!!!!!!!!
                     ChaseBeh.StartChasing();
                 }
                 
+                //Атака
+                else if (current_distance <= Attack_Distance)
+                {
+                    m_animator.SetTrigger("Attack");
+                    //Код нанесения атаки
+                }
+
                 //отмена преследования
                 else 
                 {
                     IsChasing = false;
+                    m_animator.SetBool("IsChasing", false);
                     ChangeState(NPCState.Patrolling);
                 }
             }

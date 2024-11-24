@@ -103,7 +103,10 @@ public class PatrollingNPC : MonoBehaviour
         if (m_agent.remainingDistance <= m_agent.stoppingDistance)
         {
             if (Random.Range(0, 2) == 1)
+            {
+                //m_animator.SetTrigger("Patrol");
                 SetRandomDestination(); 
+            }
             else
                 CoroutinePatrol();
         }
