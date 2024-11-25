@@ -6,8 +6,8 @@ public class RunBehaviour : StateMachineBehaviour
 {
     NavMeshAgent m_agent;
     Transform player;
-    float AttackRadius = 10f;
-    float ChasingRadius = 50f;
+    float AttackRadius = 6f;
+    float ChasingRadius = 13f;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

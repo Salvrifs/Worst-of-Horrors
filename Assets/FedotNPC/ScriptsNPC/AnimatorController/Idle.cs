@@ -7,7 +7,7 @@ public class IdleBehaviour : StateMachineBehaviour
     float timer;
     Transform player;
     NavMeshAgent m_agent;
-    float chaseRadius = 50f;
+    float chaseRadius = 13f;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -24,7 +24,7 @@ public class IdleBehaviour : StateMachineBehaviour
     {
         timer += Time.deltaTime;
 
-        if (timer >= 5)
+        if (timer >= 3)
         {
             //Debug.Log("IdleBeh: Патрулирование началось");
             animator.SetBool("IsPatrolling", true);

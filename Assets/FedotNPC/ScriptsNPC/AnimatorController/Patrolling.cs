@@ -10,7 +10,7 @@ public class PatrolBehaviour : StateMachineBehaviour
     NavMeshAgent m_agent;
 
     Transform player;
-    float chaseRadius = 50f; 
+    float chaseRadius = 13f; 
 
     Transform currentTarget;
 
