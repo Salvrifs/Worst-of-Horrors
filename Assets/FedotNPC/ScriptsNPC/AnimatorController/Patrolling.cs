@@ -55,6 +55,7 @@ public class PatrolBehaviour : StateMachineBehaviour
     {
         //Debug.Log("PatrolBeh: преследование началось");
         animator.SetBool("IsChasing", true); 
+        animator.SetBool("IsPatrolling", false);
     }
     }
 
