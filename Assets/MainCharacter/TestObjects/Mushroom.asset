@@ -15,8 +15,8 @@ MonoBehaviour:
   itemName: Mushroom
   maximumAmount: 3
   itemDescription: da
-  icon: {fileID: 21300000, guid: ed260cf9a48d77d428d3d91cf423bcdd, type: 3}
-  itemPrefab: {fileID: 283498149371873101, guid: 04ff47e186a9cea4f82b0568e0b10ccc, type: 3}
+  icon: {fileID: 21300000, guid: 13ddb89b16de043448f326881ab593c7, type: 3}
+  itemPrefab: {fileID: 5294542192182121627, guid: 633dca2d2047e074ebf00763cd0f7ff4, type: 3}
   itemType: 1
   isConsumeable: 1
   changeHealth: 10
