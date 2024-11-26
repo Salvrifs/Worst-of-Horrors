@@ -3,12 +3,13 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.XR;
+using UnityEngine.UI;
 
 public class MainBrain : MonoBehaviour
 {
     [SerializeField] float Chase_Distance = 5f;
     [SerializeField] float Attack_Distance = 2f;
-
+    
 //Состояния NPC
     public enum NPCState
     {
@@ -105,6 +106,7 @@ private void OnDrawGizmos()
             m_animator.SetBool("IsPatrolling", false);
             m_animator.SetBool("IsChasing", true);
         }
+
         else 
         {
             // Проверка наличия PatrollingNPC
@@ -164,7 +166,8 @@ private void OnDrawGizmos()
                 //Атака
                 else if (current_distance <= Attack_Distance)
                 {
-                    m_animator.SetTrigger("Attack");
+                    m_animator.SetBool("IsChasing", false);
+                    m_animator.SetBool("IsAttack", true);
                     //Код нанесения атаки
                 }
 
