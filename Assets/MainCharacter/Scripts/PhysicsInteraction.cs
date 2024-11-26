@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class PhysicsInteraction : MonoBehaviour
 {
-    [SerializeField] private float maxGrabDistance = 20f; // Maximum raycast distance to check if there is a rigidbody on the way
-    [SerializeField] private float maxEmptyDistance = 25f; // Maximum empty distance from the camera when moving shpere with mouse
+    [SerializeField] private float maxGrabDistance = 20f;
+    [SerializeField] private float maxEmptyDistance = 25f;
     [SerializeField] private float throwForce = 10.0f;
-    [SerializeField] private float emptyMoveSpeed = 0.1f; // move empty with mouse speed 
-    [SerializeField] private Image image1;  // Can grab image
-    [SerializeField] private Image image2;  // Is grabbing image
+    //[SerializeField] private float emptyMoveSpeed = 0.1f;
+    [SerializeField] private Image image1;
+    [SerializeField] private Image image2;
     public GameObject TakeText;
 
     private Rigidbody _hitRigidbody;
@@ -38,7 +38,7 @@ public class PhysicsInteraction : MonoBehaviour
         if (Input.GetMouseButton(0) && _isShooting)
         {
             ApplyFixedConstraint();
-            MoveEmptyWithMouse();
+            //MoveEmptyWithMouse();
 
             if (Input.GetMouseButtonDown(1) && _hitRigidbody != null)
             {
@@ -65,16 +65,16 @@ public class PhysicsInteraction : MonoBehaviour
                 TakeText.SetActive(true);
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster"))
             {
                 _hitRigidbody = _hitInfo.collider.GetComponent<Rigidbody>();
                 MoveEmpty(_hitInfo.point);
                 _isShooting = true;
             }
 
-            if (_isShooting == false)
+            if (_isShooting == false && (_hitInfo.collider.tag != "Monster"))
             {
-                DisplayImage(image1); // Display the first image if raycasting to a rigidbody                
+                DisplayImage(image1);        
             }
             else HideImage(image1);
 
@@ -108,7 +108,7 @@ public class PhysicsInteraction : MonoBehaviour
         }
     }
 
-    private void MoveEmptyWithMouse()
+    /*private void MoveEmptyWithMouse()
     {
         float mouseY = Input.GetAxis("Mouse Y");
         if (_empty)
@@ -117,14 +117,13 @@ public class PhysicsInteraction : MonoBehaviour
             Vector3 emptyMovement = mainCamera.transform.forward * (emptyMoveSpeed * mouseY) + scrollWheelFactor * Camera.main.transform.forward;
             Vector3 emptyPos = _empty.transform.position + emptyMovement;
 
-            // Clamp empty position relative to the camera
             float emptyDistanceFromCamera = Vector3.Distance(Camera.main.transform.position, emptyPos);
             if (emptyDistanceFromCamera <= maxEmptyDistance && emptyDistanceFromCamera > 0.4f)
             {
                 _empty.transform.position = emptyPos;
             }
         }
-    }
+    }*/
 
     private void ResetShooting()
     {
