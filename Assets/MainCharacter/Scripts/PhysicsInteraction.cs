@@ -65,14 +65,14 @@ public class PhysicsInteraction : MonoBehaviour
                 TakeText.SetActive(true);
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster"))
             {
                 _hitRigidbody = _hitInfo.collider.GetComponent<Rigidbody>();
                 MoveEmpty(_hitInfo.point);
                 _isShooting = true;
             }
 
-            if (_isShooting == false)
+            if (_isShooting == false && (_hitInfo.collider.tag != "Monster"))
             {
                 DisplayImage(image1);        
             }
