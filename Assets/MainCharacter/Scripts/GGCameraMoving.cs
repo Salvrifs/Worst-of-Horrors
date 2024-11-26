@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GGCameraMoving : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class GGCameraMoving : MonoBehaviour
     public float max_angle_Y = 90.0f;
 
     private float rotationX = 0.0f;
+
+    public GameObject panel;
 
     private void Start()
     {
@@ -17,6 +20,25 @@ public class GGCameraMoving : MonoBehaviour
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!panel.activeSelf)
+            {
+                panel.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                panel.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                Time.timeScale = 1f;
+            }
+        }
+
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
