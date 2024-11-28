@@ -11,6 +11,7 @@ public class GGCameraMoving : MonoBehaviour
     private float rotationX = 0.0f;
 
     public GameObject panel;
+    public GameObject infoPanel;
 
     private void Start()
     {
@@ -20,8 +21,7 @@ public class GGCameraMoving : MonoBehaviour
 
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!panel.activeSelf)
             {
@@ -37,6 +37,11 @@ public class GGCameraMoving : MonoBehaviour
                 Cursor.visible = false;
                 Time.timeScale = 1f;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            infoPanel.SetActive(!infoPanel.activeSelf);
         }
 
         float mouseX = Input.GetAxis("Mouse X");

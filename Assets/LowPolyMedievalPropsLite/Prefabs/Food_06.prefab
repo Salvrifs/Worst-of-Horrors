@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2754347255973482943}
   - component: {fileID: 3543392129662391554}
   - component: {fileID: 2920888658108181015}
+  - component: {fileID: 7188251399909728296}
   m_Layer: 0
   m_Name: Food_06
   m_TagString: Untagged
@@ -31,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -148,3 +149,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   i_item: {fileID: 11400000, guid: 062dc79e1570a034ea91191c5ef3ba45, type: 2}
   amount: 1
+--- !u!208 &7188251399909728296
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5294542192182121627}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.061000004, y: 0.07700001, z: 0.064}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.076000005, z: -0.001}
+  m_TimeToStationary: 0.5

@@ -36,8 +36,6 @@ public class QuickSlotPanel : MonoBehaviour
             }
 
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = selectedSprite;
-
-            // ��� �� ������ � ���������:
         }
 
         if (mouseWheel < -0.1)
@@ -55,8 +53,6 @@ public class QuickSlotPanel : MonoBehaviour
             }
 
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = selectedSprite;
-
-            // ��� �� ������ � ���������:
         }
 
         for (int i = 0; i < quickslotParent.childCount; i++)

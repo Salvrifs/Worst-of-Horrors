@@ -4,49 +4,79 @@ using UnityEngine;
 
 public class GGMoving : MonoBehaviour
 {
-    public float move_speed = 5.0f;
-    public int nitro = 2;
-    public float max_endurance = 100f;
-    public float endurance = 100f;
-    public float energy_speed = 10f;
-    private bool flag = true;
 
-    private CharacterController controller;
+    [SerializeField] private float _speed = 5.0f;
+    [SerializeField] private float _gravity = 9.81f;
+    [SerializeField] private float _jumpPower = 5.0f;
+    [SerializeField] private float _speedRun = 10.0f;
+    [SerializeField] private float _speedSit = 2.0f;
+
+    private Vector3 _walkDirection;
+    private Vector3 _velocity;
+    private float _speedWalk;
+
+    private CharacterController _characterController;
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        _speedWalk = _speed;
+        _characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
+
         float horizontal_input = Input.GetAxis("Horizontal");
         float vertical_input = Input.GetAxis("Vertical");
 
+        _walkDirection = transform.forward * vertical_input + transform.right * horizontal_input;
 
-        Vector3 move_direction = transform.forward * vertical_input + transform.right * horizontal_input;
+        Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space));
+        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));
 
-        move_direction.y -= 9000.81f * Time.deltaTime;
-        if (Input.GetKey(KeyCode.LeftShift) && (endurance > 0f) && ((move_direction.x != 0) || (move_direction.z != 0)))
+    }
+
+    private void FixedUpdate()
+    {
+
+        Walk(_walkDirection);
+        Gravity(_characterController.isGrounded);
+
+    }
+
+    private void Walk(Vector3 direction)
+    {
+        _characterController.Move(direction * _speed * Time.fixedDeltaTime);
+    }
+
+    private void Gravity(bool isGrounded)
+    {
+        if (isGrounded && _velocity.y < 0)
         {
-            controller.Move(move_direction * move_speed * Time.deltaTime * nitro);
-            endurance -= energy_speed * Time.deltaTime;
-            if (endurance <= 0)
-                flag = false;
+            _velocity.y = -1f;
         }
-        else
+        _velocity.y -= _gravity * Time.fixedDeltaTime;
+        _characterController.Move(_velocity * Time.fixedDeltaTime);
+    }
+
+    private void Jump(bool canJump)
+    {
+        if (canJump)
         {
-            if (!flag)
-            {
-                endurance = -50f;
-                flag = true;
-            }
-            if (endurance < max_endurance)
-                endurance += energy_speed * Time.deltaTime;
-            if (endurance < 0f)
-                controller.Move(move_direction * move_speed * Time.deltaTime / nitro);
-            else
-                controller.Move(move_direction * move_speed * Time.deltaTime);
+            _velocity.y = _jumpPower;
         }
     }
+
+    private void ChangeMoveSpeed(bool changeMoveSpeed)
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+            _speed = changeMoveSpeed ? _speedRun : _speedWalk;
+        else
+        {
+            _characterController.height = changeMoveSpeed ? 1f : 2f;
+            _speed = changeMoveSpeed ? _speedSit : _speedWalk;
+        }
+        
+    }
+
 }

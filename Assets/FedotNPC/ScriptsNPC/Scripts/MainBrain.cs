@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.XR;
@@ -57,11 +56,11 @@ public class MainBrain : MonoBehaviour
 }
 
 //ВСПОМОГАТЕЛЬНАЯ !!!!!!!!!!!!!!!!!!!!!!!
-private void OnDrawGizmos()
+/*private void OnDrawGizmos()
     {
         Gizmos.color = Color.red; 
         Gizmos.DrawWireSphere(transform.position, Chase_Distance); 
-    }
+    }*/
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 

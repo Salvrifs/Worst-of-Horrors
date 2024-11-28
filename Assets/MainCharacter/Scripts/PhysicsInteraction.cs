@@ -4,9 +4,7 @@ using UnityEngine.UI;
 public class PhysicsInteraction : MonoBehaviour
 {
     [SerializeField] private float maxGrabDistance = 20f;
-    [SerializeField] private float maxEmptyDistance = 25f;
     [SerializeField] private float throwForce = 10.0f;
-    //[SerializeField] private float emptyMoveSpeed = 0.1f;
     [SerializeField] private Image image1;
     [SerializeField] private Image image2;
     public GameObject TakeText;
@@ -21,6 +19,8 @@ public class PhysicsInteraction : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     private void Start()
     {
+        image1.gameObject.SetActive(false);
+        image2.gameObject.SetActive(false);
         _empty = new GameObject();
         _empty.transform.parent = mainCamera.transform;
         _empty.AddComponent<Rigidbody>();
@@ -38,7 +38,6 @@ public class PhysicsInteraction : MonoBehaviour
         if (Input.GetMouseButton(0) && _isShooting)
         {
             ApplyFixedConstraint();
-            //MoveEmptyWithMouse();
 
             if (Input.GetMouseButtonDown(1) && _hitRigidbody != null)
             {
@@ -107,23 +106,6 @@ public class PhysicsInteraction : MonoBehaviour
             }
         }
     }
-
-    /*private void MoveEmptyWithMouse()
-    {
-        float mouseY = Input.GetAxis("Mouse Y");
-        if (_empty)
-        {
-            float scrollWheelFactor = Input.GetAxis("Mouse ScrollWheel") * 5;
-            Vector3 emptyMovement = mainCamera.transform.forward * (emptyMoveSpeed * mouseY) + scrollWheelFactor * Camera.main.transform.forward;
-            Vector3 emptyPos = _empty.transform.position + emptyMovement;
-
-            float emptyDistanceFromCamera = Vector3.Distance(Camera.main.transform.position, emptyPos);
-            if (emptyDistanceFromCamera <= maxEmptyDistance && emptyDistanceFromCamera > 0.4f)
-            {
-                _empty.transform.position = emptyPos;
-            }
-        }
-    }*/
 
     private void ResetShooting()
     {
