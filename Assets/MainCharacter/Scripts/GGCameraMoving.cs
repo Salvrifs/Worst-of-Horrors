@@ -10,8 +10,7 @@ public class GGCameraMoving : MonoBehaviour
 
     private float rotationX = 0.0f;
 
-    public GameObject panel;
-    public GameObject infoPanel;
+    private bool isControlEnabled = true;
 
     private void Start()
     {
@@ -21,28 +20,8 @@ public class GGCameraMoving : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!panel.activeSelf)
-            {
-                panel.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                Time.timeScale = 0f;
-            }
-            else
-            {
-                panel.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                Time.timeScale = 1f;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            infoPanel.SetActive(!infoPanel.activeSelf);
-        }
+        if (!isControlEnabled)
+            return;
 
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
@@ -52,5 +31,10 @@ public class GGCameraMoving : MonoBehaviour
         rotationX -= mouseY * mouse_sens;
         rotationX = Mathf.Clamp(rotationX, -max_angle_Y, max_angle_Y);
         transform.localRotation = Quaternion.Euler(rotationX, 0.0f, 0.0f);
+    }
+
+    public void SetControlEnabled(bool isEnabled)
+    {
+        isControlEnabled = isEnabled;
     }
 }

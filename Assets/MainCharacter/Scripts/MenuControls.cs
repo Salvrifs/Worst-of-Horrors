@@ -7,6 +7,36 @@ using TMPro;
 public class NewBehaviourScript : MonoBehaviour
 {
     public GameObject panel;
+    public GGCameraMoving cameraController;
+    public GameObject infoPanel;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!panel.activeSelf)
+            {
+                panel.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0f;
+                cameraController.SetControlEnabled(false);
+            }
+            else
+            {
+                panel.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                Time.timeScale = 1f;
+                cameraController.SetControlEnabled(true);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            infoPanel.SetActive(!infoPanel.activeSelf);
+        }
+    }
 
     public void PlayPressed()
     {
@@ -19,6 +49,7 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Time.timeScale = 1f;
+        cameraController.SetControlEnabled(true);
     }
 
     public void ExitToMainPressed()

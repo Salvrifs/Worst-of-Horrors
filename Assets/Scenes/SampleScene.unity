@@ -1952,6 +1952,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 1496678992}
+  cameraController: {fileID: 963194229}
+  infoPanel: {fileID: 993846721}
 --- !u!1001 &335312303
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3406,8 +3408,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouse_sens: 2
   max_angle_Y: 90
-  panel: {fileID: 1496678992}
-  infoPanel: {fileID: 993846721}
 --- !u!4 &981876419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1225297511855151917, guid: 99ea5c30074df6049a24cf3e32d67aab, type: 3}
