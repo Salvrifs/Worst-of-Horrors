@@ -5,9 +5,13 @@ public class IdleBehaviour : StateMachineBehaviour
 {
 
     float timer;
-    Transform player;
+    Transform m_player;
+    Transform EnemyEye;
     NavMeshAgent m_agent;
-    float chaseRadius = 13f;
+    [Range(0, 360)] float ViewAngle = 130f;
+    float ViewDistance = 75f;
+    //float ChaseDist = 5f;
+    
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -15,7 +19,8 @@ public class IdleBehaviour : StateMachineBehaviour
         timer = 0f;
 
         m_agent = animator.GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player").transform; 
+        m_player = GameObject.FindGameObjectWithTag("Player").transform; 
+        EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         //Debug.Log($"Idle: {player.name}"); 
     }
 
@@ -30,21 +35,34 @@ public class IdleBehaviour : StateMachineBehaviour
             animator.SetBool("IsPatrolling", true);
             
         }
-            
-        float distance = Vector3.Distance(animator.transform.position, player.position);
-        if (distance < chaseRadius)
+        
+       //float distance = Vector3.Distance(m_agent.transform.position, m_player.transform.position);
+        if ( IsInView() )
         {
-            //Debug.Log("IdleBeh: погоня началась");
-            animator.SetBool("IsChasing", true);
-            
+                //Debug.Log("IdleBeh: погоня началась");
+                animator.SetBool("IsChasing", true);
         }
         
-
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+    }
+
+//Находится ли в поле зрения
+private bool IsInView() 
+    {
+        float currentAngle = Vector3.Angle(EnemyEye.forward, m_player.position - EnemyEye.position);
+        RaycastHit hit;
+        if (Physics.Raycast(EnemyEye.transform.position, m_player.position - EnemyEye.position, out hit, ViewDistance))
+        {
+            if (currentAngle < ViewAngle / 2f && Vector3.Distance(EnemyEye.position, m_player.position) <= ViewDistance && hit.transform == m_player.transform)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
@@ -58,4 +76,6 @@ public class IdleBehaviour : StateMachineBehaviour
     //{
     //    // Implement code that sets up animation IK (inverse kinematics)
     //}
+
+    
 }

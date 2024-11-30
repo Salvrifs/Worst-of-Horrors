@@ -9,11 +9,12 @@ public class PatrolBehaviour : StateMachineBehaviour
     [SerializeField] private List<Transform> m_Points = new List<Transform>();
     NavMeshAgent m_agent;
 
-    Transform player;
-    float chaseRadius = 13f; 
-
+    Transform m_player;
+    [Range(0, 360)] float ViewAngle = 130f;
+    float ViewDistance = 75f; 
+    Transform EnemyEye;
     Transform currentTarget;
-
+    //float ChaseDist = 5f;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -28,8 +29,8 @@ public class PatrolBehaviour : StateMachineBehaviour
 
         m_agent = animator.GetComponent<NavMeshAgent>();
         m_agent.SetDestination(m_Points[0].position);
-        player = GameObject.FindGameObjectWithTag("Player").transform; 
-        
+        m_player = GameObject.FindGameObjectWithTag("Player").transform; 
+        EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
     }
 
    
@@ -50,14 +51,17 @@ public class PatrolBehaviour : StateMachineBehaviour
         animator.SetBool("IsPatrolling", false);
     }
 
-    float distance = Vector3.Distance(animator.transform.position, player.position);
-    if (distance < chaseRadius)
+    //float distance = Vector3.Distance(m_agent.transform.position, m_player.transform.position);
+
+    if (IsInView())
     {
-        //Debug.Log("PatrolBeh: преследование началось");
-        animator.SetBool("IsChasing", true); 
-        animator.SetBool("IsPatrolling", false);
+            //Debug.Log("PatrolBeh: преследование началось");
+            animator.SetBool("IsChasing", true); 
+            animator.SetBool("IsPatrolling", false);
     }
-    }
+
+    
+}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -65,7 +69,7 @@ public class PatrolBehaviour : StateMachineBehaviour
         m_agent.SetDestination(m_agent.transform.position);
     }
 
-
+//Установка направления до следующей точке
  private void SetNextDestination()
     {
         if (m_Points.Count > 0)
@@ -74,8 +78,22 @@ public class PatrolBehaviour : StateMachineBehaviour
             currentTarget = m_Points[RandInd];
             m_agent.SetDestination(currentTarget.position);
         }
-    }   
+    }  
 
+//Находится ли в поле зрения
+private bool IsInView()
+    {
+        float realAngle = Vector3.Angle(EnemyEye.forward, m_player.position - EnemyEye.position);
+        RaycastHit hit;
+        if (Physics.Raycast(EnemyEye.transform.position, m_player.position - EnemyEye.position, out hit, ViewDistance))
+        {
+            if (realAngle < ViewAngle / 2f && Vector3.Distance(EnemyEye.position, m_player.position) <= ViewDistance && hit.transform == m_player.transform)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
@@ -87,4 +105,6 @@ public class PatrolBehaviour : StateMachineBehaviour
     //{
     //    // Implement code that sets up animation IK (inverse kinematics)
     //}
+
+    
 }
