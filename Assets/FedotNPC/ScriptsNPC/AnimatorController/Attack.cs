@@ -13,6 +13,7 @@ public class AttackBehaviour : StateMachineBehaviour
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 130f;
     float ViewDistance = 75f;
+    bool IsAttackUge;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -20,6 +21,7 @@ public class AttackBehaviour : StateMachineBehaviour
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
         healthCount = GameObject.FindGameObjectWithTag("healthBar").transform.GetChild(0).GetChild(4).GetChild(0).GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
+        IsAttackUge = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -37,13 +39,31 @@ public class AttackBehaviour : StateMachineBehaviour
         {
             if (IsInView())
             {
-                timer += Time.deltaTime;
-            
-                if (timer >= 1.2f)
+                if (IsAttackUge == true)
                 {
-                    PerformAttack();
+                    timer += Time.deltaTime;
+            
+                    if (timer >= 2f)
+                    {
+                        timer = 0f;
+                        PerformAttack();
+                    }
+                }
+
+                else
+                { 
+                    timer += Time.deltaTime;
+            
+                    if (timer >= 1.2f)
+                    {
+                        timer = 0f;
+                        PerformAttack();
+                        IsAttackUge = true; 
+                    }
                 }
             }
+
+            
 
             else 
             {
@@ -101,6 +121,7 @@ private bool IsInView()
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer = 0f;
+        IsAttackUge = false;
     }
 
 }
