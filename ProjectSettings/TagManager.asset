@@ -8,6 +8,7 @@ TagManager:
   - healthBar
   - Monster
   - Eye
+  - item
   layers:
   - Default
   - TransparentFX
