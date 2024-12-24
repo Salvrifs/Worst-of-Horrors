@@ -7,5 +7,5 @@ public class Item : MonoBehaviour
 
     public ItemScriptableObject i_item;
     public int amount;
-
+    public bool IsTaked = false;
 }

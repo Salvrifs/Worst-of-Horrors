@@ -14,9 +14,15 @@ public class CollectingNPC : MonoBehaviour
     int RandInd, RandBehaviour;
     bool IsHolding;
     Transform LastItem;
+    Transform Player;
+    AudioClip stealSound;
+    float fleeDist = 5f;
+    float stealDist = 2f;
+    GameObject StolenItemPrefab;
 
     void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
         m_animator = GetComponent<Animator>();
         InitializeItems();
         InitializeAgent();
@@ -25,11 +31,30 @@ public class CollectingNPC : MonoBehaviour
 
     void Update()
 {
-    
+    float distanceToPlayer = Vector3.Distance(Player.position, transform.position);
+
+    if (distanceToPlayer <= stealDist)
+    {
+        TryStealItem();
+        return;
+    }
+
+    if (distanceToPlayer < fleeDist)
+    {
+        m_agent.speed = 2f;
+    }
+
+    else
+    {
+        m_agent.speed = 10f;
+
+    }
+
+
 
     if (!IsHolding && currentTarget == null)
     {
-        MoveToItem(); // Если вещественного нет, нужно искать новую цель
+        MoveToItem(); 
         return; 
     }
     
@@ -97,10 +122,10 @@ public class CollectingNPC : MonoBehaviour
 
     foreach (Transform item in items)
     {
-        if (!item.GetComponent<item>().IsTaked && item != LastItem)
+        if (!item.GetComponent<Item>().IsTaked && item != LastItem)
         {
             currentTarget = item.transform;
-            item.GetComponent<item>().IsTaked = true;
+            item.GetComponent<Item>().IsTaked = true;
             LastItem = item;
             m_agent.SetDestination(currentTarget.position);
             foundFreeItem = true;
@@ -108,7 +133,7 @@ public class CollectingNPC : MonoBehaviour
         }
     }
 
-    // Если свободных предметов не найдено, переходим к случайной точке
+    
     if (!foundFreeItem)
     {
         GenerateDropOffPoint();
@@ -137,7 +162,7 @@ public class CollectingNPC : MonoBehaviour
             currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
             IsHolding = true;
             Debug.Log($"Подбор предмета: {currentTarget.name}. Позиция агента: {m_agent.transform.position}");
-            MoveToDrop(); // Двигаемся к точке сброса после поднятия
+            MoveToDrop(); 
         }
     }
 
@@ -149,12 +174,12 @@ public class CollectingNPC : MonoBehaviour
             //m_animator.SetTrigger("DroppingPickUp");
             currentTarget.position = DropOffPoint; 
             IsHolding = false; 
-            currentTarget.GetComponent<item>().IsTaked = false;
+            currentTarget.GetComponent<Item>().IsTaked = false;
 
-            // Переходим к новому предмету
+            
             currentTarget = null;
             MoveToItem(); 
-            // Сбрасываем текущее целевое значение
+            
         }
     }
 
@@ -171,7 +196,7 @@ public class CollectingNPC : MonoBehaviour
     float terrainWidth = terrain.terrainData.size.x;
     float terrainHeight = terrain.terrainData.size.z;
     float groundHeight; 
-    float maxSlopeAngle = 30f;  // Угол наклона поверхности, который мы считаем допустимым
+    float maxSlopeAngle = 30f;  
     
     while (true)
     {
@@ -179,28 +204,57 @@ public class CollectingNPC : MonoBehaviour
         float RandomZ = Random.Range(0, terrainHeight);
         groundHeight = terrain.SampleHeight(new Vector3(RandomX, 0, RandomZ));
         // Проверяем нормаль к поверхности в этой точке
-        Vector3 normal = Vector3.up; // Значение по умолчанию
+        Vector3 normal = Vector3.up; 
         RaycastHit hit;
         if (Physics.Raycast(new Vector3(RandomX, groundHeight + 100, RandomZ), Vector3.down, out hit, Mathf.Infinity))
         {
-            normal = hit.normal; // Получаем нормаль к поверхности в этой точке
+            normal = hit.normal; 
         }
 
-        // Проверка, является ли угол наклона нормали допустимым
+        
         if (Vector3.Angle(normal, Vector3.up) <= maxSlopeAngle)
         {
             DropOffPoint = new Vector3(RandomX, groundHeight, RandomZ);
             Debug.Log($"Сгенерирована подходящая точка сброса: {DropOffPoint}");
-            break; // Если точка подходит, выходим из цикла
+            break; 
         }
         else
         {
             Debug.Log("Выбрана не подходящая точка, повторяем.");
         }
+    } 
+}
+
+void TryStealItem()
+{
+    InventoryManager inventory = Player.GetComponent<InventoryManager>();
+    ItemScriptableObject currentTargetItem = currentTarget.GetComponent<Item>().i_item;
+
+    for (int i = 0; i < inventory.slots.Count; ++i)
+    {
+        InventorySlot slot = inventory.slots[i];
+        
+        if (!slot.isEmpty && slot.is_item == currentTargetItem)
+        {
+            //AudioSource.PlayClipAtPoint(stealSound, transform.position);
+
+            GameObject stolenItem = Instantiate(StolenItemPrefab, transform.position + Vector3.up, Quaternion.identity);
+            stolenItem.GetComponent<Item>().i_item = slot.is_item;
+
+            slot.NullifySlotData();
+            MoveAwayFromPlayer();
+        }
     }
+}
 
 
-    
+void MoveAwayFromPlayer()
+{
+    Vector3 directionAway = (transform.position - Player.position).normalized;
+    Vector3 targetPosition = transform.position + directionAway*fleeDist;
+    m_agent.SetDestination(targetPosition);
+    //StopForDuration(2f);
+    MoveToDrop();
 }
 
 /*private IEnumerator StopForDuration(float duration)

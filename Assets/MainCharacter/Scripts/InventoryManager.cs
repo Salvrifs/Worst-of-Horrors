@@ -67,4 +67,25 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
+
+
+    public void RemoveItem(Item item)
+    {
+        foreach (InventorySlot slot in slots)
+        {
+            if (slot.is_item == item)
+            {
+                if (slot.amount > 0)
+                {
+                    slot.amount--;
+                    slot.textItemAmount.text = slot.amount.ToString();
+                    if (slot.amount <= 0)
+                    {
+                        slot.NullifySlotData();
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
