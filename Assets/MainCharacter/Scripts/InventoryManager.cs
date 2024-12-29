@@ -22,20 +22,27 @@ public class InventoryManager : MonoBehaviour
     }
 
     void Update()
+{
+    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+    RaycastHit hit;
+    if (Input.GetKeyDown(KeyCode.E))
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Input.GetKeyDown(KeyCode.E)) {
-            if (Physics.Raycast(ray, out hit, reachDistance))
+        if (Physics.Raycast(ray, out hit, reachDistance))
+        {
+            Item item = hit.collider.gameObject.GetComponent<Item>();
+            if (item != null)
             {
-                if (hit.collider.gameObject.GetComponent<Item>() != null)
-                {
-                    AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
-                    Destroy(hit.collider.gameObject);
-                }
+                AddItem(item.i_item, item.amount);
+                
+                // Перемещаем объект рядом с игроком
+                hit.collider.gameObject.transform.SetParent(transform);
+                Vector3 playerPosition = transform.position; 
+                hit.collider.gameObject.transform.position = playerPosition + transform.forward * 1.5f;
+                //hit.collider.gameObject.SetActive(false); 
             }
-        } 
-    }
+        }
+    } 
+}
 
     private void AddItem(ItemScriptableObject _item, int _amount)
     {

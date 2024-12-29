@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
+using Unity.VisualScripting;
 
 public class CollectingNPC : MonoBehaviour
 {
@@ -16,9 +17,8 @@ public class CollectingNPC : MonoBehaviour
     Transform LastItem;
     Transform Player;
     AudioClip stealSound;
-    float fleeDist = 5f;
-    float stealDist = 2f;
-    GameObject StolenItemPrefab;
+    float fleeDist = 1f;
+    float stealDist = 5f;
 
     void Start()
     {
@@ -33,36 +33,34 @@ public class CollectingNPC : MonoBehaviour
 {
     float distanceToPlayer = Vector3.Distance(Player.position, transform.position);
 
+    if (currentTarget != null)
+    {
+        m_agent.SetDestination(currentTarget.position);
+    }
+    // Если NPC близко к игроку, пытаемся украсть предмет
     if (distanceToPlayer <= stealDist)
     {
         TryStealItem();
         return;
     }
 
+    // Если NPC находится слишком близко, он убегает от игрока
     if (distanceToPlayer < fleeDist)
     {
         m_agent.speed = 2f;
+        MoveAwayFromPlayer();
+        return;
     }
-
     else
     {
         m_agent.speed = 10f;
-
     }
-
-
-
+    
     if (!IsHolding && currentTarget == null)
     {
         MoveToItem(); 
         return; 
     }
-    
-   /* if (Random.Range(0, 100) < 10) // 10% chance to stop
-    {
-            StartCoroutine(StopForDuration(2f)); // Stopping for 2 seconds
-            return;
-    }*/
 
     if (currentTarget != null)
     {
@@ -80,12 +78,45 @@ public class CollectingNPC : MonoBehaviour
                 DropItem();
             }
         }
-        
     }
-    else
+    
+    else 
     {
         MoveToItem();
     }
+}
+
+void TryStealItem()
+{
+    InventoryManager inventory = Player.GetComponent<InventoryManager>();
+
+    // Поиск предметов в инвентаре игрока
+    for (int i = 0; i < inventory.slots.Count; ++i)
+    {
+        InventorySlot slot = inventory.slots[i];
+        
+        if (!slot.isEmpty && slot.is_item == currentTarget.GetComponent<Item>().i_item)
+        {
+            // Можем добавить звук кражи
+            // AudioSource.PlayClipAtPoint(stealSound, transform.position);
+
+            // Уходим с предметом
+            MoveAwayFromPlayer();
+
+            // Убираем предмет из инвентаря
+            slot.NullifySlotData();
+            Debug.Log($"Предмет {slot.is_item.itemName} успешно украден у игрока!");
+            return;
+        }
+    }
+}
+
+// Метод для перемещения NPC от игрока
+void MoveAwayFromPlayer()
+{
+    Vector3 directionAway = (transform.position - Player.position).normalized;
+    Vector3 targetPosition = transform.position + directionAway * fleeDist;
+    m_agent.SetDestination(targetPosition);
 }
 
     void InitializeItems()
@@ -95,8 +126,11 @@ public class CollectingNPC : MonoBehaviour
         {
             foreach (Transform tr in ItemsContainer)
             {
-                Debug.Log($"item: {tr.name}");
-                items.Add(tr);
+                if (tr.gameObject.activeSelf)
+                {
+                    Debug.Log($"item: {tr.name}");
+                    items.Add(tr);
+                }
             }
         }
         else
@@ -225,37 +259,7 @@ public class CollectingNPC : MonoBehaviour
     } 
 }
 
-void TryStealItem()
-{
-    InventoryManager inventory = Player.GetComponent<InventoryManager>();
-    ItemScriptableObject currentTargetItem = currentTarget.GetComponent<Item>().i_item;
 
-    for (int i = 0; i < inventory.slots.Count; ++i)
-    {
-        InventorySlot slot = inventory.slots[i];
-        
-        if (!slot.isEmpty && slot.is_item == currentTargetItem)
-        {
-            //AudioSource.PlayClipAtPoint(stealSound, transform.position);
-
-            GameObject stolenItem = Instantiate(StolenItemPrefab, transform.position + Vector3.up, Quaternion.identity);
-            stolenItem.GetComponent<Item>().i_item = slot.is_item;
-
-            slot.NullifySlotData();
-            MoveAwayFromPlayer();
-        }
-    }
-}
-
-
-void MoveAwayFromPlayer()
-{
-    Vector3 directionAway = (transform.position - Player.position).normalized;
-    Vector3 targetPosition = transform.position + directionAway*fleeDist;
-    m_agent.SetDestination(targetPosition);
-    //StopForDuration(2f);
-    MoveToDrop();
-}
 
 /*private IEnumerator StopForDuration(float duration)
     {
