@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,53 +13,37 @@ public class InventoryManager : MonoBehaviour
         mainCamera = Camera.main;
         for (int i = 0; i < quickSlotPanel.childCount; i++) 
         {
-            if (quickSlotPanel.GetChild(i).GetComponent<InventorySlot>() != null )
+            InventorySlot slot = quickSlotPanel.GetChild(i).GetComponent<InventorySlot>();
+            if (slot != null)
             {
-                slots.Add(quickSlotPanel.GetChild(i).GetComponent<InventorySlot>());
+                slots.Add(slot);
             }
         }
     }
 
     void Update()
-{
-    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-    RaycastHit hit;
-    if (Input.GetKeyDown(KeyCode.E))
     {
-        if (Physics.Raycast(ray, out hit, reachDistance))
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Item item = hit.collider.gameObject.GetComponent<Item>();
-            if (item != null)
+            if (Physics.Raycast(ray, out hit, reachDistance))
             {
-                AddItem(item.i_item, item.amount);
-                
-                // Перемещаем объект рядом с игроком
-                hit.collider.gameObject.transform.SetParent(transform);
-                Vector3 playerPosition = transform.position; 
-                hit.collider.gameObject.transform.position = playerPosition + transform.forward * 1.5f;
-                //hit.collider.gameObject.SetActive(false); 
-            }
-        }
-    } 
-}
-
-    private void AddItem(ItemScriptableObject _item, int _amount)
-    {
-
-
-        foreach (InventorySlot slot in slots)
-        {
-            if (slot.is_item == _item)
-            {
-                if (slot.amount + _amount <= _item.maximumAmount)
+                Item item = hit.collider.gameObject.GetComponent<Item>();
+                if (item != null)
                 {
-                    slot.amount += _amount;
-                    slot.textItemAmount.text = slot.amount.ToString();
-                    return;
+                    AddItem(item.i_item, item.amount);
+                    VanishMode(hit.collider.gameObject);
+                    hit.collider.gameObject.transform.SetParent(transform);
+                    Vector3 playerPosition = transform.position; 
+                    hit.collider.gameObject.transform.position = playerPosition + transform.forward * 1.5f;
                 }
-                break;
             }
-        }
+        } 
+    }
+
+    private void AddItem(ItemScriptableObject _item, int _amount = 1)
+    {
         foreach (InventorySlot slot in slots)
         {
             if (slot.isEmpty)
@@ -70,29 +53,23 @@ public class InventoryManager : MonoBehaviour
                 slot.isEmpty = false;
                 slot.SetIcon(_item.icon);
                 slot.textItemAmount.text = _amount.ToString();
-                break;
+                return;
             }
         }
     }
 
-
-    public void RemoveItem(Item item)
+    void VanishMode(GameObject obj)
     {
-        foreach (InventorySlot slot in slots)
+        Renderer itemRender = obj.GetComponent<Renderer>();
+        if (itemRender != null)
         {
-            if (slot.is_item == item)
-            {
-                if (slot.amount > 0)
-                {
-                    slot.amount--;
-                    slot.textItemAmount.text = slot.amount.ToString();
-                    if (slot.amount <= 0)
-                    {
-                        slot.NullifySlotData();
-                    }
-                    break;
-                }
-            }
+            itemRender.enabled = false;
+        } 
+
+        Collider itemCollider = obj.GetComponent<Collider>();
+        if (itemCollider != null)
+        {
+            itemCollider.enabled = false;
         }
     }
 }

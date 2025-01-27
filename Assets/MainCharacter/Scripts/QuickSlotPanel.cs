@@ -132,4 +132,6 @@ public class QuickSlotPanel : MonoBehaviour
             healthText.text = "100";
         }
     }
+
+    
 }

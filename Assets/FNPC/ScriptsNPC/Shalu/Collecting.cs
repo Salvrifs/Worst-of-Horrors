@@ -1,219 +1,185 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using Unity.VisualScripting;
 
 public class CollectingNPC : MonoBehaviour
 {
-    Transform currentTarget;
-    Vector3 DropOffPoint;
-    List<Transform> items = new List<Transform>();
-    List<Transform> availableItems = new List<Transform>();
-    NavMeshAgent m_agent;
-    Animator m_animator;
-    int RandInd, RandBehaviour;
-    bool IsHolding;
-    Transform LastItem;
-    Transform Player;
-    AudioClip stealSound;
-    float fleeDist = 1f;
-    float stealDist = 5f;
+    private NavMeshAgent m_agent;
+    private Transform Player;
+    private Transform currentTarget;
+    private Vector3 DropOffPoint;
+    private List<Transform> items = new List<Transform>();
+    
+    private int RandInd;
+    private bool IsHolding;
+    private bool isSteal;
+
+    public Transform quickslotParent;
 
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player").transform;
-        m_animator = GetComponent<Animator>();
+        m_agent = GetComponent<NavMeshAgent>();
         InitializeItems();
-        InitializeAgent();
         MoveToItem();
     }
 
     void Update()
-{
-    float distanceToPlayer = Vector3.Distance(Player.position, transform.position);
+    {
+        if (!IsHolding && currentTarget == null)
+        {
+            MoveToItem();
+            return; 
+        }
 
-    if (currentTarget != null)
-    {
-        m_agent.SetDestination(currentTarget.position);
-    }
-    // Если NPC близко к игроку, пытаемся украсть предмет
-    if (distanceToPlayer <= stealDist)
-    {
-        TryStealItem();
-        return;
-    }
+        if (isSteal && !IsHolding)
+        {
+            HandleStealing();
+            return;
+        }
 
-    // Если NPC находится слишком близко, он убегает от игрока
-    if (distanceToPlayer < fleeDist)
-    {
-        m_agent.speed = 2f;
-        MoveAwayFromPlayer();
-        return;
-    }
-    else
-    {
-        m_agent.speed = 10f;
-    }
-    
-    if (!IsHolding && currentTarget == null)
-    {
-        MoveToItem(); 
-        return; 
-    }
+        if (currentTarget != null)
+        {
+            HandleItemInteraction();
+        }
 
-    if (currentTarget != null)
-    {
-        float distance = IsHolding ? Vector3.Distance(m_agent.transform.position, DropOffPoint)
-                                   : Vector3.Distance(m_agent.transform.position, currentTarget.position);
         
+    }
+
+    private void HandleStealing()
+    {
+        float distanceToPlayer = Vector3.Distance(Player.position, transform.position);
+        if (distanceToPlayer <= 5f) // Установить дистанцию воровства
+        {
+            StealItemFromPlayer();
+            return;
+        }
+
+        MoveAwayFromPlayer();
+    }
+
+    private void HandleItemInteraction()
+    {
+        float distance = Vector3.Distance(m_agent.transform.position, currentTarget.position);
         if (distance < m_agent.stoppingDistance)
         {
             if (!IsHolding)
-            {
                 PickUpItem();
-            }
             else
-            {
                 DropItem();
+        }
+    }
+
+    private void StealItemFromPlayer()
+    {
+        while (true)
+        {
+            // Логика кражи
+            RandInd = Random.Range(0, quickslotParent.childCount);
+
+            if (quickslotParent.GetChild(RandInd) != null)
+            {
+                InventorySlot slot = quickslotParent.GetChild(RandInd).GetComponent<InventorySlot>();
+                if (slot.is_item != null && slot.amount > 0)
+                {
+                    // Кража с проверкой
+                    GameObject obj = Instantiate(slot.is_item.itemPrefab, transform.position + Vector3.up, Quaternion.identity);
+                    obj.transform.SetParent(transform);
+                    IsHolding = true;
+
+                    slot.amount--;
+                    slot.textItemAmount.text = slot.amount.ToString();
+                
+                    if (slot.amount <= 0)
+                        slot.NullifySlotData();
+
+                    currentTarget.position = currentTarget.position + Vector3.up;
+                    currentTarget.parent = m_agent.transform;
+                    MakeVisible();
+                    MoveAwayFromPlayer();
+                    return;
+                }
+            }
+
+            else 
+            {
+                RandInd = Random.Range(0, quickslotParent.childCount);
             }
         }
     }
-    
-    else 
-    {
-        MoveToItem();
-    }
-}
 
-void TryStealItem()
-{
-    InventoryManager inventory = Player.GetComponent<InventoryManager>();
-
-    // Поиск предметов в инвентаре игрока
-    for (int i = 0; i < inventory.slots.Count; ++i)
+    private void MoveToItem()
     {
-        InventorySlot slot = inventory.slots[i];
-        
-        if (!slot.isEmpty && slot.is_item == currentTarget.GetComponent<Item>().i_item)
+        foreach (Transform item in items)
         {
-            // Можем добавить звук кражи
-            // AudioSource.PlayClipAtPoint(stealSound, transform.position);
+            if (!item.GetComponent<Item>().IsTaked)
+            {
+                currentTarget = item;
+                item.GetComponent<Item>().IsTaked = true;
+                isSteal = currentTarget.parent == Player ? true : false;
+                m_agent.SetDestination(currentTarget.position);
+                return; 
+            }
+        }
 
-            // Уходим с предметом
-            MoveAwayFromPlayer();
+        // Если все предметы собраны, проверка инвентаря игрока
+    /*    currentTarget = Player;
+        isSteal = true;
+        m_agent.SetDestination(Player.position);
+    */
 
-            // Убираем предмет из инвентаря
-            slot.NullifySlotData();
-            Debug.Log($"Предмет {slot.is_item.itemName} успешно украден у игрока!");
-            return;
+
+    }
+
+    private void MoveAwayFromPlayer()
+    {
+        Vector3 directionAway = (transform.position - Player.position).normalized;
+        Vector3 targetPosition = transform.position + directionAway * 1.5f; // Дистанция убегания
+        m_agent.SetDestination(targetPosition);
+    }
+
+    private void PickUpItem()
+    {
+        if (currentTarget != null)
+        {
+            IsHolding = true;
+            MoveToDrop();
         }
     }
-}
 
-// Метод для перемещения NPC от игрока
-void MoveAwayFromPlayer()
-{
-    Vector3 directionAway = (transform.position - Player.position).normalized;
-    Vector3 targetPosition = transform.position + directionAway * fleeDist;
-    m_agent.SetDestination(targetPosition);
-}
+    void MoveToDrop()
+    {
+        Debug.Log("Двигается к точке сброса");
+        GenerateDropOffPoint();
+        m_agent.SetDestination(DropOffPoint);
+        //m_animator.SetTrigger("GoToTarget");
+        Debug.Log($"Движение к точке сброса на позицию {DropOffPoint}");
+    }
 
-    void InitializeItems()
+    private void DropItem()
+    {
+        if (currentTarget != null)
+        {
+            currentTarget.SetParent(null);
+            currentTarget.position = DropOffPoint;
+            IsHolding = false;
+            currentTarget.GetComponent<Item>().IsTaked = false;
+            isSteal = false;
+            currentTarget = null;
+            MoveToItem();
+        }
+    }
+
+    private void InitializeItems()
     {
         Transform ItemsContainer = GameObject.FindGameObjectWithTag("item")?.transform;
         if (ItemsContainer != null)
         {
             foreach (Transform tr in ItemsContainer)
             {
-                if (tr.gameObject.activeSelf)
-                {
-                    Debug.Log($"item: {tr.name}");
-                    items.Add(tr);
-                }
+                items.Add(tr);
             }
-        }
-        else
-        {
-            Debug.LogError("Не найдены предметы");
-            return;
-        }
-    }
-    
-    void InitializeAgent()
-    {
-        m_agent = GetComponent<NavMeshAgent>();
-        if (m_agent == null)
-        {
-            Debug.LogError("Инициализация агента не удалась!");
-            return;
-        }
-    }
-
-    void MoveToItem()
-    {
-        bool foundFreeItem = false;
-
-    foreach (Transform item in items)
-    {
-        if (!item.GetComponent<Item>().IsTaked && item != LastItem)
-        {
-            currentTarget = item.transform;
-            item.GetComponent<Item>().IsTaked = true;
-            LastItem = item;
-            m_agent.SetDestination(currentTarget.position);
-            foundFreeItem = true;
-            return; 
-        }
-    }
-
-    
-    if (!foundFreeItem)
-    {
-        GenerateDropOffPoint();
-        currentTarget = new GameObject("RandomDropOff").transform; 
-        currentTarget.position = DropOffPoint; 
-        m_agent.SetDestination(DropOffPoint); 
-        return; 
-    }
-        
-    }
-
-    void MoveToDrop()
-    {
-        GenerateDropOffPoint();
-        m_agent.SetDestination(DropOffPoint);
-        //m_animator.SetTrigger("GoToTarget");
-        Debug.Log($"Движение к точке сброса на позицию {DropOffPoint}");
-    }
-    
-    void PickUpItem()
-    {
-        if (currentTarget != null)
-        {
-            currentTarget.SetParent(m_agent.transform);
-            //m_animator.SetTrigger("DroppingPickUp");
-            currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
-            IsHolding = true;
-            Debug.Log($"Подбор предмета: {currentTarget.name}. Позиция агента: {m_agent.transform.position}");
-            MoveToDrop(); 
-        }
-    }
-
-    void DropItem()
-    {
-        if (currentTarget != null)
-        {
-            currentTarget.SetParent(null);
-            //m_animator.SetTrigger("DroppingPickUp");
-            currentTarget.position = DropOffPoint; 
-            IsHolding = false; 
-            currentTarget.GetComponent<Item>().IsTaked = false;
-
-            
-            currentTarget = null;
-            MoveToItem(); 
-            
         }
     }
 
@@ -256,10 +222,25 @@ void MoveAwayFromPlayer()
         {
             Debug.Log("Выбрана не подходящая точка, повторяем.");
         }
-    } 
+    }
 }
 
+void MakeVisible()
+{
+    //Делаем невидимым
+        Renderer itemRender = currentTarget.GetComponent<Renderer>();
+        if (itemRender != null)
+        {
+            itemRender.enabled = true;
+        } 
 
+        //Отключение коллайдера
+        Collider itemCollider = currentTarget.GetComponent<Collider>();
+        if (itemCollider != null)
+        {
+            itemCollider.enabled = true;
+        }
+}
 
 /*private IEnumerator StopForDuration(float duration)
     {
@@ -275,3 +256,4 @@ void MoveAwayFromPlayer()
         m_animator.SetTrigger("Resume");
     }*/
 }
+
