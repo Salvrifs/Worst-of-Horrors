@@ -8,6 +8,7 @@ public class InventoryManager : MonoBehaviour
     private Camera mainCamera;
     public float reachDistance = 3f;
 
+    private Transform Player;
     void Start()
     {
         mainCamera = Camera.main;
@@ -19,6 +20,8 @@ public class InventoryManager : MonoBehaviour
                 slots.Add(slot);
             }
         }
+
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
@@ -34,9 +37,9 @@ public class InventoryManager : MonoBehaviour
                 {
                     AddItem(item.i_item, item.amount);
                     VanishMode(hit.collider.gameObject);
-                    hit.collider.gameObject.transform.SetParent(transform);
-                    Vector3 playerPosition = transform.position; 
-                    hit.collider.gameObject.transform.position = playerPosition + transform.forward * 1.5f;
+                    hit.collider.gameObject.transform.SetParent(Player);
+                    Vector3 playerPosition = Player.position; 
+                    hit.collider.gameObject.transform.position = playerPosition + transform.up * 1.5f;
                 }
             }
         } 
@@ -71,5 +74,7 @@ public class InventoryManager : MonoBehaviour
         {
             itemCollider.enabled = false;
         }
+
+        obj.GetComponent<Rigidbody>().isKinematic = true;
     }
 }
