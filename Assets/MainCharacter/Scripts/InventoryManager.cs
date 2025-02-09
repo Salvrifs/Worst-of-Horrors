@@ -33,6 +33,7 @@ public class InventoryManager : MonoBehaviour
             if (Physics.Raycast(ray, out hit, reachDistance))
             {
                 Item item = hit.collider.gameObject.GetComponent<Item>();
+
                 if (item != null)
                 {
                     AddItem(item.i_item, item.amount);
