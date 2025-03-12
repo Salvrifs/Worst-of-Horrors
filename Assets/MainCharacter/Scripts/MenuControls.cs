@@ -21,6 +21,7 @@ public class NewBehaviourScript : MonoBehaviour
                 Cursor.visible = true;
                 Time.timeScale = 0f;
                 cameraController.SetControlEnabled(false);
+                
             }
             else
             {

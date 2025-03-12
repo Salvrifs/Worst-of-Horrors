@@ -5,6 +5,7 @@ public class ChasingNPC : MonoBehaviour
 {
     private NavMeshAgent m_agent;
     private Transform m_player;
+    AudioSource Chasing;
     //private Animator m_animator;
 
     void Start()

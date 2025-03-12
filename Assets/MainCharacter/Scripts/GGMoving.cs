@@ -10,10 +10,16 @@ public class GGMoving : MonoBehaviour
     [SerializeField] private float _jumpPower = 5.0f;
     [SerializeField] private float _speedRun = 10.0f;
     [SerializeField] private float _speedSit = 2.0f;
-
+    private float NumOfSound;
     private Vector3 _walkDirection;
     private Vector3 _velocity;
     private float _speedWalk;
+
+    private AudioSource audioSource;
+    public AudioSource WalkSound1;
+    public AudioSource WalkSound2;
+    public AudioSource WalkSound3;
+    public AudioSource jumpSound;
 
     private CharacterController _characterController;
 
@@ -38,9 +44,55 @@ public class GGMoving : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
+        /*if (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") > 0)
+        {
+            
+        }*/
 
         Walk(_walkDirection);
         Gravity(_characterController.isGrounded);
+
+        NumOfSound = NumOfSound==1 ? 2 : 1;
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) ||
+            Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            switch (NumOfSound)
+            {
+                case 1:
+                {
+                    if (WalkSound1.isPlaying || WalkSound2.isPlaying || WalkSound3.isPlaying)
+                    {
+                        return;
+                    }
+
+                    WalkSound1.Play();
+                    break;
+                }
+
+                case 2:
+                {
+                    if (WalkSound1.isPlaying || WalkSound2.isPlaying || WalkSound3.isPlaying)
+                    {
+                        return;
+                    }
+
+                    WalkSound2.Play();
+                    break;
+                }
+
+                case 3:
+                {
+                if (WalkSound1.isPlaying || WalkSound2.isPlaying || WalkSound3.isPlaying)
+                    {
+                        return;
+                    }
+
+                    WalkSound1.Play();
+                    break;
+                }
+            }
+        }
 
     }
 
@@ -63,6 +115,7 @@ public class GGMoving : MonoBehaviour
     {
         if (canJump)
         {
+            jumpSound.Play();
             _velocity.y = _jumpPower;
         }
     }
