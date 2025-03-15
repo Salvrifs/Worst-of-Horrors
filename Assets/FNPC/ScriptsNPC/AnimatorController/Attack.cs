@@ -6,24 +6,32 @@ using Unity.VisualScripting;
 
 public class AttackBehaviour : StateMachineBehaviour
 {
-    Transform m_player;
-    float AttackRadius = 6f;
+    private Transform m_player;
     private Text healthCount;
+    private Slider HealthBar;
+    //private Slider StaminaBar;
+    private float AttackRadius = 6f; 
     private int damageAmount = 5; 
     private float timer = 0f;
+    
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 130f;
+    
     float ViewDistance = 75f;
     bool IsAttackUge;
     [SerializeField] AudioSource AttackSound;
     [SerializeField] AudioSource DeathPlayer;
+    
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
-        healthCount = GameObject.FindGameObjectWithTag("healthBar").transform.GetChild(0).GetChild(4).GetChild(0).GetComponent<Text>();
+        HealthBar = GameObject.FindGameObjectWithTag("healthBar").GetComponent<Slider>();
+        //StaminaBar = GameObject.FindGameObjectWithTag("StaminaBar").GetComponent<Slider>();
+        healthCount = HealthBar.transform.GetChild(0).GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
+        
         IsAttackUge = false;
         AttackSound = GameObject.Find("MonsterAttack").GetComponent<AudioSource>();
         DeathPlayer = GameObject.Find("DeathPlayer").GetComponent<AudioSource>();
@@ -99,6 +107,7 @@ public class AttackBehaviour : StateMachineBehaviour
         {
             timer = 0f;
             float new_health = int.Parse(healthCount.text) - damageAmount;
+            HealthBar.value = new_health;
             healthCount.text = new_health.ToString();
             
         }

@@ -289,7 +289,7 @@ public class CollectingNPC : MonoBehaviour
         foreach (Transform item in items)
         {
             Debug.Log($"{m_agent.name}: {item}");
-            if (!item.GetComponent<Item>().IsTaked && LastItem != item)
+            if (!item.GetComponent<Item>().IsTaked && LastItem != item && CanReach(item.position))
             {
                 Debug.Log($"{m_agent.name}: O kak!");
                 SetCurrentTarget(item);
