@@ -53,6 +53,7 @@ public class CollectingNPC : MonoBehaviour
             MoveAwayFromPlayer();
             return;
         }*/
+        
         Debug.Log($"{m_agent.name}: {currentTarget.name}");
 
         if (currentTarget == null && DropOffPoint == default)
@@ -269,7 +270,7 @@ public class CollectingNPC : MonoBehaviour
         PickUpItem();
         for (int i = 0; i < quickslotParent.childCount; ++i)
         {
-            if (quickslotParent.GetChild(i) == currentTarget)
+            if (quickslotParent.GetChild(i).name == currentTarget.name)
             {
                 currentTarget.SetParent(m_agent.transform);
                 quickslotParent.GetChild(i).GetComponent<InventorySlot>().NullifySlotData();
@@ -277,9 +278,13 @@ public class CollectingNPC : MonoBehaviour
             }
         }
         //Если своего предмета уже не нашёл взять что-то рандомное
-        //AttemptRandomSteal();
+        Debug.Log("не нашёл своего беру на рандом");
+        AttemptRandomSteal();
     }
-    
+    //
+    //Чек Есть ли предмет в инвентаре
+    //
+
     //
     // Движене к предмету
     //
@@ -603,7 +608,7 @@ public class CollectingNPC : MonoBehaviour
     private bool CanReach(Vector3 targetPosition)
     {
         NavMeshHit hit;
-        return NavMesh.SamplePosition(targetPosition, out hit, 1.0f, NavMesh.AllAreas);
+        return NavMesh.SamplePosition(targetPosition, out hit, 100.0f, NavMesh.AllAreas);
     }
 
     //

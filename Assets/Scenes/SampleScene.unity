@@ -953,6 +953,7 @@ MonoBehaviour:
   i_item: {fileID: 11400000, guid: 062dc79e1570a034ea91191c5ef3ba45, type: 2}
   amount: 1
   IsTaked: 0
+  IsTakedByPlayer: 0
 --- !u!208 &152701444
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -994,6 +995,7 @@ MonoBehaviour:
   i_item: {fileID: 11400000, guid: 062dc79e1570a034ea91191c5ef3ba45, type: 2}
   amount: 1
   IsTaked: 0
+  IsTakedByPlayer: 0
 --- !u!4 &167733809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4237517483046682220, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
@@ -1015,9 +1017,8 @@ GameObject:
   - component: {fileID: 173347278}
   - component: {fileID: 173347280}
   - component: {fileID: 173347279}
-  - component: {fileID: 173347281}
   m_Layer: 5
-  m_Name: Fill
+  m_Name: Fill_Stamina
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1080,18 +1081,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 173347277}
   m_CullTransparentMesh: 1
---- !u!225 &173347281
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173347277}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &189690021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,9 +1164,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 50
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 50
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1940,16 +1929,17 @@ MonoBehaviour:
   _jumpPower: 5
   _speedRun: 10
   _speedSit: 2
-  RunCost: 1
+  RunCost: 2
   jumpCost: 4
-  MaxStamina: 20
+  MaxStamina: 100
   StaminaRegenDelay: 2
   StaminaRegenRate: 5
   StaminaBar: {fileID: 189690023}
-  StaminaFill: {fileID: 0}
+  StaminaFill: {fileID: 173347279}
+  Current_Stamina: 100
   WalkSound1: {fileID: 1917507352}
   WalkSound2: {fileID: 544525767}
-  WalkSound3: {fileID: 0}
+  WalkSound3: {fileID: 494451716}
   jumpSound: {fileID: 337730142}
   timerOfPlayerLive: 0
   MaxTimeOfPlay: 6000
@@ -4533,7 +4523,7 @@ GameObject:
   - component: {fileID: 968315975}
   - component: {fileID: 968315974}
   m_Layer: 5
-  m_Name: Fill
+  m_Name: Fill_Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7494,6 +7484,7 @@ MonoBehaviour:
   i_item: {fileID: 11400000, guid: 062dc79e1570a034ea91191c5ef3ba45, type: 2}
   amount: 1
   IsTaked: 0
+  IsTakedByPlayer: 0
 --- !u!54 &1660332281
 Rigidbody:
   m_ObjectHideFlags: 0

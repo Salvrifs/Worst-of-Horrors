@@ -27,9 +27,8 @@ public class AttackBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
-        HealthBar = GameObject.FindGameObjectWithTag("healthBar").GetComponent<Slider>();
-        //StaminaBar = GameObject.FindGameObjectWithTag("StaminaBar").GetComponent<Slider>();
-        healthCount = HealthBar.transform.GetChild(0).GetComponent<Text>();
+        HealthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         
         IsAttackUge = false;

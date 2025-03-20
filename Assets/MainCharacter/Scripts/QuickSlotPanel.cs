@@ -91,6 +91,7 @@ public class QuickSlotPanel : MonoBehaviour
                     if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
                     {
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
+
                     }
                     else
                     {
@@ -103,22 +104,48 @@ public class QuickSlotPanel : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
+            InventorySlot curr_Slot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
+            Transform curr_Item = GameObject.Find(curr_Slot.is_item.name).transform; 
+            Debug.Log($"PLAYYYYYYYYYYEEEEEEERRRR: {curr_Item.name}");
+            if (curr_Item != null)
             {
-                GameObject itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
+              
+                //GameObject itemObject = Instantiate(Curr_Slot.is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
+                curr_Item.position = player.position + Vector3.up + player.forward;
+                curr_Item.rotation = Quaternion.identity;
+                MakeVisible(curr_Item);
 
-                if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
+                if (curr_Slot.amount <= 1)
                 {
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
                 }
                 else
                 {
-                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
-                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
+                    curr_Slot.amount--;
+                    curr_Slot.textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                 }
             }
         }
     }
+
+    private void MakeVisible(Transform currItem)
+    {
+        Renderer itemRender = currItem.GetComponent<Renderer>();
+        if (itemRender != null)
+        {
+            itemRender.enabled = true;
+        }
+
+        Collider itemCollider = currItem.GetComponent<Collider>();
+        if (itemCollider != null)
+        {
+            itemCollider.enabled = true;
+        }
+
+        currItem.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    
 
     private void ChangeCharacteristics()
     { 

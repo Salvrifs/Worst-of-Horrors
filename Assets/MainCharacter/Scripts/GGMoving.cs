@@ -1,3 +1,118 @@
+/*using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GGMoving : MonoBehaviour
+{
+
+    [SerializeField] private float _speed = 5.0f;
+    [SerializeField] private float _gravity = 9.81f;
+    [SerializeField] private float _jumpPower = 5.0f;
+    [SerializeField] private float _speedRun = 10.0f;
+    [SerializeField] private float _speedSit = 2.0f;
+
+    private Vector3 _walkDirection;
+    private Vector3 _velocity;
+    private float _speedWalk;
+    private CharacterController _characterController;
+
+    [SerializeField] private Image Fill_Stamin;
+    [SerializeField] private Slider StaminaBar;
+    [SerializeField] private float Max_Stamina;
+    [SerializeField] private float current_Stamina;
+    [SerializeField] private float costRunming;
+    [SerializeField]private float costJump;
+    private bool IsRunning;
+    
+
+    void Start()
+    {
+        _speedWalk = _speed;
+        _characterController = GetComponent<CharacterController>();
+        current_Stamina = Max_Stamina;
+    }
+
+    void Update()
+    {
+        
+        float horizontal_input = Input.GetAxis("Horizontal");
+        float vertical_input = Input.GetAxis("Vertical");
+
+        _walkDirection = transform.forward * vertical_input + transform.right * horizontal_input;
+        
+
+
+
+        if (IsRunning)
+        {
+            current_Stamina -= costRunming;
+            StaminaBar.value = current_Stamina;
+        }
+
+
+
+        Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space));
+        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));
+
+    }
+
+    private void FixedUpdate()
+    {
+
+        Walk(_walkDirection);
+        Gravity(_characterController.isGrounded);
+
+    }
+
+    private void Walk(Vector3 direction)
+    {
+        _characterController.Move(direction * _speed * Time.fixedDeltaTime);
+    }
+
+    private void Gravity(bool isGrounded)
+    {
+        if (isGrounded && _velocity.y < 0)
+        {
+            _velocity.y = -1f;
+        }
+        _velocity.y -= _gravity * Time.fixedDeltaTime;
+        _characterController.Move(_velocity * Time.fixedDeltaTime);
+    }
+
+    private void Jump(bool canJump)
+    {
+        if (canJump)
+        {
+            _velocity.y = _jumpPower;
+        }
+    }
+
+    private void ChangeMoveSpeed(bool changeMoveSpeed)
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+            if (changeMoveSpeed)
+            {
+                _speed = _speedRun;
+                IsRunning = true; 
+            }
+
+            else
+            {
+                _speed = _speedWalk;
+                IsRunning = false;
+            }
+        
+        else
+        {
+            _characterController.height = changeMoveSpeed ? 1f : 2f;
+            _speed = changeMoveSpeed ? _speedSit : _speedWalk;
+        }
+        
+    }
+
+}*/
+
 using System.Collections;
 using System.Collections.Generic;
 //using Microsoft.Unity.VisualStudio.Editor;
@@ -27,6 +142,8 @@ public class GGMoving : MonoBehaviour
     [SerializeField] private float StaminaRegenRate = 5f;
     [SerializeField] private Slider StaminaBar; // Должен быть настроен как горизонтальный Slider
     [SerializeField] private Image StaminaFill; // Ссылка на Image типа Fill
+    [SerializeField] private float Current_Stamina;
+
 
     [Header("Audio Settings")]
     public AudioSource WalkSound1;
@@ -39,7 +156,7 @@ public class GGMoving : MonoBehaviour
     [SerializeField] private float MaxTimeOfPlay = 6000f;
 
 
-    private float Current_Stamina;
+    
     private float NumOfSound;
     private Vector3 _walkDirection;
     private Vector3 _velocity;
@@ -56,7 +173,7 @@ public class GGMoving : MonoBehaviour
         _speedWalk = _speed;
         _characterController = GetComponent<CharacterController>();
         Current_Stamina = MaxStamina;
-        StaminaBar.enabled = false;
+        StaminaBar.gameObject.SetActive(false);
         
     }
 
@@ -162,6 +279,11 @@ public class GGMoving : MonoBehaviour
             regenCoroutine = StartCoroutine(RegenStamina());
         }
 
+        if (Current_Stamina < RunCost)
+        {
+            isSprinting = false;
+        }
+        
         Current_Stamina = Math.Clamp(Current_Stamina, 0, MaxStamina);
     }
     //
@@ -193,7 +315,7 @@ public class GGMoving : MonoBehaviour
         staminaCG.alpha = Mathf.Lerp(staminaCG.alpha, targetAlpha, Time.deltaTime * 5f);
 
         // Изменение цвета
-        StaminaFill.color = Current_Stamina <= 17f ?
+        StaminaFill.color = Current_Stamina <= 26f ?
             Color.Lerp(StaminaFill.color, Color.red, Time.deltaTime * 5f) :
             Color.Lerp(StaminaFill.color, Color.white, Time.deltaTime * 5f);
 
