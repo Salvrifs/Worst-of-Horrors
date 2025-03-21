@@ -192,10 +192,11 @@ public class GGMoving : MonoBehaviour
 
         _walkDirection = transform.forward * vertical_input + transform.right * horizontal_input;
 
-        Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space));
-        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));
         HandleStamina();
-        UpdateStaminaUI();        
+        UpdateStaminaUI();    
+        Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space) && Current_Stamina >= jumpCost);
+        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));
+            
     }
 
     private void FixedUpdate()
@@ -230,10 +231,15 @@ public class GGMoving : MonoBehaviour
     {
         if (canJump)
         {
+            if (regenCoroutine != null)
+            {
+                StopCoroutine(regenCoroutine);
+                regenCoroutine = null;
+            }
+
             jumpSound.Play();
             _velocity.y = _jumpPower;
-            Current_Stamina -= jumpCost*Time.deltaTime;
-
+            Current_Stamina -= jumpCost;
         }
 
 
@@ -246,7 +252,7 @@ public class GGMoving : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             StaminaBar.enabled = true;
-            _speed = changeMoveSpeed ? _speedRun : _speedWalk;
+            _speed = (changeMoveSpeed && isSprinting) ? _speedRun : _speedWalk;
             isSprinting = true;
         }
         
@@ -262,9 +268,14 @@ public class GGMoving : MonoBehaviour
     //
     private void HandleStamina()
     {
-        if (isSprinting && _characterController.isGrounded)
+        if (Current_Stamina < RunCost)
         {
-            Current_Stamina -= RunCost*Time.deltaTime;
+            isSprinting = false;
+        }
+
+        if (isSprinting)
+        {
+            Current_Stamina -= RunCost;
             StaminaBar.gameObject.SetActive(true);
 
             if (regenCoroutine != null)
@@ -274,15 +285,12 @@ public class GGMoving : MonoBehaviour
             }
         }
 
-        else if (Current_Stamina < MaxStamina && regenCoroutine == null)
+        else if (Current_Stamina < MaxStamina && regenCoroutine == null && !isSprinting)
         {
             regenCoroutine = StartCoroutine(RegenStamina());
         }
 
-        if (Current_Stamina < RunCost)
-        {
-            isSprinting = false;
-        }
+        
         
         Current_Stamina = Math.Clamp(Current_Stamina, 0, MaxStamina);
     }
