@@ -11,28 +11,27 @@ public class Sounds : MonoBehaviour
     [SerializeField] private Slider Slider_Monster;
     [SerializeField] private Slider Slider_Player;
     [SerializeField] private Slider Slider_Effect;
+    [SerializeField] private GameObject Main_Menu;
+    [SerializeField] private GameObject Options_Menu;
+
     
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("musicVolume"))
-        {
-            LoadVolumeMusic();
-            LoadVolumeMonster();
-            LoadPlayerVolume();
-            LoadEffectVolume();
-            LoadMainVolume();
-        }
 
-        else
-        {
-            SetMusicVolume();
-            SetMonsterVolume();
-            SetPlayerVolume();
-            SetEffectVolume();
-            SetMainVolume();
-        } 
+       LoadSoundsOptions(); 
     }
+
+    //Загрузка данных звуков
+    public void LoadSoundsOptions()
+    {
+        LoadMainVolume();
+        LoadVolumeMusic();
+        LoadVolumeMonster();
+        LoadPlayerVolume();
+        LoadEffectVolume();
+    }
+
     //
     //Установка громкости музыки
     //
@@ -47,8 +46,17 @@ public class Sounds : MonoBehaviour
     //
     private void LoadVolumeMusic()
     {
-        Slider_Music.value = PlayerPrefs.GetFloat("musicVolume");
-        SetMusicVolume();
+        if (PlayerPrefs.HasKey("musicVolume"))
+        {
+            Slider_Music.value = PlayerPrefs.GetFloat("musicVolume");
+            SetMusicVolume();
+        }
+
+        else
+        {
+            Slider_Music.value = 50;
+            SetMusicVolume();
+        }
     }
     //
     //Громкость монстра
@@ -64,8 +72,17 @@ public class Sounds : MonoBehaviour
     //
     private void LoadVolumeMonster()
     {
-        Slider_Monster.value = PlayerPrefs.GetFloat("MonsterVolume");
-        SetMonsterVolume();
+        if (PlayerPrefs.HasKey("MonsterVolume"))
+        {
+            Slider_Monster.value = PlayerPrefs.GetFloat("MonsterVolume");
+            SetMonsterVolume();
+        }
+
+        else
+        {
+            Slider_Monster.value = 50;
+            SetMonsterVolume();
+        }
     }
     //
     //Громкость игрока
@@ -81,15 +98,24 @@ public class Sounds : MonoBehaviour
     //
     private void LoadPlayerVolume()
     {
-        Slider_Player.value = PlayerPrefs.GetFloat("PlayerVolume");
-        SetPlayerVolume();
+        if (PlayerPrefs.HasKey("PlayerVolume"))
+        {
+            Slider_Player.value = PlayerPrefs.GetFloat("PlayerVolume");
+            SetPlayerVolume();
+        }
+        
+        else
+        {
+            Slider_Player.value = 50;
+            SetPlayerVolume();
+        }
     }
     //
     //Громкость звуков эффектов
     //
     public void SetEffectVolume()
     {
-        float volume_effect = Slider_Monster.value;
+        float volume_effect = Slider_Effect.value;
         myMixer.SetFloat("Effect", volume_effect);
         PlayerPrefs.SetFloat("EffectVolume", volume_effect);
     } 
@@ -98,24 +124,76 @@ public class Sounds : MonoBehaviour
     //
     private void LoadEffectVolume()
     {
-        Slider_Main.value = PlayerPrefs.GetFloat("EffectVolume");
-        SetEffectVolume();
+        if (PlayerPrefs.HasKey("EffectVolume"))
+        {
+            Slider_Effect.value = PlayerPrefs.GetFloat("EffectVolume");
+            SetEffectVolume();
+        }
+        
+        else
+        {
+            Slider_Effect.value = 50;
+            SetEffectVolume();
+        }
     }
     //
     //Громкость звуков основная
     //
     public void SetMainVolume()
     {
-        float volume_player = Slider_Monster.value;
-        myMixer.SetFloat("Main", volume_player);
-        PlayerPrefs.SetFloat("MainVolume", volume_player);
+        float volume_main = Slider_Main.value;
+        myMixer.SetFloat("Master", volume_main);
+        PlayerPrefs.SetFloat("MainVolume", volume_main);
     } 
     //
     //Установка главных звуков 
     //
     private void LoadMainVolume()
     {
-        Slider_Player.value = PlayerPrefs.GetFloat("MainVolume");
-        SetPlayerVolume();
+        if (PlayerPrefs.HasKey("MainVolume"))
+        {
+            Slider_Main.value = PlayerPrefs.GetFloat("MainVolume");
+            SetPlayerVolume();
+        }
+
+        else
+        {
+            Slider_Main.value = 50;
+            SetPlayerVolume();
+        }
     }
+
+    //
+    //Кнопка сохранения
+    //
+    public void Save_Button()
+    {
+        SetMainVolume();
+        SetMusicVolume();
+        SetEffectVolume();
+        SetMonsterVolume();
+        SetPlayerVolume();
+
+        gameObject.SetActive(false);
+        Main_Menu.SetActive(true);
+    }
+
+    //
+    //Кнопка выхода в паузу
+    //
+    public void Quit_Button()
+    {
+        gameObject.SetActive(false);
+        Main_Menu.SetActive(true);
+    }
+
+    //
+    //Кнопка перехода к настройкам
+    //
+    public void To_Options_Button()
+    {
+        gameObject.SetActive(false);
+        Options_Menu.SetActive(true);
+    }
+
 }

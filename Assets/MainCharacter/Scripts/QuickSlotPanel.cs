@@ -12,6 +12,8 @@ public class QuickSlotPanel : MonoBehaviour
     public Sprite notSelectedSprite;
     private Transform player;
 
+    [SerializeField] private Slider HealthBar;
+
     public Text healthText;
 
     private void Start()
@@ -152,7 +154,9 @@ public class QuickSlotPanel : MonoBehaviour
         if (int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.changeHealth <= 100)
         {
             float newHealth = int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.changeHealth;
+            Mathf.Lerp(newHealth, 0, 100);
             healthText.text = newHealth.ToString();
+            HealthBar.value = newHealth;
         }
         else
         {

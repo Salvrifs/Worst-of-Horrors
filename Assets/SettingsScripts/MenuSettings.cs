@@ -9,13 +9,16 @@ public class MenuSettings : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown resolutionsDropdown;
     [SerializeField] private TMP_Dropdown qualityDropdown;
-    [SerializeField] private GameObject Settings_Menu;
-    [SerializeField] private GameObject MainMenu;
+    //[SerializeField] private GameObject Options_Menu;
+    [SerializeField] private GameObject Main_Menu;
+    [SerializeField] private GameObject SoundsOptions_Menu;
 
     Resolution[] resolutions;
 
     void Start()
     {
+        //Options_Menu.SetActive(false);
+
         resolutionsDropdown.ClearOptions();
         List<string> options = new List<string>();
         resolutions = Screen.resolutions;
@@ -36,7 +39,7 @@ public class MenuSettings : MonoBehaviour
     }
 
     //
-    //установка разрешения
+    //Установка разрешения
     //
     public void SetResolution(int resolutionIndex)
     {
@@ -57,14 +60,25 @@ public class MenuSettings : MonoBehaviour
     {
         Screen.fullScreen = isFullScreen;
     }
+
     //
-    //выход из меню настроек
+    //Выход из меню настроек
     //
-    public void QuitButton()
+    public void Quit_Button()
     {
-        Settings_Menu.SetActive(false);
-        MainMenu.SetActive(true);
-    } 
+        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        Main_Menu.SetActive(true);
+    }
+    //
+    //Кнопка в настрйки звуков
+    //
+    public void ToSoundOptions_Button()
+    {
+        gameObject.SetActive(false);
+        SoundsOptions_Menu.SetActive(true);
+    }
+
     //
     //Сохранение настроек
     //
@@ -73,8 +87,9 @@ public class MenuSettings : MonoBehaviour
         PlayerPrefs.SetInt("QualitySettingsPref", qualityDropdown.value);
         PlayerPrefs.SetInt("ResolutionSettingsPref", resolutionsDropdown.value);
         PlayerPrefs.SetInt("FullScreenSettingsPref", Convert.ToInt32(Screen.fullScreen));
-        Settings_Menu.SetActive(false);
-        MainMenu.SetActive(true);
+        //Options_Menu.SetActive(false);
+        gameObject.SetActive(false);
+        Main_Menu.SetActive(true);
     }
     //
     //Применение/загрузка настроек
@@ -111,9 +126,8 @@ public class MenuSettings : MonoBehaviour
         {
             Screen.fullScreen = true;
         }
-
-
     }
+    
     
     // Update is called once per frame
     void Update()
