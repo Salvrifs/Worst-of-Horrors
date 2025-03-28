@@ -105,7 +105,14 @@ public class CollectingNPC : MonoBehaviour
             HandleItemDropping(Distance);
         }
     }
-
+    void FixedUpdate()
+    {
+        // Обновление анимаций только если не в процессе кражи
+        if (!IsHolding || !isRunningAway)
+        {
+            UpdateMovementAnimations();
+        }
+    }
     //
     //Инициализация предметов
     //
@@ -486,7 +493,7 @@ public class CollectingNPC : MonoBehaviour
         m_animator.SetBool("IsWalking", true);
         GenerateDropOffPoint();
         m_agent.SetDestination(DropOffPoint);
-        Debug.Log($"{m_agent.name}: Движение к точке сброса на позицию {DropOffPoint}");
+        //Debug.Log($"{m_agent.name}: Движение к точке сброса на позицию {DropOffPoint}");
     }
 
     //
@@ -663,12 +670,5 @@ public class CollectingNPC : MonoBehaviour
     }
 }
 
-void FixedUpdate()
-{
-    // Обновление анимаций только если не в процессе кражи
-    if (!IsHolding || !isRunningAway)
-    {
-        UpdateMovementAnimations();
-    }
-}
+
 }

@@ -1,118 +1,3 @@
-/*using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-
-public class GGMoving : MonoBehaviour
-{
-
-    [SerializeField] private float _speed = 5.0f;
-    [SerializeField] private float _gravity = 9.81f;
-    [SerializeField] private float _jumpPower = 5.0f;
-    [SerializeField] private float _speedRun = 10.0f;
-    [SerializeField] private float _speedSit = 2.0f;
-
-    private Vector3 _walkDirection;
-    private Vector3 _velocity;
-    private float _speedWalk;
-    private CharacterController _characterController;
-
-    [SerializeField] private Image Fill_Stamin;
-    [SerializeField] private Slider StaminaBar;
-    [SerializeField] private float Max_Stamina;
-    [SerializeField] private float current_Stamina;
-    [SerializeField] private float costRunming;
-    [SerializeField]private float costJump;
-    private bool IsRunning;
-    
-
-    void Start()
-    {
-        _speedWalk = _speed;
-        _characterController = GetComponent<CharacterController>();
-        current_Stamina = Max_Stamina;
-    }
-
-    void Update()
-    {
-        
-        float horizontal_input = Input.GetAxis("Horizontal");
-        float vertical_input = Input.GetAxis("Vertical");
-
-        _walkDirection = transform.forward * vertical_input + transform.right * horizontal_input;
-        
-
-
-
-        if (IsRunning)
-        {
-            current_Stamina -= costRunming;
-            StaminaBar.value = current_Stamina;
-        }
-
-
-
-        Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space));
-        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));
-
-    }
-
-    private void FixedUpdate()
-    {
-
-        Walk(_walkDirection);
-        Gravity(_characterController.isGrounded);
-
-    }
-
-    private void Walk(Vector3 direction)
-    {
-        _characterController.Move(direction * _speed * Time.fixedDeltaTime);
-    }
-
-    private void Gravity(bool isGrounded)
-    {
-        if (isGrounded && _velocity.y < 0)
-        {
-            _velocity.y = -1f;
-        }
-        _velocity.y -= _gravity * Time.fixedDeltaTime;
-        _characterController.Move(_velocity * Time.fixedDeltaTime);
-    }
-
-    private void Jump(bool canJump)
-    {
-        if (canJump)
-        {
-            _velocity.y = _jumpPower;
-        }
-    }
-
-    private void ChangeMoveSpeed(bool changeMoveSpeed)
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-            if (changeMoveSpeed)
-            {
-                _speed = _speedRun;
-                IsRunning = true; 
-            }
-
-            else
-            {
-                _speed = _speedWalk;
-                IsRunning = false;
-            }
-        
-        else
-        {
-            _characterController.height = changeMoveSpeed ? 1f : 2f;
-            _speed = changeMoveSpeed ? _speedSit : _speedWalk;
-        }
-        
-    }
-
-}*/
-
 using System.Collections;
 using System.Collections.Generic;
 //using Microsoft.Unity.VisualStudio.Editor;
@@ -123,9 +8,27 @@ using Unity.VisualScripting;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Leguar.LowHealth;
 
 public class GGMoving : MonoBehaviour
 {
+    [Header("Shader Effects")]
+    [SerializeField] [Range(0, 1)] private float maxVisionLoss = 0.7f;
+    [SerializeField] [Range(0, 1)] private float maxDetailLoss = 0.5f;
+    [SerializeField] [Range(0, 1)] private float maxColorLoss = 1f;
+    [SerializeField] [Range(0, 1)] private float maxDoubleVision = 0.4f;
+
+    [Header("Infection Settings")]
+    [SerializeField] private float infectionDuration = 0.3f * 60f; // 15 minutes
+    [SerializeField] private float npcAvoidanceDuration = 0.5f * 60f; 
+    [SerializeField] private float mutationDuration = 0.7f * 60f; 
+    private bool isInfected = false;
+    private bool isMutated = false;
+    private float originalSpeed;
+    private float originalJumpPower;
+    public LowHealthDirectAccess shaderAccessScript;
+    public LowHealthController shaderControllerScript;
+    [SerializeField] private Image infectionEffectImage;
 
     [Header("Movement Settings")]
     [SerializeField] private float _speed = 5.0f;
@@ -140,8 +43,8 @@ public class GGMoving : MonoBehaviour
     [SerializeField] private float MaxStamina = 50f;
     [SerializeField] private float StaminaRegenDelay = 2f;
     [SerializeField] private float StaminaRegenRate = 5f;
-    [SerializeField] private Slider StaminaBar; // Должен быть настроен как горизонтальный Slider
-    [SerializeField] private Image StaminaFill; // Ссылка на Image типа Fill
+    [SerializeField] private Slider StaminaBar; 
+    [SerializeField] private Image StaminaFill; 
     [SerializeField] private float Current_Stamina;
 
 
@@ -153,10 +56,14 @@ public class GGMoving : MonoBehaviour
 
     [Header("Player Life Settings")]
     public float timerOfPlayerLive;
+    //[SerializeField] private Text healthCount;
     [SerializeField] private float MaxTimeOfPlay = 6000f;
 
 
-    
+    private float wakingUp1;
+	private float wakingUp2;
+	private float takingDamage;
+    private float beingDizzy;
     private float NumOfSound;
     private Vector3 _walkDirection;
     private Vector3 _velocity;
@@ -170,11 +77,13 @@ public class GGMoving : MonoBehaviour
 
     void Start()
     {
+        shaderControllerScript.SetPlayerHealthSmoothly(1f, 1f); // 40% здоровья
         _speedWalk = _speed;
         _characterController = GetComponent<CharacterController>();
         Current_Stamina = MaxStamina;
         StaminaBar.gameObject.SetActive(false);
-        
+        StartCoroutine(InfectionTimer());
+        infectionEffectImage.color = new Color(1, 0, 0, 0);
     }
 
     void Update()
@@ -195,8 +104,7 @@ public class GGMoving : MonoBehaviour
         HandleStamina();
         UpdateStaminaUI();    
         Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space) && Current_Stamina >= jumpCost);
-        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));
-            
+        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));   
     }
 
     private void FixedUpdate()
@@ -369,4 +277,127 @@ public class GGMoving : MonoBehaviour
             }
         }
     }
+    //
+    //таймер инфекции
+    //
+    private IEnumerator InfectionTimer()
+    {
+        Debug.Log($"currentTime InfectionTimer: {timerOfPlayerLive}" );
+        yield return new WaitForSeconds(infectionDuration);
+        Debug.Log($"currentTime InfectionTimer: {timerOfPlayerLive}" );
+        if (!isInfected)
+        {
+            Debug.Log("AAAAAA");
+            StartCoroutine(ApplyInfectionEffects());
+            InfectionPlayer();
+        }
+    }
+    //
+    //Инфекция игрока по истечении времени
+    //
+    private void InfectionPlayer()
+{
+    Debug.Log($"Time: {timerOfPlayerLive} InfectionPlayer 40f");
+    isInfected = true;
+    _speed *= 0.75f;
+    _jumpPower *= 0.75f; 
+    shaderControllerScript.SetPlayerHealthSmoothly(0.4f, 1f); // 40% здоровья
+    StartCoroutine(NPCAvoidanceTimer());
 }
+    //
+    //Таймер чтобы игрока не трогали NPC
+    //
+    private IEnumerator NPCAvoidanceTimer()
+{
+    yield return new WaitForSeconds(npcAvoidanceDuration);
+    
+    Debug.Log($"Time: {timerOfPlayerLive} Avoidance 20f");
+    shaderControllerScript.SetPlayerHealthSmoothly(0.2f, 1f); // 20% здоровья
+    transform.tag = "noPlayerMore";
+    StartCoroutine(MutationTimer());
+}
+    //
+    //Таймер мутации
+    //
+    private IEnumerator MutationTimer()
+{
+    yield return new WaitForSeconds(mutationDuration);
+    if (isInfected)
+    {
+        PerformMutation();
+    }
+}
+    //
+    //Исполнение мутации
+    //
+    private void PerformMutation()
+{
+    isMutated = true;
+    shaderControllerScript.SetPlayerHealthSmoothly(0.1f, 1f); // 10% здоровья
+
+
+
+
+        // Шейдерные эффекты
+        /*shaderAccessScript.colorLossEffect = 1f;
+        shaderAccessScript.colorLossTowardRed = 1f;
+        shaderAccessScript.visionLossEffect = 0.8f;
+        shaderAccessScript.detailLossEffect = 0.6f;
+        shaderAccessScript.doubleVisionEffect = 0.5f;
+        shaderAccessScript.UpdateShaderProperties();
+
+        // Визуальные изменения
+       // _characterController.height = 1f;
+        //infectionEffectImage.color = new Color(1, 0, 0, 0.3f); */
+}    
+
+    
+
+    //
+    //Эффекты мутаций
+    //
+
+
+    
+    //
+    //              ВСПОМОГАТЕЛЬНАЯ
+    //Для эффектов
+    //
+    private float smoothCurve(float time) {
+			if (time>=1f) {
+				return 0f;
+			}
+			float t;
+			if (time<0.1f) {
+				t = time*5f;
+			} else {
+				t = 0.5f+(time-0.1f)/0.9f*0.5f;
+			}
+			float sin = Mathf.Sin(Mathf.PI*t);
+			return sin;
+		}
+        private IEnumerator ApplyInfectionEffects()
+    {
+        float elapsedTime = 0f;
+        float startVision = shaderAccessScript.visionLossEffect;
+        float startDetail = shaderAccessScript.detailLossEffect;
+        float startColor = shaderAccessScript.colorLossEffect;
+        float startDouble = shaderAccessScript.doubleVisionEffect;
+
+        while (elapsedTime < infectionDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / infectionDuration;
+
+            shaderAccessScript.visionLossEffect = Mathf.Lerp(startVision, maxVisionLoss, t);
+            shaderAccessScript.detailLossEffect = Mathf.Lerp(startDetail, maxDetailLoss, t);
+            shaderAccessScript.colorLossEffect = Mathf.Lerp(startColor, maxColorLoss, t);
+            shaderAccessScript.doubleVisionEffect = Mathf.Lerp(startDouble, maxDoubleVision, t);
+            
+            shaderAccessScript.UpdateShaderProperties();
+            yield return null;
+        }
+    }
+    
+}
+
