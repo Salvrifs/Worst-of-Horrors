@@ -7,14 +7,17 @@ using TMPro;
 
 public class MenuSettings : MonoBehaviour
 {
+    [Header ("-------------\nDropDowns\n-------------")]
     [SerializeField] private TMP_Dropdown resolutionsDropdown;
     [SerializeField] private TMP_Dropdown qualityDropdown;
-    //[SerializeField] private GameObject Options_Menu;
+    
+    [Header ("-------------\nMenu_Panels\n-------------")]
+
     [SerializeField] private GameObject Main_Menu;
     [SerializeField] private GameObject SoundsOptions_Menu;
-
+    
     Resolution[] resolutions;
-
+    int currentResolutionIndex;
     void Start()
     {
         //Options_Menu.SetActive(false);
@@ -22,7 +25,7 @@ public class MenuSettings : MonoBehaviour
         resolutionsDropdown.ClearOptions();
         List<string> options = new List<string>();
         resolutions = Screen.resolutions;
-        int currentResolutionIndex = 0;
+        currentResolutionIndex = 0;
 
         for (int i = 0; i < resolutions.Length; ++i)
         {
@@ -37,6 +40,8 @@ public class MenuSettings : MonoBehaviour
         resolutionsDropdown.RefreshShownValue();
         LoadSettings(currentResolutionIndex);
     }
+
+    
 
     //
     //Установка разрешения
@@ -66,9 +71,10 @@ public class MenuSettings : MonoBehaviour
     //
     public void Quit_Button()
     {
+        LoadSettings(currentResolutionIndex);
         gameObject.SetActive(false);
-        //gameObject.SetActive(false);
         Main_Menu.SetActive(true);
+        
     }
     //
     //Кнопка в настрйки звуков

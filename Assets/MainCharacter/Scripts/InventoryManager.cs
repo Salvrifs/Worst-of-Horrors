@@ -36,7 +36,7 @@ public class InventoryManager : MonoBehaviour
 
                 if (item != null)
                 {
-                    AddItem(item.i_item, item.amount);
+                    AddItem(item, item.amount);
                     VanishMode(hit.collider.gameObject);
                     hit.collider.gameObject.transform.SetParent(Player);
                     Vector3 playerPosition = Player.position; 
@@ -46,7 +46,7 @@ public class InventoryManager : MonoBehaviour
         } 
     }
 
-    private void AddItem(ItemScriptableObject _item, int _amount = 1)
+    private void AddItem(Item _item, int _amount = 1)
     {
         foreach (InventorySlot slot in slots)
         {
@@ -55,13 +55,16 @@ public class InventoryManager : MonoBehaviour
                 slot.is_item = _item;
                 slot.amount = _amount;
                 slot.isEmpty = false;
-                slot.SetIcon(_item.icon);
+                slot.SetIcon(_item.i_item.icon);
                 slot.textItemAmount.text = _amount.ToString();
                 return;
             }
         }
     }
-
+    //
+    //              ВСПОМОГАТЕЛЬНАЯ
+    //Сделать невидимым (когда происходит подбор предмета)
+    //
     void VanishMode(GameObject obj)
     {
         Renderer itemRender = obj.GetComponent<Renderer>();

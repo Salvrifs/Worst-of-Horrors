@@ -3158,6 +3158,7 @@ MonoBehaviour:
   cameraController: {fileID: 963194229}
   infoPanel: {fileID: 993846721}
   SettingsPanel: {fileID: 776264532}
+  SoundPanel: {fileID: 728304187}
 --- !u!1001 &335312303
 PrefabInstance:
   m_ObjectHideFlags: 0

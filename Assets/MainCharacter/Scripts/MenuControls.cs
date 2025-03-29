@@ -10,27 +10,34 @@ public class NewBehaviourScript : MonoBehaviour
     public GGCameraMoving cameraController;
     public GameObject infoPanel;
     [SerializeField] private GameObject SettingsPanel;
-
+    [SerializeField] private GameObject SoundPanel;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!Menu.activeSelf)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Menu.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                Time.timeScale = 0f;
-                cameraController.SetControlEnabled(false);
-                
-            }
-            else
-            {
-                Menu.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                Time.timeScale = 1f;
-                cameraController.SetControlEnabled(true);
+                if (!Menu.activeSelf && !SettingsPanel.activeSelf && !SoundPanel.activeSelf)
+                {
+                    MenuActivate(!Menu.activeSelf);
+                }
+
+                else if (!Menu.activeSelf && SettingsPanel.activeSelf && !SoundPanel.activeSelf)
+                {
+                    SettingsPanel.SetActive(false);
+                    MenuActivate(!Menu.activeSelf);
+                }
+
+                else if (!Menu.activeSelf && !SettingsPanel.activeSelf && SoundPanel.activeSelf)
+                {
+                    SoundPanel.SetActive(false);
+                    MenuActivate(!Menu.activeSelf);
+                }
+
+                else 
+                {
+                    MenuActivate(!Menu.activeSelf);
+                }
             }
         }
 
@@ -39,6 +46,19 @@ public class NewBehaviourScript : MonoBehaviour
             infoPanel.SetActive(!infoPanel.activeSelf);
         }
     }
+
+    //
+    //Управление меню
+    //
+    private void MenuActivate(bool activeOrNot)
+    {
+        Menu.SetActive(activeOrNot);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0f;
+        cameraController.SetControlEnabled(false);
+    }
+
     //
     //Нажать кнопку "Играть" в главном меню
     //

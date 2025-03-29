@@ -30,14 +30,14 @@ public class GGMoving : MonoBehaviour
     public LowHealthController shaderControllerScript;
     [SerializeField] private Image infectionEffectImage;
 
-    [Header("Movement Settings")]
+    [Header("\t==============\n\tMovement Settings\n\t==============")]
     [SerializeField] private float _speed = 5.0f;
     [SerializeField] private float _gravity = 9.81f;
     [SerializeField] private float _jumpPower = 5.0f;
     [SerializeField] private float _speedRun = 10.0f;
     [SerializeField] private float _speedSit = 2.0f;
 
-    [Header("Stamina Settings")]
+    [Header("\t==============\n\tStamina Settings\n\t==============")]
     [SerializeField] private float RunCost = 2f;
     [SerializeField] private float jumpCost = 4f;
     [SerializeField] private float MaxStamina = 50f;
@@ -48,13 +48,13 @@ public class GGMoving : MonoBehaviour
     [SerializeField] private float Current_Stamina;
 
 
-    [Header("Audio Settings")]
+    [Header("\t==============\n\tAudio Settings\n\t==============")]
     public AudioSource WalkSound1;
     public AudioSource WalkSound2;
     public AudioSource WalkSound3;
     public AudioSource jumpSound;
 
-    [Header("Player Life Settings")]
+    [Header("\t==============\n\tPlayer Life Settings\n\t==============")]
     public float timerOfPlayerLive;
     //[SerializeField] private Text healthCount;
     [SerializeField] private float MaxTimeOfPlay = 6000f;
