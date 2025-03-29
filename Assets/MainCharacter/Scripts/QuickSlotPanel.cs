@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,9 @@ public class QuickSlotPanel : MonoBehaviour
     public Sprite selectedSprite;
     public Sprite notSelectedSprite;
     private Transform player;
-
-    [SerializeField] private Slider HealthBar;
-
+     [SerializeField] private Slider HealthBar;
     public Text healthText;
+    public static event Action<ItemScriptableObject> OnItemUsed;
 
     private void Start()
     {
@@ -80,103 +80,55 @@ public class QuickSlotPanel : MonoBehaviour
                 }
             }
         }
-        //
-        //Использование предмета
-        //
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            InventorySlot curr_slot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
-            Item curr_item = curr_slot.is_item;
-            
-            if (curr_item != null)
+            if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
             {
-                if (curr_item.i_item.isConsumeable && quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == selectedSprite)
+                if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.isConsumeable && quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == selectedSprite)
                 {
                     
                     ChangeCharacteristics();
-                    if (curr_slot.amount <= 1)
+
+                    if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
                     {
-                        curr_slot.NullifySlotData();
+                        quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
                     }
                     else
                     {
-                        curr_slot.amount--;
-                        curr_slot.textItemAmount.text = curr_slot.amount.ToString();
+                        quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
+                        quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                     }
                 }
-                Destroy(curr_item.gameObject);
             }
-
-
-            
         }
-        //
-        //Сброс предмета
-        //
+
         if (Input.GetKeyDown(KeyCode.B))
         {
-            //InventorySlot curr_Slot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
-            //Transform curr_Item = GameObject.Find(curr_Slot.is_item.name).transform; 
-            //Debug.Log($"PLAYYYYYYYYYYEEEEEEERRRR: {curr_Item.name}");
-            
-            InventorySlot curr_slot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
-            Transform curr_item = curr_slot.is_item.transform;  
-
-            if (curr_item != null)
+            if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
             {
-              
-                //GameObject itemObject = Instantiate(Curr_Slot.is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
-                curr_item.position = player.position + Vector3.up + player.forward;
-                curr_item.rotation = Quaternion.identity;
-                
-                MakeVisible(curr_item);
+                GameObject itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
 
-                if (curr_slot.amount <= 1)
+                if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
                 {
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
                 }
                 else
                 {
-                    curr_slot.amount--;
-                    curr_slot.textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
+                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
+                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                 }
-                curr_slot.is_item.IsTakedByPlayer = false;
-                Debug.Log($"Parent: {curr_slot.is_item.transform.parent}");
-                curr_slot.is_item.gameObject.transform.SetParent(null);
-                //Debug.Log($"Parent: {curr_slot.is_item.transform.parent}");
+
+                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
             }
         }
     }
-    //
-    //              ВСПОМОГАТЕЛЬНАЯ
-    //Сделать предмет видимым (для сброса предмета или кражи)
-    //
-    private void MakeVisible(Transform currItem)
-    {
-        Renderer itemRender = currItem.GetComponent<Renderer>();
-        if (itemRender != null)
-        {
-            itemRender.enabled = true;
-        }
 
-        Collider itemCollider = currItem.GetComponent<Collider>();
-        if (itemCollider != null)
-        {
-            itemCollider.enabled = true;
-        }
-
-        currItem.GetComponent<Rigidbody>().isKinematic = false;
-    }
-
-    
-    //
-    //Изменение характеристик игрока
-    //
     private void ChangeCharacteristics()
     { 
-        if (int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.i_item.changeHealth <= 100)
+        if (int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.changeHealth <= 100)
         {
-            float newHealth = int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.i_item.changeHealth;
+            float newHealth = int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.changeHealth;
             Mathf.Lerp(newHealth, 0, 100);
             healthText.text = newHealth.ToString();
             HealthBar.value = newHealth;
@@ -185,7 +137,7 @@ public class QuickSlotPanel : MonoBehaviour
         {
             healthText.text = "100";
         }
+        quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
+        OnItemUsed?.Invoke(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item);
     }
-
-    
 }

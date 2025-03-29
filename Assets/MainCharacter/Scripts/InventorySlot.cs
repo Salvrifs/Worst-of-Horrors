@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
-    //public ItemScriptableObject is_item;
-    public Item is_item;
+    public ItemScriptableObject is_item;
     public int amount;
     public bool isEmpty = true;
     public GameObject iconGO;
@@ -27,8 +26,7 @@ public class InventorySlot : MonoBehaviour
 
     public void NullifySlotData()
     {
-        // ������� �������� InventorySlot
-        is_item.i_item = null;
+        // óáèðàåì çíà÷åíèÿ InventorySlot
         is_item = null;
         amount = 0;
         isEmpty = true;

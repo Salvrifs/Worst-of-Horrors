@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -8,46 +10,55 @@ public class InventoryManager : MonoBehaviour
     private Camera mainCamera;
     public float reachDistance = 3f;
 
-    private Transform Player;
+    public static event Action<Item> OnDestroyItem;
     void Start()
     {
         mainCamera = Camera.main;
         for (int i = 0; i < quickSlotPanel.childCount; i++) 
         {
-            InventorySlot slot = quickSlotPanel.GetChild(i).GetComponent<InventorySlot>();
-            if (slot != null)
+            if (quickSlotPanel.GetChild(i).GetComponent<InventorySlot>() != null )
             {
-                slots.Add(slot);
+                slots.Add(quickSlotPanel.GetChild(i).GetComponent<InventorySlot>());
             }
         }
-
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+        if (Input.GetKeyDown(KeyCode.E)) {
             if (Physics.Raycast(ray, out hit, reachDistance))
             {
-                Item item = hit.collider.gameObject.GetComponent<Item>();
-
-                if (item != null)
+                if (hit.collider.gameObject.GetComponent<Item>() != null)
                 {
-                    AddItem(item, item.amount);
-                    VanishMode(hit.collider.gameObject);
-                    hit.collider.gameObject.transform.SetParent(Player);
-                    Vector3 playerPosition = Player.position; 
-                    hit.collider.gameObject.transform.position = playerPosition + transform.up * 1.5f;
+                    AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
+                    hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
+                    Destroy(hit.collider.gameObject);
+
                 }
             }
         } 
     }
 
-    private void AddItem(Item _item, int _amount = 1)
+    private void AddItem(ItemScriptableObject _item, int _amount)
     {
+
+
+        foreach (InventorySlot slot in slots)
+        {
+            if (slot.is_item == _item)
+            {
+                if (slot.amount + _amount <= _item.maximumAmount)
+                {
+                    slot.amount += _amount;
+                    slot.textItemAmount.text = slot.amount.ToString();
+                    return;
+                }
+                break;
+            }
+        }
         foreach (InventorySlot slot in slots)
         {
             if (slot.isEmpty)
@@ -55,30 +66,10 @@ public class InventoryManager : MonoBehaviour
                 slot.is_item = _item;
                 slot.amount = _amount;
                 slot.isEmpty = false;
-                slot.SetIcon(_item.i_item.icon);
+                slot.SetIcon(_item.icon);
                 slot.textItemAmount.text = _amount.ToString();
-                return;
+                break;
             }
         }
-    }
-    //
-    //              ВСПОМОГАТЕЛЬНАЯ
-    //Сделать невидимым (когда происходит подбор предмета)
-    //
-    void VanishMode(GameObject obj)
-    {
-        Renderer itemRender = obj.GetComponent<Renderer>();
-        if (itemRender != null)
-        {
-            itemRender.enabled = false;
-        } 
-
-        Collider itemCollider = obj.GetComponent<Collider>();
-        if (itemCollider != null)
-        {
-            itemCollider.enabled = false;
-        }
-
-        obj.GetComponent<Rigidbody>().isKinematic = true;
     }
 }

@@ -21,4 +21,5 @@ public class ItemScriptableObject : ScriptableObject
 
     [Header("Consumable Characteristics")]
     public float changeHealth;
+    public bool IsTakedByPlayer = false;
 }
