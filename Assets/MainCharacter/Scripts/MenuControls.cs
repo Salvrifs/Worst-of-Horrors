@@ -11,6 +11,7 @@ public class NewBehaviourScript : MonoBehaviour
     public GameObject infoPanel;
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject SoundPanel;
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -20,23 +21,27 @@ public class NewBehaviourScript : MonoBehaviour
                 if (!Menu.activeSelf && !SettingsPanel.activeSelf && !SoundPanel.activeSelf)
                 {
                     MenuActivate(!Menu.activeSelf);
+                    AudioListener.pause = true;
                 }
 
                 else if (!Menu.activeSelf && SettingsPanel.activeSelf && !SoundPanel.activeSelf)
                 {
                     SettingsPanel.SetActive(false);
                     MenuActivate(!Menu.activeSelf);
+                    AudioListener.pause = true;
                 }
 
                 else if (!Menu.activeSelf && !SettingsPanel.activeSelf && SoundPanel.activeSelf)
                 {
                     SoundPanel.SetActive(false);
                     MenuActivate(!Menu.activeSelf);
+                    AudioListener.pause = true;
                 }
 
                 else 
                 {
                     MenuActivate(!Menu.activeSelf);
+                    AudioListener.pause = false;
                 }
             }
         }
@@ -76,6 +81,7 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.visible = false;
         Time.timeScale = 1f;
         cameraController.SetControlEnabled(true);
+        
     }
     //
     //Нажать кпопку "Настройки" в esc

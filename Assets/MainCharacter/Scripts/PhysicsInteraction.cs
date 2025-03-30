@@ -8,6 +8,7 @@ public class PhysicsInteraction : MonoBehaviour
     [SerializeField] private Image image1;
     [SerializeField] private Image image2;
     public GameObject TakeText;
+    private AudioListener al;
 
     private Rigidbody _hitRigidbody;
     private bool _isShooting;
@@ -19,6 +20,7 @@ public class PhysicsInteraction : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     private void Start()
     {
+        al = GetComponent<AudioListener>();
         image1.gameObject.SetActive(false);
         image2.gameObject.SetActive(false);
         _empty = new GameObject();

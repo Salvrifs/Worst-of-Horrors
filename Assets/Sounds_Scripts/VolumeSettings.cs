@@ -18,7 +18,7 @@ public class Sounds : MonoBehaviour
 
     private void Start()
     {
-
+        AudioListener.pause = true;
        LoadSoundsOptions(); 
     }
 

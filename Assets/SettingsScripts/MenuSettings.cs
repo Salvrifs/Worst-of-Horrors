@@ -21,7 +21,7 @@ public class MenuSettings : MonoBehaviour
     void Start()
     {
         //Options_Menu.SetActive(false);
-
+        AudioListener.pause = true;
         resolutionsDropdown.ClearOptions();
         List<string> options = new List<string>();
         resolutions = Screen.resolutions;
