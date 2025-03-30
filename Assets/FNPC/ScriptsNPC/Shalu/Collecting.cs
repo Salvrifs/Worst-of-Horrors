@@ -35,11 +35,11 @@ public class CollectingNPC : MonoBehaviour
     // Время и звуки
     private float timer = 0f;
     public AudioSource walkSoundS; 
-    //public AudioClip pickUpSound; 
-    //public AudioClip dropSound; 
-    public AudioClip walkSound; 
-    public AudioClip runSound; 
-    public AudioClip jumpSound; 
+    public AudioSource pickUpSound; 
+    public AudioSource dropSound; 
+    public AudioSource walkSound; 
+    public AudioSource runSound; 
+    //public AudioSource jumpSound; 
 
     [SerializeField] float escapeDuration = 15f;
 
@@ -216,14 +216,14 @@ public class CollectingNPC : MonoBehaviour
         if (!isSteal  || !CanReach(currentTarget.position) || currentTarget.parent == Player)
         {
             AttemptRandomSteal();
-            //m_animator.SetBool("AAA,MAN!");
+            m_animator.SetBool("IsRunning", true);
             MoveAwayFromPlayer();
         }
 
-        else if (isSteal && currentTarget.parent == Player)
+        else if (isSteal && currentTarget.parent.CompareTag("Player"))
         {
             NotifyStealFromPlayer();
-            //m_animator.SetTrigger("AAA,MAN!");
+            m_animator.SetTrigger("IsPicking");
             MoveAwayFromPlayer();
         }
 
@@ -352,33 +352,31 @@ public class CollectingNPC : MonoBehaviour
     //                                  ВСПОМОГАТЕЛЬНАЯ
     //Корутина побега 
    private IEnumerator EscapeBehavior()
+{
+    isRunningAway = true;
+    m_animator.SetBool(IsHolding ? "IsRunningHold" : "IsRunning", true);
+
+    float timer = 0f;
+    while (timer < escapeDuration)
     {
-        isRunningAway = true;
-        m_animator.SetBool("IsRunning", true);
+        Vector3 escapeDirection = (transform.position - Player.position).normalized;
+        Vector3 targetPosition = transform.position + escapeDirection * 10f;
         
-        float timer = 0f;
-        while (timer < escapeDuration)
+        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, 3f, NavMesh.AllAreas))
         {
-            Vector3 escapeDirection = (transform.position - Player.position).normalized;
-            Vector3 targetPosition = transform.position + escapeDirection * 10f;
-            
-            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, 3f, NavMesh.AllAreas))
-            {
-                m_agent.SetDestination(hit.position);
-            }
-            
-            timer += Time.deltaTime;
-            yield return null;
+            m_agent.SetDestination(hit.position);
         }
         
-        isRunningAway = false;
-        m_animator.SetBool("IsRunning", false);
-        
-        if (!IsHolding)
-        {
-            MoveToItem();
-        }
+        timer += Time.deltaTime;
+        yield return null;
     }
+    
+    m_animator.SetBool("IsRunning", false);
+    m_animator.SetBool("IsRunningHold", false);
+    isRunningAway = false;
+    
+    if (!IsHolding) MoveToItem();
+}
     //
     //                                  ВСПОМОГАТЕЛЬНАЯ
     //Выброс предмета/Завершение побега от игрока
@@ -405,63 +403,69 @@ public class CollectingNPC : MonoBehaviour
     //
     //Корутина
     //
-    private IEnumerator PickUpAnimationRoutine()
-    {
-        m_animator.SetBool("IsPickingUpHash", true);
-        yield return new WaitForSeconds(1f); 
-        
-        currentTarget.SetParent(m_agent.transform);
-        currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
-        currentTarget.GetComponent<Rigidbody>().isKinematic = true;
-        
-        IsHolding = true;
-        m_animator.SetBool("IsPickingUpHash", false);
+   private IEnumerator PickUpAnimationRoutine()
+{
+    m_animator.SetTrigger("IsPicking");
+    m_animator.SetBool("IsWalking", false);
+    m_animator.SetBool("IsRunning", false);
 
-        if (!isSteal)
-        {
-            //Debug.Log($"{m_agent.name}: PickUpRoutine: If");
-            MoveToDrop();
-        }
-        
-        else
-        {
-            //Debug.Log($"{m_agent.name}: PickUpRoutine: else");
-            MoveAwayFromPlayer();
-        }
+    yield return new WaitForSeconds(1.2f);
+    
+    currentTarget.SetParent(m_agent.transform);
+    currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
+    currentTarget.GetComponent<Rigidbody>().isKinematic = true;
+    
+    IsHolding = true;
+    m_animator.ResetTrigger("IsPicking");
+
+    if (!isSteal)
+    {
+        MoveToDrop();
     }
+    else
+    {
+        MoveAwayFromPlayer();
+    }
+}
 
     //
     //Движение к дропу
     //
     private void MoveToDrop()
-    {
-        m_animator.SetBool("IsWalking", true);
-        GenerateDropOffPoint();
-        m_agent.SetDestination(DropOffPoint);
-        //Debug.Log($"{m_agent.name}: Движение к точке сброса на позицию {DropOffPoint}");
-    }
+{
+    GenerateDropOffPoint();
+    m_agent.SetDestination(DropOffPoint);
+    m_animator.SetBool(IsHolding ? "IsWalkingHold" : "IsWalking", true);
+}
 
     //
     //Выброс предмета
     //
     private void DropItem()
+{
+    if (currentTarget != null)
     {
-        if (currentTarget != null)
-        {
-            m_animator.SetBool("IsDropping", true);
-            //audioSource.PlayOneShot(dropSound);
-
-            currentTarget.SetParent(null);
-            currentTarget.position = DropOffPoint;
-            IsHolding = false;
-            currentTarget.GetComponent<Item>().IsTaked = false;
-            isSteal = false;
-            currentTarget = null;
-            DropOffPoint = default;
-            StartCoroutine(StopDroppingAnimation());
-            MoveToItem();
-        }
+        StartCoroutine(DropAnimationRoutine());
     }
+}
+private IEnumerator DropAnimationRoutine()
+{
+    m_animator.SetTrigger("IsDropping");
+    
+    yield return new WaitForSeconds(0.8f);
+    
+    currentTarget.SetParent(null);
+    currentTarget.position = DropOffPoint;
+    currentTarget.GetComponent<Item>().IsTaked = false;
+    
+    IsHolding = false;
+    isSteal = false;
+    currentTarget = null;
+    DropOffPoint = default;
+    
+    m_animator.ResetTrigger("IsDropping");
+    MoveToItem();
+}
     //Немедленный выброс предмета под себя
     private void ImmediateDropItem()
     {
@@ -567,7 +571,7 @@ public class CollectingNPC : MonoBehaviour
             currentTarget.GetComponent<Item>().i_item.itemName == used_item.itemName &&
             Vector3.Distance(Player.transform.position, m_agent.transform.position) < 40f)
         {
-            //m_animator.SetTrigger("AAA,MAN!!!");
+            m_animator.SetTrigger("IsPicking");
             //AudioSource.Play("AAA");
             //yield return new WaitForSeconds(1.6f);
 
@@ -678,17 +682,36 @@ public class CollectingNPC : MonoBehaviour
     private void UpdateMovementAnimations()
 {
     bool isMoving = m_agent.velocity.magnitude > 0.1f;
-    
-    // Приоритет анимации бега
-    if (isRunningAway)
+
+    if (IsHolding)
     {
-        m_animator.SetBool("IsRunning", isMoving);
+        if (isRunningAway)
+        {
+            m_animator.SetBool("IsRunningHold", isMoving);
+            m_animator.SetBool("IsWalkingHold", false);
+        }
+        else
+        {
+            m_animator.SetBool("IsWalkingHold", isMoving);
+            m_animator.SetBool("IsRunningHold", false);
+        }
+        m_animator.SetBool("IsRunning", false);
         m_animator.SetBool("IsWalking", false);
     }
     else
     {
-        m_animator.SetBool("IsWalking", isMoving);
-        m_animator.SetBool("IsRunning", false);
+        if (isRunningAway)
+        {
+            m_animator.SetBool("IsRunning", isMoving);
+            m_animator.SetBool("IsWalking", false);
+        }
+        else
+        {
+            m_animator.SetBool("IsWalking", isMoving);
+            m_animator.SetBool("IsRunning", false);
+        }
+        m_animator.SetBool("IsRunningHold", false);
+        m_animator.SetBool("IsWalkingHold", false);
     }
 }
 
