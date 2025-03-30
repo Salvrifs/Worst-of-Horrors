@@ -1898,6 +1898,7 @@ GameObject:
   - component: {fileID: 253159572}
   - component: {fileID: 253159574}
   - component: {fileID: 253159575}
+  - component: {fileID: 253159576}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2022,6 +2023,14 @@ MonoBehaviour:
   quickSlotPanel: {fileID: 2067958980}
   slots: []
   reachDistance: 3
+--- !u!81 &253159576
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253159570}
+  m_Enabled: 1
 --- !u!1 &264325456
 GameObject:
   m_ObjectHideFlags: 0

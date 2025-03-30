@@ -41,7 +41,7 @@ public class CollectingNPC : MonoBehaviour
 
         void Start()
         {
-            audioSource = GetComponent<AudioSource>();
+            //audioSource = GetComponent<AudioSource>();
             Player = GameObject.FindGameObjectWithTag("Player").transform;
             m_agent = GetComponent<NavMeshAgent>();
             m_animator = GetComponent<Animator>();
@@ -197,8 +197,8 @@ public class CollectingNPC : MonoBehaviour
             currentTarget = null;
             IsHolding = false;
 
-            if (audioSource.isPlaying) return;
-            audioSource.PlayOneShot(dropSound);
+            //if (audioSource.isPlaying) return;
+            //audioSource.PlayOneShot(dropSound);
         }
 
         //
@@ -213,11 +213,11 @@ public class CollectingNPC : MonoBehaviour
                 //m_animator.SetBool("AAA,MAN!");
                 
                 MoveAwayFromPlayer();
-                if (audioSource.isPlaying)
+                /*if (audioSource.isPlaying)
                 {
                     return;
                 }
-                audioSource.PlayOneShot(dropSound);
+                audioSource.PlayOneShot(dropSound);*/
             }
 
             else if (isSteal && currentTarget.parent == Player)
@@ -225,11 +225,11 @@ public class CollectingNPC : MonoBehaviour
                 NotifyStealFromPlayer();
                 //m_animator.SetTrigger("AAA,MAN!");
                 MoveAwayFromPlayer();
-                if (audioSource.isPlaying)
+                /*if (audioSource.isPlaying)
                 {
                     return;
-                }
-                audioSource.PlayOneShot(dropSound);
+                }*/
+                //audioSource.PlayOneShot(dropSound);
             }
 
         }
@@ -358,7 +358,7 @@ public class CollectingNPC : MonoBehaviour
         //Корутина побега 
         private IEnumerator EscapeRoutine()
     {
-        audioSource.PlayOneShot(runSound);
+        //audioSource.PlayOneShot(runSound);
         isRunningAway = true;
         escapeTimer = 0f;
         float originalSpeed = m_agent.speed; 
@@ -462,7 +462,7 @@ public class CollectingNPC : MonoBehaviour
         private IEnumerator PickUpAnimationRoutine()
         {
             m_animator.SetBool("IsPicking", true);
-            audioSource.PlayOneShot(pickUpSound);
+            //audioSource.PlayOneShot(pickUpSound);
             yield return new WaitForSeconds(1f); 
             
             currentTarget.SetParent(m_agent.transform);

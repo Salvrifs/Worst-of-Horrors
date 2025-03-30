@@ -40,7 +40,11 @@ public class NewBehaviourScript : MonoBehaviour
 
                 else 
                 {
-                    MenuActivate(!Menu.activeSelf);
+                    Menu.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                    Time.timeScale = 1f;
+                    cameraController.SetControlEnabled(true);
                     AudioListener.pause = false;
                 }
             }
