@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class InventoryManager : MonoBehaviour
     private Camera mainCamera;
     public float reachDistance = 3f;
 
+    public static event Action<Item> OnDestroyItem;
     void Start()
     {
         mainCamera = Camera.main;
@@ -31,7 +33,10 @@ public class InventoryManager : MonoBehaviour
                 if (hit.collider.gameObject.GetComponent<Item>() != null)
                 {
                     AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
+                    hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
                     Destroy(hit.collider.gameObject);
+
                 }
             }
         } 

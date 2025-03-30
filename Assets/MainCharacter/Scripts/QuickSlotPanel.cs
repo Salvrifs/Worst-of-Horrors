@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,9 @@ public class QuickSlotPanel : MonoBehaviour
     public Sprite selectedSprite;
     public Sprite notSelectedSprite;
     private Transform player;
-
+     [SerializeField] private Slider HealthBar;
     public Text healthText;
+    public static event Action<ItemScriptableObject> OnItemUsed;
 
     private void Start()
     {
@@ -116,6 +118,8 @@ public class QuickSlotPanel : MonoBehaviour
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                 }
+
+                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
             }
         }
     }
@@ -125,11 +129,15 @@ public class QuickSlotPanel : MonoBehaviour
         if (int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.changeHealth <= 100)
         {
             float newHealth = int.Parse(healthText.text) + quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.changeHealth;
+            Mathf.Lerp(newHealth, 0, 100);
             healthText.text = newHealth.ToString();
+            HealthBar.value = newHealth;
         }
         else
         {
             healthText.text = "100";
         }
+        quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
+        OnItemUsed?.Invoke(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item);
     }
 }

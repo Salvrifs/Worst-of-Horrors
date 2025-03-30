@@ -13,7 +13,7 @@ public class ItemScriptableObject : ScriptableObject
 {
     public string itemName;
     public int maximumAmount;
-    public string itemDescription; // не используется
+    public string itemDescription; // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     public Sprite icon;
     public GameObject itemPrefab;
     public ItemType itemType;
@@ -21,4 +21,5 @@ public class ItemScriptableObject : ScriptableObject
 
     [Header("Consumable Characteristics")]
     public float changeHealth;
+    public bool IsTakedByPlayer = false;
 }
