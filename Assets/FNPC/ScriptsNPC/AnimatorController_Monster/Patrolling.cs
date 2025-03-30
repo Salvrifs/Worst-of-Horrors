@@ -15,6 +15,7 @@ public class PatrolBehaviour : StateMachineBehaviour
     Transform EnemyEye;
     Transform currentTarget;
     //float ChaseDist = 5f;
+    [SerializeField] AudioSource PatrollingSound;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -31,6 +32,8 @@ public class PatrolBehaviour : StateMachineBehaviour
         m_agent.SetDestination(m_Points[0].position);
         m_player = GameObject.FindGameObjectWithTag("Player").transform; 
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
+        PatrollingSound = GameObject.Find("MonsterPatrolling").GetComponent<AudioSource>();
+        PatrollingSound.Play();
     }
 
    
@@ -60,14 +63,24 @@ public class PatrolBehaviour : StateMachineBehaviour
             animator.SetBool("IsPatrolling", false);
     }
 
-    
+    if (PatrollingSound.isPlaying)
+    {
+        return;
+    }
+
+    PatrollingSound.Play();
 }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         m_agent.SetDestination(m_agent.transform.position);
+        if (PatrollingSound.isPlaying)
+        {
+            PatrollingSound.Stop();
+        }
     }
+
 
 //Установка направления до следующей точке
  private void SetNextDestination()

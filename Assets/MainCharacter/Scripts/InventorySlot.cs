@@ -26,7 +26,7 @@ public class InventorySlot : MonoBehaviour
 
     public void NullifySlotData()
     {
-        // убираем значения InventorySlot
+        // ГіГЎГЁГ°Г ГҐГ¬ Г§Г­Г Г·ГҐГ­ГЁГї InventorySlot
         is_item = null;
         amount = 0;
         isEmpty = true;
