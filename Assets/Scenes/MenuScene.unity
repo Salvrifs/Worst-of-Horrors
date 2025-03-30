@@ -2099,6 +2099,7 @@ MonoBehaviour:
   cameraController: {fileID: 0}
   infoPanel: {fileID: 0}
   SettingsPanel: {fileID: 49772682}
+  SoundPanel: {fileID: 0}
 --- !u!1 &502590223
 GameObject:
   m_ObjectHideFlags: 0
