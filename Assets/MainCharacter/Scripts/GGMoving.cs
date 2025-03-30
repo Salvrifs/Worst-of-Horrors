@@ -19,9 +19,9 @@ public class GGMoving : MonoBehaviour
     [SerializeField] [Range(0, 1)] private float maxDoubleVision = 0.4f;
 
     [Header("Infection Settings")]
-    [SerializeField] private float infectionDuration = 0.3f * 60f; // 15 minutes
-    [SerializeField] private float npcAvoidanceDuration = 0.5f * 60f; 
-    [SerializeField] private float mutationDuration = 0.7f * 60f; 
+    [SerializeField] private float infectionDuration = 15f * 60f; // 15 minutes
+    [SerializeField] private float npcAvoidanceDuration = 20f * 60f; 
+    [SerializeField] private float mutationDuration = 30f * 60f; 
     private bool isInfected = false;
     private bool isMutated = false;
     private float originalSpeed;
