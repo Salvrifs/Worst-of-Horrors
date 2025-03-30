@@ -10,7 +10,8 @@ public class RunBehaviour : StateMachineBehaviour
     //float ChasingRadius = 5f;
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 130f;
-    float ViewDistance = 75f;
+    [SerializeField] float ViewDistance = 75f;
+    [SerializeField] AudioSource ChasingSound;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -20,6 +21,8 @@ public class RunBehaviour : StateMachineBehaviour
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         //Debug.Log($"Run: {player.name}");
+        ChasingSound = GameObject.Find("MonsterChasing").GetComponent<AudioSource>();
+        ChasingSound.Play();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -49,11 +52,20 @@ public class RunBehaviour : StateMachineBehaviour
             
         }
 
+        if (ChasingSound.isPlaying)
+        {
+            return;
+        }
+        ChasingSound.Play();
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (ChasingSound.isPlaying)
+        {
+            ChasingSound.Stop();
+        }
         m_agent.SetDestination(m_agent.transform.position);
         
     }

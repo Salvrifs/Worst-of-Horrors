@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 3568398053166638294}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 724.7135, y: 106.81998, z: 1062.269}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -122,6 +122,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   i_item: {fileID: 11400000, guid: aa64db810826a764a825991822787b3a, type: 2}
   amount: 1
+  IsTaked: 0
+  IsTakedByPlayer: 0
 --- !u!54 &8472425677461480245
 Rigidbody:
   m_ObjectHideFlags: 0

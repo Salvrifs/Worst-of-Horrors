@@ -2,26 +2,39 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class AttackBehaviour : StateMachineBehaviour
 {
-    Transform m_player;
-    float AttackRadius = 6f;
+    private Transform m_player;
     private Text healthCount;
+    private Slider HealthBar;
+    //private Slider StaminaBar;
+    private float AttackRadius = 6f; 
     private int damageAmount = 5; 
     private float timer = 0f;
+    
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 130f;
+    
     float ViewDistance = 75f;
     bool IsAttackUge;
+    [SerializeField] AudioSource AttackSound;
+    [SerializeField] AudioSource DeathPlayer;
+    
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
-        healthCount = GameObject.FindGameObjectWithTag("healthBar").transform.GetChild(0).GetChild(4).GetChild(0).GetComponent<Text>();
+        HealthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
+        
         IsAttackUge = false;
+        AttackSound = GameObject.Find("MonsterAttack").GetComponent<AudioSource>();
+        DeathPlayer = GameObject.Find("DeathPlayer").GetComponent<AudioSource>();
+        AttackSound.Play();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -47,6 +60,11 @@ public class AttackBehaviour : StateMachineBehaviour
                     {
                         timer = 0f;
                         PerformAttack();
+                        if (AttackSound.isPlaying)
+                        {
+                            return;
+                        }
+                        AttackSound.Play();
                     }
                 }
 
@@ -59,6 +77,11 @@ public class AttackBehaviour : StateMachineBehaviour
                         timer = 0f;
                         PerformAttack();
                         IsAttackUge = true; 
+                        if (AttackSound.isPlaying)
+                        {
+                            return;
+                        }
+                        AttackSound.Play();
                     }
                 }
             }
@@ -72,6 +95,8 @@ public class AttackBehaviour : StateMachineBehaviour
         }
 
         
+
+        
     }
 
     private void PerformAttack()
@@ -81,19 +106,22 @@ public class AttackBehaviour : StateMachineBehaviour
         {
             timer = 0f;
             float new_health = int.Parse(healthCount.text) - damageAmount;
+            HealthBar.value = new_health;
             healthCount.text = new_health.ToString();
             
         }
         else
         {
+
             GameOver();
         }
     }
 
     private void GameOver()
     {
+        DeathPlayer.Play();
         Debug.Log("Игра окончена!");
-
+        
         // Перезагрузить текущую сцену
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     
@@ -122,6 +150,10 @@ private bool IsInView()
     {
         timer = 0f;
         IsAttackUge = false;
+        if (AttackSound.isPlaying)
+        {
+            AttackSound.Stop();
+        }
     }
 
 }

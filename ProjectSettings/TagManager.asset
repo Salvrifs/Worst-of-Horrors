@@ -9,6 +9,8 @@ TagManager:
   - Monster
   - Eye
   - item
+  - noPlayerMore
+  - PanelUI
   layers:
   - Default
   - TransparentFX

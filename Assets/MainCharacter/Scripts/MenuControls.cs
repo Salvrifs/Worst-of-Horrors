@@ -6,29 +6,38 @@ using TMPro;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public GameObject panel;
+    public GameObject Menu;
     public GGCameraMoving cameraController;
     public GameObject infoPanel;
-
+    [SerializeField] private GameObject SettingsPanel;
+    [SerializeField] private GameObject SoundPanel;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!panel.activeSelf)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                panel.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                Time.timeScale = 0f;
-                cameraController.SetControlEnabled(false);
-            }
-            else
-            {
-                panel.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                Time.timeScale = 1f;
-                cameraController.SetControlEnabled(true);
+                if (!Menu.activeSelf && !SettingsPanel.activeSelf && !SoundPanel.activeSelf)
+                {
+                    MenuActivate(!Menu.activeSelf);
+                }
+
+                else if (!Menu.activeSelf && SettingsPanel.activeSelf && !SoundPanel.activeSelf)
+                {
+                    SettingsPanel.SetActive(false);
+                    MenuActivate(!Menu.activeSelf);
+                }
+
+                else if (!Menu.activeSelf && !SettingsPanel.activeSelf && SoundPanel.activeSelf)
+                {
+                    SoundPanel.SetActive(false);
+                    MenuActivate(!Menu.activeSelf);
+                }
+
+                else 
+                {
+                    MenuActivate(!Menu.activeSelf);
+                }
             }
         }
 
@@ -38,26 +47,55 @@ public class NewBehaviourScript : MonoBehaviour
         }
     }
 
+    //
+    //Управление меню
+    //
+    private void MenuActivate(bool activeOrNot)
+    {
+        Menu.SetActive(activeOrNot);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0f;
+        cameraController.SetControlEnabled(false);
+    }
+
+    //
+    //Нажать кнопку "Играть" в главном меню
+    //
     public void PlayPressed()
     {
         SceneManager.LoadScene("SampleScene");
     }
-
+    //
+    //нажать кпопку "Продолжить" в esc
+    //
     public void ContinuePressed()
     {
-        panel.SetActive(false);
+        Menu.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Time.timeScale = 1f;
         cameraController.SetControlEnabled(true);
     }
-
+    //
+    //Нажать кпопку "Настройки" в esc
+    //
+    public void SettingsPressed()
+    {
+        SettingsPanel.SetActive(true);
+        Menu.SetActive(false);
+    }
+    //
+    //Нажать кнопку "Выход" в esc
+    //
     public void ExitToMainPressed()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MenuScene");
     }
-
+    //
+    //Нажать кнопку "Выход" в главном меню
+    //
     public void ExitPressed()
     {
         Application.Quit();
