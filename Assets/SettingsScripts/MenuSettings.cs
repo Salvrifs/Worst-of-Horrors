@@ -38,7 +38,9 @@ public class MenuSettings : MonoBehaviour
         }
         resolutionsDropdown.AddOptions(options);
         resolutionsDropdown.RefreshShownValue();
+        
         LoadSettings(currentResolutionIndex);
+        
     }
 
     
@@ -110,8 +112,9 @@ public class MenuSettings : MonoBehaviour
 
         else 
         {
-            qualityDropdown.value = 3;
+            qualityDropdown.value = 2;
         }
+        Setquality(qualityDropdown.value);
 
         //Разрешение
         if (PlayerPrefs.HasKey("ResolutionSettingsPref"))
@@ -122,6 +125,7 @@ public class MenuSettings : MonoBehaviour
         {
             resolutionsDropdown.value = ResolutionIndex;
         }
+        SetResolution(resolutionsDropdown.value); ;
 
         //Полноэкранный режим
         if (PlayerPrefs.HasKey("FullScreenSettingsPref"))

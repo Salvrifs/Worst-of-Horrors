@@ -26,8 +26,8 @@ public class GGMoving : MonoBehaviour
     private bool isMutated = false;
     private float originalSpeed;
     private float originalJumpPower;
-    public LowHealthDirectAccess shaderAccessScript;
-    public LowHealthController shaderControllerScript;
+    //public LowHealthDirectAccess shaderAccessScript;
+    //public LowHealthController shaderControllerScript;
     [SerializeField] private Image infectionEffectImage;
 
     [Header("\t==============\n\tMovement Settings\n\t==============")]
@@ -77,7 +77,7 @@ public class GGMoving : MonoBehaviour
 
     void Start()
     {
-        shaderControllerScript.SetPlayerHealthSmoothly(1f, 1f); // 40% здоровья
+        //shaderControllerScript.SetPlayerHealthSmoothly(1f, 1f); // 40% здоровья
         _speedWalk = _speed;
         _characterController = GetComponent<CharacterController>();
         Current_Stamina = MaxStamina;
@@ -90,11 +90,11 @@ public class GGMoving : MonoBehaviour
     {
         timerOfPlayerLive += Time.deltaTime;
 
-        if(timerOfPlayerLive > MaxTimeOfPlay)
-        {
-            transform.tag = "noPlayerMore";
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        //if(timerOfPlayerLive > MaxTimeOfPlay)
+        //{
+         //   transform.tag = "noPlayerMore";
+        //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //}
 
         float horizontal_input = Input.GetAxis("Horizontal");
         float vertical_input = Input.GetAxis("Vertical");
@@ -301,7 +301,7 @@ public class GGMoving : MonoBehaviour
     isInfected = true;
     _speed *= 0.75f;
     _jumpPower *= 0.75f; 
-    shaderControllerScript.SetPlayerHealthSmoothly(0.4f, 1f); // 40% здоровья
+    //shaderControllerScript.SetPlayerHealthSmoothly(0.4f, 1f); // 40% здоровья
     StartCoroutine(NPCAvoidanceTimer());
 }
     //
@@ -312,7 +312,7 @@ public class GGMoving : MonoBehaviour
     yield return new WaitForSeconds(npcAvoidanceDuration);
     
     Debug.Log($"Time: {timerOfPlayerLive} Avoidance 20f");
-    shaderControllerScript.SetPlayerHealthSmoothly(0.2f, 1f); // 20% здоровья
+    //shaderControllerScript.SetPlayerHealthSmoothly(0.2f, 1f); // 20% здоровья
     transform.tag = "noPlayerMore";
     StartCoroutine(MutationTimer());
 }
@@ -333,7 +333,7 @@ public class GGMoving : MonoBehaviour
     private void PerformMutation()
 {
     isMutated = true;
-    shaderControllerScript.SetPlayerHealthSmoothly(0.1f, 1f); // 10% здоровья
+    //shaderControllerScript.SetPlayerHealthSmoothly(0.1f, 1f); // 10% здоровья
 
 
 
@@ -379,22 +379,22 @@ public class GGMoving : MonoBehaviour
         private IEnumerator ApplyInfectionEffects()
     {
         float elapsedTime = 0f;
-        float startVision = shaderAccessScript.visionLossEffect;
-        float startDetail = shaderAccessScript.detailLossEffect;
-        float startColor = shaderAccessScript.colorLossEffect;
-        float startDouble = shaderAccessScript.doubleVisionEffect;
+        //float startVision = shaderAccessScript.visionLossEffect;
+        //float startDetail = shaderAccessScript.detailLossEffect;
+        //float startColor = shaderAccessScript.colorLossEffect;
+        //float startDouble = shaderAccessScript.doubleVisionEffect;
 
         while (elapsedTime < infectionDuration)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / infectionDuration;
 
-            shaderAccessScript.visionLossEffect = Mathf.Lerp(startVision, maxVisionLoss, t);
-            shaderAccessScript.detailLossEffect = Mathf.Lerp(startDetail, maxDetailLoss, t);
-            shaderAccessScript.colorLossEffect = Mathf.Lerp(startColor, maxColorLoss, t);
-            shaderAccessScript.doubleVisionEffect = Mathf.Lerp(startDouble, maxDoubleVision, t);
+            //shaderAccessScript.visionLossEffect = Mathf.Lerp(startVision, maxVisionLoss, t);
+            //shaderAccessScript.detailLossEffect = Mathf.Lerp(startDetail, maxDetailLoss, t);
+            //shaderAccessScript.colorLossEffect = Mathf.Lerp(startColor, maxColorLoss, t);
+            //shaderAccessScript.doubleVisionEffect = Mathf.Lerp(startDouble, maxDoubleVision, t);
             
-            shaderAccessScript.UpdateShaderProperties();
+            //shaderAccessScript.UpdateShaderProperties();
             yield return null;
         }
     }

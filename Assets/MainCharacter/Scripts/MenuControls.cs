@@ -75,7 +75,7 @@ public class NewBehaviourScript : MonoBehaviour
     //
     public void PlayPressed()
     {
-        Menu.SetActive(false);
+        //Menu.SetActive(false);
         SceneManager.LoadScene("SampleScene");
     }
     //
