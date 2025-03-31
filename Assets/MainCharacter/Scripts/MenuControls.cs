@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class NewBehaviourScript : MonoBehaviour
 {
+    [SerializeField] GameObject MainMenu;
     public GameObject Menu;
     public GGCameraMoving cameraController;
     public GameObject infoPanel;
@@ -73,6 +75,7 @@ public class NewBehaviourScript : MonoBehaviour
     //
     public void PlayPressed()
     {
+        Menu.SetActive(false);
         SceneManager.LoadScene("SampleScene");
     }
     //

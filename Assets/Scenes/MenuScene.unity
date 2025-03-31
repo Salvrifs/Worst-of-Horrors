@@ -2095,11 +2095,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1156d1a5e85bd804399bb9f98568f55f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainMenu: {fileID: 0}
   Menu: {fileID: 446013552}
   cameraController: {fileID: 0}
   infoPanel: {fileID: 0}
   SettingsPanel: {fileID: 49772682}
-  SoundPanel: {fileID: 0}
+  SoundPanel: {fileID: 1346497416}
 --- !u!1 &502590223
 GameObject:
   m_ObjectHideFlags: 0
