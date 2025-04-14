@@ -230,7 +230,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.4579188
+        functionName: Strike_Monster
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4f2a7c67a8fbef446b422aef40bfc90f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -288,7 +295,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.5446224
+        functionName: Step_Monster
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4f2a7c67a8fbef446b422aef40bfc90f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.99771166
+        functionName: Step_Monster
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4f2a7c67a8fbef446b422aef40bfc90f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -317,7 +338,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: Idle
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4f2a7c67a8fbef446b422aef40bfc90f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -346,7 +374,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.5194508
+        functionName: Step_Monster
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4f2a7c67a8fbef446b422aef40bfc90f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.99771166
+        functionName: Step_Monster
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4f2a7c67a8fbef446b422aef40bfc90f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

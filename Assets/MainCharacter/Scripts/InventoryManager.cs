@@ -68,6 +68,7 @@ public class InventoryManager : MonoBehaviour
                 slot.isEmpty = false;
                 slot.SetIcon(_item.icon);
                 slot.textItemAmount.text = _amount.ToString();
+                
                 break;
             }
         }

@@ -19,8 +19,7 @@ public class AttackBehaviour : StateMachineBehaviour
     
     float ViewDistance = 75f;
     bool IsAttackUge;
-    [SerializeField] AudioSource AttackSound;
-    [SerializeField] AudioSource DeathPlayer;
+    
     
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -32,9 +31,9 @@ public class AttackBehaviour : StateMachineBehaviour
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         
         IsAttackUge = false;
-        AttackSound = GameObject.Find("MonsterAttack").GetComponent<AudioSource>();
-        DeathPlayer = GameObject.Find("DeathPlayer").GetComponent<AudioSource>();
-        AttackSound.Play();
+        
+        
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -60,11 +59,7 @@ public class AttackBehaviour : StateMachineBehaviour
                     {
                         timer = 0f;
                         PerformAttack();
-                        if (AttackSound.isPlaying)
-                        {
-                            return;
-                        }
-                        AttackSound.Play();
+                        
                     }
                 }
 
@@ -77,11 +72,7 @@ public class AttackBehaviour : StateMachineBehaviour
                         timer = 0f;
                         PerformAttack();
                         IsAttackUge = true; 
-                        if (AttackSound.isPlaying)
-                        {
-                            return;
-                        }
-                        AttackSound.Play();
+                        
                     }
                 }
             }
@@ -119,7 +110,7 @@ public class AttackBehaviour : StateMachineBehaviour
 
     private void GameOver()
     {
-        DeathPlayer.Play();
+        
         Debug.Log("Игра окончена!");
         
         // Перезагрузить текущую сцену
@@ -150,10 +141,7 @@ private bool IsInView()
     {
         timer = 0f;
         IsAttackUge = false;
-        if (AttackSound.isPlaying)
-        {
-            AttackSound.Stop();
-        }
+       
     }
 
 }

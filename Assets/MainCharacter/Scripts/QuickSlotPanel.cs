@@ -99,6 +99,7 @@ public class QuickSlotPanel : MonoBehaviour
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                     }
+                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
                 }
             }
         }
@@ -118,8 +119,9 @@ public class QuickSlotPanel : MonoBehaviour
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                 }
-
+                
                 quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
+                itemObject.GetComponent<Item>().OnDrop();
             }
         }
     }

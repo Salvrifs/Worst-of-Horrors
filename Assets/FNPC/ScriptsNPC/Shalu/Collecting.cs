@@ -1,8 +1,11 @@
 using UnityEngine;
-    using UnityEngine.AI;
-    using System.Collections.Generic;
-    using System.Collections;
-    using Unity.VisualScripting;
+using UnityEngine.AI;
+using System.Collections.Generic;
+using System.Collections;
+using Unity.VisualScripting;
+using System.Linq;
+using System.Runtime.CompilerServices;
+
 public class CollectingNPC : MonoBehaviour
     {
         //Фундамент
@@ -27,6 +30,18 @@ public class CollectingNPC : MonoBehaviour
         private float ViewDistance = 75f;
         [Range(0, 360)] private float ViewAngle = 130f;
 
+        [Header("Stealing Settings")]
+        [SerializeField] private Transform itemHolderPoint; 
+        [SerializeField] private float stealDetectionRange = 20f;
+        [SerializeField] private float escapeSpeedMultiplier = 2f;
+    
+        private GameObject stolenItemInstance;
+        private bool isChasingPlayer;
+        private float chaseTimer;
+        private float baseSpeed;
+        
+
+
         // Время и звуки
         private float timer = 0f;
         private AudioSource audioSource;
@@ -39,36 +54,52 @@ public class CollectingNPC : MonoBehaviour
     [SerializeField] private AudioClip runSound; 
     [SerializeField] private AudioClip jumpSound;
 
+    private Vector3 temp_size;  
+
         void Start()
         {
-            //audioSource = GetComponent<AudioSource>();
+            
+            audioSource = GetComponent<AudioSource>();
             Player = GameObject.FindGameObjectWithTag("Player").transform;
             m_agent = GetComponent<NavMeshAgent>();
             m_animator = GetComponent<Animator>();
             InitializeItems();
+            baseSpeed = m_agent.speed;
+            Item.OnItemCreated += OnItemCreatedHandler;
+            InventoryManager.OnDestroyItem += OnItemDestroyedHandler;
             MoveToItem();
         }
-
+        void OnDestroy()
+    {
+        Item.OnItemCreated -= OnItemCreatedHandler;
+        InventoryManager.OnDestroyItem -= OnItemDestroyedHandler;
+    }
         void Update()
         {
-        /* if (IsInView())
-            {
-                MoveAwayFromPlayer();
-                return;
-            }*/
+        
             
             Debug.Log($"{m_agent.name}: {currentTarget.name}");
+            
 
             if (currentTarget == null && DropOffPoint == default)
             {
-                Debug.Log("Both things don't exist");
                 MoveToItem();
                 
             }
 
+            if (isChasingPlayer)
+            {
+                chaseTimer += Time.deltaTime;
+                float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
+
+                if (chaseTimer >= 10f && distanceToPlayer > stealDetectionRange)
+                {
+                    DropItemAndEscape();
+                }
+            }
+
             if (isRunningAway)
             {
-                Debug.Log($"{m_agent.name}: in isRunningAway {currentTarget.name}");
                 escapeTimer += Time.deltaTime;
                 if (escapeTimer >= 10f)
                 {
@@ -81,13 +112,10 @@ public class CollectingNPC : MonoBehaviour
 
             // Проверка, принадлежит ли текущая цель игроку
             if (IsHolding && currentTarget.parent.CompareTag("Player"))
-            {
-                //m_animator.SetTrigger("AAA,MAN!!!");
-                //Звук
-                Debug.Log("it don't be in this way");
+            {   
                 ResetCurrentTarget();
                 MoveAwayFromPlayer();
-                //MoveToItem();
+                
                 return;
             }
 
@@ -95,18 +123,22 @@ public class CollectingNPC : MonoBehaviour
                 ? Vector3.Distance(m_agent.transform.position, DropOffPoint) 
                 : Vector3.Distance(m_agent.transform.position, currentTarget.position);
 
-            isSteal = currentTarget.parent.CompareTag("Player");
-
-            if (!IsHolding)
+            if (currentTarget != null)
             {
-                Debug.Log($"{m_agent.name}: Handle !Holding");
-                HandleItemCollection(Distance);
+                isSteal = currentTarget.CompareTag("Player");
+        
+                if (!IsHolding)
+                {   
+                    HandleItemCollection(Distance);
+                }
             }
+            
             else
             {
-                Debug.Log($"{m_agent.name}: Handle Holding");
+                Debug.Log("Holding");
                 HandleItemDropping(Distance);
             }
+            InitializeItems();
         }
         void FixedUpdate()
         {
@@ -127,7 +159,6 @@ public class CollectingNPC : MonoBehaviour
                 
                 foreach (Transform tr in ItemsContainer)
                 {
-                    Debug.Log(tr.name);
                     items.Add(tr);
                 }
             }
@@ -141,20 +172,19 @@ public class CollectingNPC : MonoBehaviour
         {
             if (m_agent.stoppingDistance >= Distance)
             {
-                if (isSteal)
+                if (currentTarget.CompareTag("Player"))
                 {
-                    Debug.Log($"{m_agent.name}: Norm dist steal for colle");
+                    Debug.Log("IsSteal");
                     StealItemFromPlayer();
                 }
                 else
                 {
-                    Debug.Log($"{m_agent.name}: Norm dist not steal for colle");
+                    Debug.Log("!IsSteal");
                     PickUpItem();
                 }
             }
-            else
+            else if (currentTarget != null)
             {
-                Debug.Log($"{m_agent.name}: Distance more than stoppingDist for colle");
                 m_agent.SetDestination(currentTarget.position);
             }
         }
@@ -169,18 +199,18 @@ public class CollectingNPC : MonoBehaviour
             {
                 ResetCurrentTarget();
                 MoveAwayFromPlayer();
-                //MoveToItem();
+                
             }
             else
             {
                 if (m_agent.stoppingDistance >= Distance)
                 {
-                    Debug.Log($"{m_agent.name}: Norm dist for drop");
+                    
                     DropItem();
                 }
                 else
                 {
-                    Debug.Log($"{m_agent.name}: Not Norm dist for drop");
+                    
                     m_agent.SetDestination(DropOffPoint);
                 }
             }
@@ -191,56 +221,164 @@ public class CollectingNPC : MonoBehaviour
         //
         private void ResetCurrentTarget()
         {
-            //m_animator.SetTrigger("Jump!");
-
-            Debug.Log($"{m_agent.name} Reset");
+            
             currentTarget = null;
             IsHolding = false;
-
-            //if (audioSource.isPlaying) return;
-            //audioSource.PlayOneShot(dropSound);
         }
 
         //
         //                          УПРАВЛЯЮЩАЯ МЕТОДАМИ
         // Кража предмета
         //
-        private void StealItemFromPlayer()
-        {
-            if (!isSteal  || !CanReach(currentTarget.position) || currentTarget.parent == Player)
-            {
-                AttemptRandomSteal();
-                //m_animator.SetBool("AAA,MAN!");
-                
-                MoveAwayFromPlayer();
-                /*if (audioSource.isPlaying)
-                {
-                    return;
-                }
-                audioSource.PlayOneShot(dropSound);*/
-            }
+  // В методе StealItemFromPlayer внесем правки:
+private void StealItemFromPlayer()
+{
+    if (IsHolding) return;
 
-            else if (isSteal && currentTarget.parent == Player)
-            {
-                NotifyStealFromPlayer();
-                //m_animator.SetTrigger("AAA,MAN!");
-                MoveAwayFromPlayer();
-                /*if (audioSource.isPlaying)
-                {
-                    return;
-                }*/
-                //audioSource.PlayOneShot(dropSound);
-            }
+    m_animator.SetTrigger("Take");
+    CoroutineForTake();
+
+    // Поиск первого подходящего предмета
+    InventorySlot targetSlot = quickslotParent.GetComponentsInChildren<InventorySlot>().FirstOrDefault(s => s.amount > 0 && s.is_item != null);
+
+    if (targetSlot != null)
+    {
+        // Создаем копию предмета
+        stolenItemInstance = Instantiate(
+            targetSlot.is_item.itemPrefab,
+            itemHolderPoint.position,
+            Quaternion.identity,
+            itemHolderPoint
+        );
+
+        // Настройка объекта
+        stolenItemInstance.GetComponent<Item>().IsTakedByPlayer = false;
+        stolenItemInstance.tag = "Untagged"; 
+        targetSlot.amount--;
+
+        // Обновление данных слота
+        if (targetSlot.amount <= 0) 
+            targetSlot.NullifySlotData();
+        else
+            targetSlot.textItemAmount.text = targetSlot.amount.ToString();
+
+        // Переход в режим удержания
+        IsHolding = true;
+        currentTarget = stolenItemInstance.transform;
+        GenerateDropOffPoint();
+        StartCoroutine(EscapeWithItem());
+    }
+    else
+    {
+        MoveToItem();
+    }
+
+
+}
+
+
+private IEnumerator EscapeWithItem()
+{
+    m_agent.speed *= 1.5f;
+    m_agent.SetDestination(DropOffPoint);
+    
+    while (Vector3.Distance(transform.position, DropOffPoint) > 1f)
+    {
+        yield return null;
+    }
+    
+    DropItem();
+    m_agent.speed = baseSpeed;
+}
+
+
+
+// Новая корутина для обработки кражи
+private IEnumerator StealProcess(Transform stolenItem)
+{
+    
+    yield return new WaitForSeconds(1.5f);
+    
+    // Переносим предмет к NPC
+    stolenItem.SetParent(itemHolderPoint);
+    stolenItem.localPosition = Vector3.zero;
+    
+    // Настраиваем параметры
+    IsHolding = true;
+    currentTarget = stolenItem;
+    
+    // Запускаем побег
+    GenerateDropOffPoint();
+    m_agent.speed *= 1.5f;
+    m_agent.SetDestination(DropOffPoint);
+}
+
+        private void OnItemCreatedHandler(Item newItem)
+    {
+        if (!IsHolding && newItem.IsTakedByPlayer)
+        {
+            currentTarget = newItem.transform;
+            m_agent.SetDestination(currentTarget.position);
 
         }
+    }
+
+    private void OnItemDestroyedHandler(Item destroyedItem)
+    {
+        temp_size = destroyedItem.transform.localScale;
+        if (destroyedItem.IsTakedByPlayer && !IsHolding)
+        {
+            StartChasingPlayer();
+        }
+
+        else if (destroyedItem.IsTakedByPlayer && IsHolding)
+        {
+            MoveAwayFromPlayer();
+            StartCoroutine(ResetAfterEscape());
+        }
+    }
+
+    private void StartChasingPlayer()
+    {
+        isChasingPlayer = true;
+        chaseTimer = 0f;
+        currentTarget = Player;
+        m_agent.SetDestination(Player.position);
+    }
+
+    private void DropItemAndEscape()
+    {
+        // Сбрасываем предмет
+        if (stolenItemInstance != null)
+        {
+            Destroy(stolenItemInstance);
+            Instantiate(currentTarget.GetComponent<Item>().i_item.itemPrefab, 
+                      transform.position, Quaternion.identity);
+        }
+
+        // Ускоряемся и убегаем
+        m_agent.speed = baseSpeed * escapeSpeedMultiplier;
+        MoveAwayFromPlayer();
+        StartCoroutine(ResetAfterEscape());
+    }
+
+    private IEnumerator ResetAfterEscape()
+    {
+        yield return new WaitForSeconds(5f);
+        m_agent.speed = baseSpeed;
+        isChasingPlayer = false;
+        MoveToItem();
+    }
+
+
         //
-        //                          ВСПОМОГАТЕЛЬНАЯ к StealItemFromPlayer
-        //Кража случайного предмета
+        //                          
+        //
         //
         private void AttemptRandomSteal()
         {
+            Debug.Log("AttemptSteal xmmm...");
             int count = 0;
-            Debug.Log($"{m_agent.name}: Random steal");
             
             while (true)
             {
@@ -249,7 +387,7 @@ public class CollectingNPC : MonoBehaviour
 
                 if (TryStealItemFromSlot(RandInd))
                 {
-                    MakeVisible();
+                    
                     PickUpItem();
                     
                     isSteal = false;
@@ -264,11 +402,12 @@ public class CollectingNPC : MonoBehaviour
             }
         }
         //
-        //                          ПРОВЕРКА к AttemptStealItem
-        //   Можно ли украсть предмет
+        //                          
+        //   
         //
         private bool TryStealItemFromSlot(int slotIndex)
         {
+            Debug.Log("TryStealItemFromSlot");
             InventorySlot slot = quickslotParent.GetChild(slotIndex)?.GetComponent<InventorySlot>();
             if (slot != null && slot.is_item != null && slot.amount > 0)
             {
@@ -284,50 +423,46 @@ public class CollectingNPC : MonoBehaviour
             return false;
         }
         //
-        //                              ВСПОМГАТЕЛЬНАЯ
-        //"Обнуление"/Очистка инвентаря
+        //                              
         //
         private void NotifyStealFromPlayer()
         {
-            Debug.Log($"{m_agent.name}: Steal");
-            MakeVisible();
-            PickUpItem();
-            for (int i = 0; i < quickslotParent.childCount; ++i)
-            {
-                if (quickslotParent.GetChild(i).name == currentTarget.name)
-                {
-                    currentTarget.SetParent(m_agent.transform);
-                    quickslotParent.GetChild(i).GetComponent<InventorySlot>().NullifySlotData();
-                    return;
-                }
-            }
-            //Если своего предмета уже не нашёл взять что-то рандомное
-            Debug.Log("не нашёл своего беру на рандом");
-            AttemptRandomSteal();
+            
+            Debug.Log("Now Notify so has been Instantiate but where?!");
+             IsHolding = true;
+            GenerateDropOffPoint(); 
+            MoveAwayFromPlayer(); 
         }
-        //
-        //Чек Есть ли предмет в инвентаре
-        //
-
+        
         //
         // Движене к предмету
         //
         private void MoveToItem()
         {
-            //Debug.Log($"{m_agent.name}: WENT TO THE mOVEtOiTEM");
+             m_animator.SetBool("IsWalking", true);
+            if (PlayerHasItems())
+            {
+                currentTarget = Player;
+                m_agent.SetDestination(Player.position);
+            }
+
+            else {
+            
+           
             foreach (Transform item in items)
             {
-                Debug.Log($"{m_agent.name}: {item}");
-                if (!item.GetComponent<Item>().IsTaked && LastItem != item && CanReach(item.position))
+                
+                if (!item.GetComponent<Item>().IsTakedByPlayer && LastItem != item && CanReach(item.position))
                 {
-                    Debug.Log($"{m_agent.name}: O kak!");
+                    
                     SetCurrentTarget(item);
                     return;
                 }
             }
-            Debug.Log($"{m_agent.name}: ne ponyal");
-            GenerateDropOffPoint();
-            MoveToDrop();
+                
+                GenerateDropOffPoint();
+                MoveToDrop();
+            }
         }
         //
         //                          ВСПОМОГАТЕЛЬНАЯ 
@@ -337,14 +472,21 @@ public class CollectingNPC : MonoBehaviour
         {
             currentTarget = item;
             LastItem = item;
-            item.GetComponent<Item>().IsTaked = true;
+            item.GetComponent<Item>().IsTakedByPlayer = true;
             isSteal = currentTarget.parent == Player;
             m_agent.SetDestination(currentTarget.position);
-            //audioSource.PlayOneShot(walkSound);
-            m_animator.SetBool("IsWalking", true);
+            
         }
         
-
+        private bool PlayerHasItems()
+    {
+        foreach (Transform slot in quickslotParent)
+        {
+            if (slot.GetComponent<InventorySlot>().is_item != null) 
+                return true;
+        }
+        return false;
+    }
         //
         //Движение от игрока 
         //
@@ -356,14 +498,15 @@ public class CollectingNPC : MonoBehaviour
         //
         //                                  ВСПОМОГАТЕЛЬНАЯ
         //Корутина побега 
+        //
         private IEnumerator EscapeRoutine()
     {
-        //audioSource.PlayOneShot(runSound);
+        
         isRunningAway = true;
         escapeTimer = 0f;
         float originalSpeed = m_agent.speed; 
         m_agent.speed *= 1.5f; 
-        //audioSource.PlayOneShot(runSound);
+        
         
 
         while (escapeTimer < 10f && Vector3.Distance(Player.position, m_agent.transform.position) < escapeDist)
@@ -391,12 +534,12 @@ public class CollectingNPC : MonoBehaviour
 
             if (Vector3.Distance(Player.position, m_agent.transform.position) > escapeDist)
             {
-                Debug.Log($"{m_agent.name}: ImmediateDrop: If");
+                
                 MoveToItem();
             }
             else
             {
-                Debug.Log($"{m_agent.name}: ImmediateDrop: else");
+               
                 MoveAwayFromPlayer();
             }
 
@@ -407,36 +550,24 @@ public class CollectingNPC : MonoBehaviour
             m_animator.SetBool("IsRunning", false);
             
             if (IsHolding)
-            {
-                Debug.Log($"{m_agent.name}: EscapeRoutine: If");
-                //GenerateDropOffPoint();
-                //m_agent.SetDestination(DropOffPoint);
+            {   
                 MoveToDrop();
                 //yield break;
             }
 
             else
             {
-                Debug.Log($"{m_agent.name}: PickUpRoutine: else");
+              
                 MoveToItem();
             }
         
         
         
     }
+        //
         //Задание направления от игрока
         //
-        /*private void MoveAway()
-        {
-            
-            Vector3 directionAway = (transform.position - Player.position).normalized;
-            Vector3 targetPosition = transform.position + directionAway * 1.5f;
-            m_agent.SetDestination(targetPosition);
-        }*/
-        //
-        //                                  ВСПОМОГАТЕЛЬНАЯ
-        //Выброс предмета/Завершение побега от игрока
-        //
+        
         private void ExecuteEscape()
         {
             currentTarget.parent = null;
@@ -449,42 +580,47 @@ public class CollectingNPC : MonoBehaviour
         //
         //Подбор предмета
         //
-        private void PickUpItem()
-        {
-            if (currentTarget != null)
-            {
-                StartCoroutine(PickUpAnimationRoutine());
-            }
-        }
-        //
-        //Корутина
-        //
-        private IEnumerator PickUpAnimationRoutine()
-        {
-            m_animator.SetBool("IsPicking", true);
-            //audioSource.PlayOneShot(pickUpSound);
-            yield return new WaitForSeconds(1f); 
-            
-            currentTarget.SetParent(m_agent.transform);
-            currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
-            currentTarget.GetComponent<Rigidbody>().isKinematic = true;
-            
-            IsHolding = true;
-            m_animator.SetBool("IsPicking", false);
+       private void PickUpItem()
+{
+    if (currentTarget != null)
+    {
+        StartCoroutine(PickUpProcess());
+    }
+}
 
-            if (!isSteal)
-            {
-                Debug.Log($"{m_agent.name}: PickUpRoutine: If");
-                MoveToDrop();
-            }
-            
-            else
-            {
-                Debug.Log($"{m_agent.name}: PickUpRoutine: else");
-                MoveAwayFromPlayer();
-            }
-        }
+private IEnumerator PickUpProcess()
+{
+    m_animator.SetTrigger("Take");
+    //audioSource.PlayOneShot(pickUpSound);
+    
+    float timer = 0f;
+    while (timer < 1.5f)
+    {
+        timer += Time.deltaTime;
+        yield return null; 
+    }
+    
+    currentTarget.SetParent(m_agent.transform);
+    currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
+    currentTarget.GetComponent<Rigidbody>().isKinematic = true;
+    IsHolding = true;
 
+    Debug.Log("Choice between Moveaway and MoveToDrop");
+    if (!isSteal)
+    { 
+        Debug.Log("MoveToDrop");
+        MoveToDrop();
+        
+    }
+
+    else
+    {
+        isSteal = false;
+        currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
+        Debug.Log("MoveAway"); 
+        MoveAwayFromPlayer();
+    }
+}
         //
         //Движение к дропу
         //
@@ -493,45 +629,52 @@ public class CollectingNPC : MonoBehaviour
             m_animator.SetBool("IsWalking", true);
             GenerateDropOffPoint();
             m_agent.SetDestination(DropOffPoint);
-            //Debug.Log($"{m_agent.name}: Движение к точке сброса на позицию {DropOffPoint}");
         }
 
         //
         //Выброс предмета
         //
         private void DropItem()
-        {
-            if (currentTarget != null)
-            {
-                m_animator.SetBool("IsDropping", true);
-                //audioSource.PlayOneShot(dropSound);
+{
+    StartCoroutine(DropProcess());
+}
 
-                currentTarget.SetParent(null);
-                currentTarget.position = DropOffPoint;
-                IsHolding = false;
-                currentTarget.GetComponent<Item>().IsTaked = false;
-                isSteal = false;
-                currentTarget = null;
-                DropOffPoint = default;
-                StartCoroutine(StopDroppingAnimation());
-                MoveToItem();
-            }
-        }
+private IEnumerator DropProcess()
+{
+    m_animator.SetTrigger("Drop");
+    //audioSource.PlayOneShot(dropSound);
+    
+    float timer = 0f;
+    while (timer < 1.5f)
+    {
+        timer += Time.deltaTime;
+        yield return null;
+    }
+    
+    m_animator.SetTrigger("Drop");
+    m_animator.SetBool("IsWalkingHold", false);
+    m_animator.SetBool("IsWalking", true);
+
+
+    currentTarget.SetParent(null);
+    currentTarget.position = DropOffPoint;
+    IsHolding = false;
+    currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
+    currentTarget = null;
+    
+    MoveToItem();
+}
         //Немедленный выброс предмета под себя
         private void ImmediateDropItem()
         {
-            //m_animator.SetBool("IsDropping", true);
-            //audioSource.PlayOneShot(dropSound);
 
             currentTarget.SetParent(null);
             currentTarget.position = m_agent.transform.position;
             IsHolding = false;
-            currentTarget.GetComponent<Item>().IsTaked = false;
+            currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
             isSteal = false;
             currentTarget = null;
             DropOffPoint = default;
-            //StartCoroutine(StopDroppingAnimation());
-            //MoveAwayFromPlayer();
             
         }
         
@@ -545,7 +688,7 @@ public class CollectingNPC : MonoBehaviour
 
             if (terrain == null)
             {
-                Debug.LogError("Террайн не найден");
+               
                 return;
             }
 
@@ -563,18 +706,18 @@ public class CollectingNPC : MonoBehaviour
                 if (IsSlopeAcceptable(RandomX, groundHeight, RandomZ, maxSlopeAngle))
                 {
                     DropOffPoint = new Vector3(RandomX, groundHeight, RandomZ);
-                    Debug.Log($"{m_agent.name}: Сгенерирована подходящая точка сброса: {DropOffPoint}");
+                   
                     break; 
                 }
                 else
                 {
-                    Debug.Log($"{m_agent.name}: Выбрана не подходящая точка, повторяем.");
+                   
                 }
             }
         }
         //
         //                      ВСПОМОГАТЕЛЬНАЯ к DroppOffPoint
-        //Приемлисмость позиции
+        //  Приемлисмость позиции
         //
         private bool IsSlopeAcceptable(float RandomX, float groundHeight, float RandomZ, float maxSlopeAngle)
         {
@@ -618,34 +761,7 @@ public class CollectingNPC : MonoBehaviour
             return NavMesh.SamplePosition(targetPosition, out hit, 100.0f, NavMesh.AllAreas);
         }
 
-        //
-        //Находится ли в поле зрения
-        //
-        /*private bool IsInView()
-        {
-            float realAngle = Vector3.Angle(Eye.forward, Player.position - Eye.position);
-            RaycastHit hit;
-            
-            if (Physics.Raycast(Eye.position, Player.position - Eye.position, out hit, ViewDistance))
-            {
-                if (realAngle < ViewAngle / 2f && Vector3.Distance(Eye.position, Player.position) <= ViewDistance && hit.transform == Player.transform)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }*/
-
-        //
-        //КОРУТИНЫ
-        //
-        /*private IEnumerator StopPickingUpAnimation()
-        {
-            yield return new WaitForSeconds(1.5f);
-            m_animator.SetBool("IsPickingUpHash", false);
-            //m_animator.SetBool("IsWalking", false);
-        }*/
-
+        
         private IEnumerator StopDroppingAnimation()
         {
             yield return new WaitForSeconds(10.5f);
@@ -670,5 +786,20 @@ public class CollectingNPC : MonoBehaviour
         }
     }
 
+private IEnumerator CoroutineForTake()
+{
+    yield return new WaitForSeconds(1.5f);
+    m_animator.SetTrigger("Take");
+    m_animator.SetBool("IsWalkingHold", true);
+}
 
-    }
+private IEnumerator CoroutineForDrop()
+{
+    yield return new WaitForSeconds(1.5f);
+    m_animator.SetTrigger("Drop");
+    m_animator.SetBool("IsWalkingHold", false);
+    m_animator.SetBool("IsWalking", true);
+}
+
+}
+
