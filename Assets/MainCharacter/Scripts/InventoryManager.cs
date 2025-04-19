@@ -30,13 +30,23 @@ public class InventoryManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) {
             if (Physics.Raycast(ray, out hit, reachDistance))
             {
-                if (hit.collider.gameObject.GetComponent<Item>() != null)
+                GameObject obj = hit.collider.gameObject;
+                if (obj.GetComponent<Item>() != null)
                 {
                     AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
                     hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
                     OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
                     Destroy(hit.collider.gameObject);
+                }
 
+                else if ( obj.GetComponent<CollectingNPC>() != null && 
+                          obj.GetComponent<CollectingNPC>().IsHolding == true)
+                {
+                    Transform ShaluItem = obj.transform.GetChild(2).GetChild(1); 
+                    AddItem(ShaluItem.GetComponent<Item>().i_item, ShaluItem.GetComponent<Item>().amount);
+                    ShaluItem.GetComponent<Item>().i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(ShaluItem.GetComponent<Item>());
+                    Destroy(ShaluItem.gameObject);
                 }
             }
         } 

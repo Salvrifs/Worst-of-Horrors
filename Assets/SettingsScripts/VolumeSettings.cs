@@ -89,7 +89,7 @@ public class Sounds : MonoBehaviour
     //
     public void SetPlayerVolume()
     {
-        float volume_player = Slider_Monster.value;
+        float volume_player = Slider_Player.value;
         myMixer.SetFloat("Player", volume_player);
         PlayerPrefs.SetFloat("PlayerVolume", volume_player);
     } 
@@ -118,6 +118,8 @@ public class Sounds : MonoBehaviour
         float volume_effect = Slider_Effect.value;
         myMixer.SetFloat("Effect", volume_effect);
         PlayerPrefs.SetFloat("EffectVolume", volume_effect);
+        
+
     } 
     //
     //Установка звуков эффектов
@@ -162,6 +164,7 @@ public class Sounds : MonoBehaviour
             SetPlayerVolume();
         }
     }
+     
 
     //
     //Кнопка сохранения

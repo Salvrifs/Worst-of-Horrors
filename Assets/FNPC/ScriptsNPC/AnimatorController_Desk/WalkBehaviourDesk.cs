@@ -46,6 +46,7 @@ public class WalkBehaviourDesk : StateMachineBehaviour
         // Проверка обнаружения игрока
         if (IsPlayerDetected(animator.transform))
         {
+            animator.SetBool("Patrol", false);
             animator.SetBool("Run", true);
             return;
         }
@@ -78,5 +79,10 @@ public class WalkBehaviourDesk : StateMachineBehaviour
             return false;
             
         return true;
+    }
+
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        
     }
 }

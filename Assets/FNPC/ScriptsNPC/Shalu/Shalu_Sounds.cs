@@ -10,7 +10,7 @@ public class Shalu_Sounds : MonoBehaviour
     [SerializeField] private AudioClip Whistling;
     [SerializeField] private AudioClip Fear;
 
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
 
     void Start() 
     {

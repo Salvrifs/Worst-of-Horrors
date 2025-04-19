@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7f77321e24395f468e4f3a83f5c8efc, type: 3}
+  m_Name: Desk
+  m_EditorClassIdentifier: 
+  itemName: Desk
+  maximumAmount: 1
+  itemDescription: 
+  icon: {fileID: 21300000, guid: 8c7ceb5e9a78aa04d92fa9d0528bb1ec, type: 3}
+  itemPrefab: {fileID: 3031949372687064824, guid: d84acdf9ef8bf0a4595911f1d45fc00d, type: 3}
+  itemType: 2
+  isConsumeable: 0
+  changeHealth: 0
+  IsTakedByPlayer: 1

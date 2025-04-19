@@ -11,15 +11,19 @@ public class RunBehaviour : StateMachineBehaviour
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 130f;
     [SerializeField] float ViewDistance = 75f;
-    
+    [SerializeField] AudioClip[] intimidateSound; 
+    [SerializeField] AudioSource intimidate_audioSource;
+    int ind;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        ind = Random.Range(0, intimidateSound.Length);
         m_agent = animator.GetComponent<NavMeshAgent>();
 
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
+        intimidate_audioSource = animator.GetComponent<AudioSource>();
         //Debug.Log($"Run: {player.name}");
        
     }
@@ -50,6 +54,7 @@ public class RunBehaviour : StateMachineBehaviour
             animator.SetBool("IsChasing", false);
             
         }
+    PlayChase_Sound();
 
     }
 
@@ -57,9 +62,19 @@ public class RunBehaviour : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         m_agent.SetDestination(m_agent.transform.position);
-        
+        intimidate_audioSource.Stop();   
     }
-
+//
+//Звук
+//
+    private void PlayChase_Sound()
+    {
+        if (intimidate_audioSource.clip != intimidateSound[ind])
+        {
+            intimidate_audioSource.PlayOneShot(intimidateSound[ind]);
+            ind = Random.Range(0, intimidateSound.Length);
+        }
+    }
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{

@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
+using UnityEditor;
 
 public class AttackBehaviour : StateMachineBehaviour
 {
@@ -19,7 +20,8 @@ public class AttackBehaviour : StateMachineBehaviour
     
     float ViewDistance = 75f;
     bool IsAttackUge;
-    
+    [SerializeField] AudioClip[] intimidateSound; 
+    [SerializeField] AudioSource intimidate_audioSource;
     
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -29,7 +31,7 @@ public class AttackBehaviour : StateMachineBehaviour
         HealthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
         healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
-        
+        intimidate_audioSource = animator.GetComponent<AudioSource>();
         IsAttackUge = false;
         
         
@@ -39,6 +41,7 @@ public class AttackBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        
         animator.transform.LookAt(m_player);
         float distance = Vector3.Distance(animator.transform.position, m_player.position);
 
@@ -85,6 +88,9 @@ public class AttackBehaviour : StateMachineBehaviour
             }
         }
 
+        PlayAttack_Sound();
+                
+        
         
 
         
@@ -118,8 +124,9 @@ public class AttackBehaviour : StateMachineBehaviour
     
         // SceneManager.LoadScene("GameOverScene"); //Перезагрузить нужную сцену
     }
-
+//
 //Находится ли в поле зрения
+//
 private bool IsInView() 
     {
         float currentAngle = Vector3.Angle(EnemyEye.forward, m_player.position - EnemyEye.position);
@@ -135,13 +142,23 @@ private bool IsInView()
         }
         return false; // Игрок скрыт
     }
+//
+//Звук
+//
+    private void PlayAttack_Sound()
+    {
+        if (!intimidate_audioSource.isPlaying)
+        {
+            intimidate_audioSource.PlayOneShot(intimidateSound[Random.Range(0, intimidateSound.Length)]);
+        }
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer = 0f;
         IsAttackUge = false;
-       
+        intimidate_audioSource.Stop();
     }
 
 }

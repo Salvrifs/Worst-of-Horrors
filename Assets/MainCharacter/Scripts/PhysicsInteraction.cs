@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -66,7 +67,13 @@ public class PhysicsInteraction : MonoBehaviour
                 TakeText.SetActive(true);
             }
 
-            if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster"))
+            CollectingNPC ShaluScript = _hitInfo.collider.gameObject.GetComponent<CollectingNPC>();
+            if (ShaluScript != null)
+            {
+                TakeText.SetActive(true);
+            }
+
+            if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster") && _hitInfo.collider.gameObject.GetComponentInParent<CollectingNPC>() == null)
             {
                 _hitRigidbody = _hitInfo.collider.GetComponent<Rigidbody>();
                 MoveEmpty(_hitInfo.point);
@@ -77,6 +84,12 @@ public class PhysicsInteraction : MonoBehaviour
             {
                 DisplayImage(image1);        
             }
+
+            else if (_isShooting == false && (_hitInfo.collider.tag == "Monster") && (ShaluScript.IsHolding == true) )
+            {
+                DisplayImage(image1);
+            }
+
             else HideImage(image1);
 
             if (!_hitInfo.collider.GetComponent<Rigidbody>()) HideImage(image1);

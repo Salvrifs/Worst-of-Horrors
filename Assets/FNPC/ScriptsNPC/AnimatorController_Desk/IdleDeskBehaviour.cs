@@ -11,7 +11,8 @@ public class IdleDeskBehaviour : StateMachineBehaviour
     [SerializeField] private float detectionAngle = 130f;
     [SerializeField] private float detectionDistance = 75f;
     [SerializeField] private float idleDuration = 3f;
-
+    AudioSource audioSource;
+    [SerializeField] AudioClip say; 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer = 0;
@@ -36,6 +37,8 @@ public class IdleDeskBehaviour : StateMachineBehaviour
         {
             animator.SetBool("Patrol", true);
         }
+
+
     }
 
     private bool IsPlayerDetected(Transform npcTransform)
@@ -52,5 +55,15 @@ public class IdleDeskBehaviour : StateMachineBehaviour
             return false;
             
         return true;
+    }
+
+    private void Say_Sound()
+    {
+        if (audioSource.isPlaying)
+        {
+            return;
+        }
+
+        audioSource.PlayOneShot(say);
     }
 }

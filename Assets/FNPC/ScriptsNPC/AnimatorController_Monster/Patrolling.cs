@@ -15,7 +15,8 @@ public class PatrolBehaviour : StateMachineBehaviour
     Transform EnemyEye;
     Transform currentTarget;
     //float ChaseDist = 5f;
-    
+    [SerializeField] AudioSource intimidate_audioSource;
+    [SerializeField] AudioClip[] intimidate_audioClips;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -32,7 +33,7 @@ public class PatrolBehaviour : StateMachineBehaviour
         m_agent.SetDestination(m_Points[0].position);
         m_player = GameObject.FindGameObjectWithTag("Player").transform; 
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
-        
+        intimidate_audioSource = animator.GetComponent<AudioSource>();
 
     }
 

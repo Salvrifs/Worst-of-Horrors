@@ -64,6 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67343c903936b424dbc179bd6485e415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intimidateSound: []
+  intimidate_audioSource: {fileID: 0}
 --- !u!1101 &-6078252695474173241
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -126,6 +128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67343c903936b424dbc179bd6485e415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intimidateSound:
+  - {fileID: 8300000, guid: 7c27aaa32b2823343aeed787c8a20795, type: 3}
+  - {fileID: 8300000, guid: dc4ae9d50d1262b47b2e7d4542a1f001, type: 3}
+  - {fileID: 8300000, guid: 35df921a46bf50d4da45e802b3b51456, type: 3}
+  intimidate_audioSource: {fileID: 0}
 --- !u!1102 &-3725446683539739956
 AnimatorState:
   serializedVersion: 6
@@ -419,6 +426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67343c903936b424dbc179bd6485e415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intimidateSound: []
+  intimidate_audioSource: {fileID: 0}
 --- !u!1101 &4109752446368374470
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -456,6 +465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67343c903936b424dbc179bd6485e415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intimidateSound: []
+  intimidate_audioSource: {fileID: 0}
 --- !u!1102 &5288204679806333661
 AnimatorState:
   serializedVersion: 6
@@ -496,6 +507,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401b6744df57b3946ac5d4e68c805ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ViewDistance: 75
+  intimidateSound:
+  - {fileID: 8300000, guid: 513cc7fb73defa24290210d461ef23ad, type: 3}
+  - {fileID: 8300000, guid: 7c27aaa32b2823343aeed787c8a20795, type: 3}
+  - {fileID: 8300000, guid: 35df921a46bf50d4da45e802b3b51456, type: 3}
+  - {fileID: 8300000, guid: dc4ae9d50d1262b47b2e7d4542a1f001, type: 3}
+  intimidate_audioSource: {fileID: 0}
 --- !u!1101 &5980144179228745251
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -533,6 +551,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67343c903936b424dbc179bd6485e415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intimidateSound: []
+  intimidate_audioSource: {fileID: 0}
 --- !u!114 &8590666599288218944
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -558,6 +578,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Points: []
+  intimidate_audioSource: {fileID: 0}
+  intimidate_audioClips:
+  - {fileID: 8300000, guid: 812b0d4c6c4c42041ba1a89c4e007ee1, type: 3}
+  - {fileID: 8300000, guid: 9fd3a33a292c92c42a9defdeab7500c4, type: 3}
 --- !u!1102 &9136743148357608219
 AnimatorState:
   serializedVersion: 6

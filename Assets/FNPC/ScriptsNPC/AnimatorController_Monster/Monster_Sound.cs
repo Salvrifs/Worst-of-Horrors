@@ -7,12 +7,12 @@ public class Monster_Sound : MonoBehaviour
     [SerializeField] private AudioClip Attack;
     [SerializeField] private AudioClip Step;
     [SerializeField] private AudioClip intimidation;
-    [SerializeField] private AudioClip idle;
-    private AudioSource audioSource;
+    [SerializeField] private AudioClip[] idle;
+    [SerializeField] private AudioSource audioSource;
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
     }
 
     void Strike_Monster()
@@ -27,12 +27,24 @@ public class Monster_Sound : MonoBehaviour
 
     void Intimidation()
     {
-        audioSource.PlayOneShot(intimidation);
+        if (audioSource.isPlaying)
+        {
+            return;
+        }
+
+        else
+        {
+            audioSource.PlayOneShot(intimidation);
+        }
     }
 
     void Idle() 
     {
-        audioSource.PlayOneShot(idle);
+        if (audioSource.isPlaying)
+        {
+            return;
+        }
+        audioSource.PlayOneShot(idle[Random.Range(0, idle.Length)]);
     }
 
 }

@@ -6,9 +6,9 @@ public class RunBehaviourDesk : StateMachineBehaviour
     private NavMeshAgent agent;
     private Transform player;
     private float timer_esc;    
-    [SerializeField] private float safeDistance = 20f;
+    [SerializeField] private float safeDistance = 40f;
     [SerializeField] private float speedMultiplier = 1.5f;
-
+    
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer_esc = 0f;
@@ -50,11 +50,14 @@ public class RunBehaviourDesk : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.speed /= speedMultiplier;
+        
     }
 
     private void UpdateEscapeDestination()
     {
-        Vector3 dirFromPlayer = agent.transform.position - player.position;
+        Vector3 randomDirection = Random.insideUnitSphere * 5f; 
+        randomDirection.y = 0;
+        Vector3 dirFromPlayer = (agent.transform.position - player.position).normalized + randomDirection;
         Vector3 escapePoint = agent.transform.position + dirFromPlayer.normalized * safeDistance;
         agent.SetDestination(escapePoint);
     }

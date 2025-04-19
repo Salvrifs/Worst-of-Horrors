@@ -30,14 +30,14 @@ public class NewBehaviourScript : MonoBehaviour
                 {
                     SettingsPanel.SetActive(false);
                     MenuActivate(!Menu.activeSelf);
-                    AudioListener.pause = true;
+                    //AudioListener.pause = true;
                 }
 
                 else if (!Menu.activeSelf && !SettingsPanel.activeSelf && SoundPanel.activeSelf)
                 {
                     SoundPanel.SetActive(false);
                     MenuActivate(!Menu.activeSelf);
-                    AudioListener.pause = true;
+                    //AudioListener.pause = true;
                 }
 
                 else 
@@ -68,6 +68,7 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.visible = true;
         Time.timeScale = 0f;
         cameraController.SetControlEnabled(false);
+        AudioListener.pause = activeOrNot;
     }
 
     //
@@ -88,7 +89,7 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.visible = false;
         Time.timeScale = 1f;
         cameraController.SetControlEnabled(true);
-        
+        AudioListener.pause = false;
     }
     //
     //Нажать кпопку "Настройки" в esc
