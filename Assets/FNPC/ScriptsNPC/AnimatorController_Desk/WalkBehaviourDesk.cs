@@ -54,7 +54,7 @@ public class WalkBehaviourDesk : StateMachineBehaviour
         // Проверка достижения точки
         if (agent.remainingDistance <= waypointThreshold && !agent.pathPending)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            currentWaypointIndex = (currentWaypointIndex) % waypoints.Length;
             SetNextDestination();
         }
     }

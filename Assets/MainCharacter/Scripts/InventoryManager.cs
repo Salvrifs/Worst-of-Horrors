@@ -5,14 +5,21 @@ using System;
 
 public class InventoryManager : MonoBehaviour
 {
+    
     public Transform quickSlotPanel;
     public List<InventorySlot> slots = new List<InventorySlot>();
     private Camera mainCamera;
     public float reachDistance = 3f;
 
+    [SerializeField] AudioClip TakeBottle;
+    [SerializeField] AudioClip TakeMushrom;
+
+    AudioSource audioSource;
+
     public static event Action<Item> OnDestroyItem;
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         mainCamera = Camera.main;
         for (int i = 0; i < quickSlotPanel.childCount; i++) 
         {
@@ -33,10 +40,23 @@ public class InventoryManager : MonoBehaviour
                 GameObject obj = hit.collider.gameObject;
                 if (obj.GetComponent<Item>() != null)
                 {
+                    if (obj.GetComponent<Item>().i_item.itemName == "Mushroom")
+                    {
+                        //audioSource.PlayOneShot(TakeBottle);
                     AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
                     hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
                     OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
                     Destroy(hit.collider.gameObject);
+                    }
+
+                    else if (obj.GetComponent<Item>().i_item.itemName == "Potion")
+                    {
+                        //audioSource.PlayOneShot(TakeMushrom);
+                    AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
+                    hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
+                    Destroy(hit.collider.gameObject);
+                    }
                 }
 
                 else if ( obj.GetComponent<CollectingNPC>() != null && 

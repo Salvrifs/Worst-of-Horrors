@@ -85,7 +85,8 @@ public class PhysicsInteraction : MonoBehaviour
                 DisplayImage(image1);        
             }
 
-            else if (_isShooting == false && (_hitInfo.collider.tag == "Monster") && (ShaluScript.IsHolding == true) )
+            else if (_isShooting == false && (_hitInfo.collider.tag == "Monster") && 
+                    ( (ShaluScript.IsHolding == true) || (_hitInfo.collider.GetComponent<Sounds_Desk>() != null) ) )
             {
                 DisplayImage(image1);
             }

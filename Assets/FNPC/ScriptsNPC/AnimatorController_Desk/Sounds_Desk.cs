@@ -5,9 +5,9 @@ using UnityEngine;
 public class Sounds_Desk : MonoBehaviour
 {
     AudioSource audioSource;
-    AudioClip[] Steps;
-    AudioClip[] fright;
-    AudioClip[] escapes;
+    [SerializeField] AudioClip[] Steps;
+    [SerializeField] AudioClip[] fright;
+    [SerializeField] AudioClip[] escapes;
 
 
     void Start()

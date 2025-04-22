@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
     public int amount;
     public bool IsTakedByPlayer;
     public static event Action<Item> OnItemCreated;
-    
+    public static event Action<Item> OnItemUsed;
     public Vector3 size;
 
     void Awake()
@@ -22,7 +22,7 @@ public class Item : MonoBehaviour
     }
     void Start()
     {
-       
+        size = transform.localScale;
         OnItemCreated?.Invoke(this);  
         IsTakedByPlayer = false; 
     }
@@ -34,5 +34,10 @@ public class Item : MonoBehaviour
         OnItemCreated?.Invoke(this);
     }
 
+    public void OnUsed()
+    {
+        IsTakedByPlayer = false;
+        OnItemUsed?.Invoke(this);
+    }
     
 }

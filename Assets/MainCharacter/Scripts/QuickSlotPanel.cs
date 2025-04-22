@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class QuickSlotPanel : MonoBehaviour
 {
     public Transform quickslotParent;
@@ -14,10 +15,17 @@ public class QuickSlotPanel : MonoBehaviour
     private Transform player;
      [SerializeField] private Slider HealthBar;
     public Text healthText;
+
+    AudioSource audioSource;
+    [SerializeField] AudioClip UseHeal;
+    [SerializeField] AudioClip[] FallOfItem;
+    [SerializeField] AudioClip DropItem;
+
     public static event Action<ItemScriptableObject> OnItemUsed;
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -87,9 +95,9 @@ public class QuickSlotPanel : MonoBehaviour
             {
                 if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.isConsumeable && quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == selectedSprite)
                 {
-                    
+                    //audioSource.PlayOneShot(UseHeal);
                     ChangeCharacteristics();
-
+                   
                     if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
                     {
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
@@ -100,6 +108,7 @@ public class QuickSlotPanel : MonoBehaviour
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                     }
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
+                    
                 }
             }
         }
@@ -108,7 +117,12 @@ public class QuickSlotPanel : MonoBehaviour
         {
             if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
             {
-                GameObject itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
+                Transform itemsContainer = GameObject.FindGameObjectWithTag("item").transform;
+                GameObject itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity, itemsContainer);
+                
+                //audioSource.PlayOneShot(DropItem);
+                //StartCoroutine(waitOfFall());
+                //audioSource.PlayOneShot(FallOfItem[UnityEngine.Random.Range(0, FallOfItem.Length)]);
 
                 if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
                 {
@@ -120,7 +134,7 @@ public class QuickSlotPanel : MonoBehaviour
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                 }
                 
-                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
+                //quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
                 itemObject.GetComponent<Item>().OnDrop();
             }
         }
@@ -141,5 +155,10 @@ public class QuickSlotPanel : MonoBehaviour
         }
         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
         OnItemUsed?.Invoke(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item);
+    }
+
+    private IEnumerator waitOfFall()
+    {
+        yield return new WaitForSeconds(1.5f);
     }
 }

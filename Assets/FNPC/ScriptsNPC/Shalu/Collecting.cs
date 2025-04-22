@@ -41,6 +41,8 @@ public class CollectingNPC : MonoBehaviour
         private float chaseTimer;
         private float baseSpeed;
         
+        public Transform ItemsContainer;
+
 
 
         // Время и звуки
@@ -56,9 +58,14 @@ public class CollectingNPC : MonoBehaviour
     [SerializeField] private AudioClip runSound; 
     [SerializeField] private AudioClip Whistling;
     
-    private Vector3 temp_size;  
+    private Vector3 temp_size;
 
-        void Start()
+    void Awake()
+    {
+        ItemsContainer = GameObject.FindGameObjectWithTag("item").transform;
+    }
+
+    void Start()
         {
             
             //Whistle_audioSource = GetComponent<AudioSource>();
@@ -69,27 +76,50 @@ public class CollectingNPC : MonoBehaviour
             baseSpeed = m_agent.speed;
             Item.OnItemCreated += OnItemCreatedHandler;
             InventoryManager.OnDestroyItem += OnItemDestroyedHandler;
+            QuickSlotPanel.OnItemUsed += OnItemUsedHandler;
             MoveToItem();
         }
-        void OnDestroy()
+       
+private void OnItemUsedHandler(ItemScriptableObject usedItem)
+{
+    if (isChasingPlayer)
     {
-        Item.OnItemCreated -= OnItemCreatedHandler;
-        InventoryManager.OnDestroyItem -= OnItemDestroyedHandler;
+        isChasingPlayer = false;
+        chaseTimer = 0f;
+        items.Remove(currentTarget);
+        currentTarget = null;
+
+        // Перейти к случайной точке или к предмету
+        MoveToDrop();
+        return; // Выход из метода, чтобы не продолжать дальнейшие проверки
     }
+
+    if (IsHolding && stolenItemInstance != null && 
+        stolenItemInstance.GetComponent<Item>().i_item == usedItem)
+    {
+        ImmediateDropItem();
+        MoveAwayFromPlayer();
+    }
+}
+
+    
         void Update()
-        {
-        
-            
-            Debug.Log($"{m_agent.name}: {currentTarget.name}");
-            PlaySound_Whistling();
+{
+    // Удалить устаревшие Debug.Log
+    PlaySound_Whistling();
 
-            if (currentTarget == null && DropOffPoint == default)
-            {
-                MoveToItem();
-                
-            }
+    if (currentTarget == null && DropOffPoint == default && !isChasingPlayer)
+    {
+        MoveToItem();
+    }
+    
+    // Обновление пути только если цель - игрок
+    if (isChasingPlayer && currentTarget == Player)
+    {
+        m_agent.SetDestination(Player.position);
+    }
 
-            if (isChasingPlayer)
+            /*if (isChasingPlayer)
             {
                 chaseTimer += Time.deltaTime;
                 float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
@@ -98,7 +128,7 @@ public class CollectingNPC : MonoBehaviour
                 {
                     DropItemAndEscape();
                 }
-            }
+            }*/
 
             if (isRunningAway)
             {
@@ -159,18 +189,20 @@ public class CollectingNPC : MonoBehaviour
         //
         //Инициализация предметов
         //
-        private void InitializeItems()
+        public void InitializeItems()
+{
+    items.Clear();
+    if (ItemsContainer != null)
+    {
+        foreach (Transform tr in ItemsContainer)
         {
-            Transform ItemsContainer = GameObject.FindGameObjectWithTag("item")?.transform;
-            if (ItemsContainer != null)
+            if (tr != null && tr.GetComponent<Item>() != null)
             {
-                
-                foreach (Transform tr in ItemsContainer)
-                {
-                    items.Add(tr);
-                }
+                items.Add(tr);
             }
         }
+    }
+}
 
         //
         //                          ОСНОВНАЯ
@@ -323,38 +355,48 @@ private IEnumerator StealProcess(Transform stolenItem)
     m_agent.SetDestination(DropOffPoint);
 }
 
-        private void OnItemCreatedHandler(Item newItem)
+       private void OnItemCreatedHandler(Item newItem)
+{
+    if (!IsHolding && !newItem.IsTakedByPlayer && newItem.transform.parent == ItemsContainer)
     {
-        if (!IsHolding && newItem.IsTakedByPlayer)
-        {
-            currentTarget = newItem.transform;
-            m_agent.SetDestination(currentTarget.position);
-
-        }
+        items.Add(newItem.transform); 
+        currentTarget = newItem.transform;
+        m_agent.SetDestination(currentTarget.position);
+        isChasingPlayer = false; 
     }
+}
 
-    private void OnItemDestroyedHandler(Item destroyedItem)
+   private void OnItemDestroyedHandler(Item destroyedItem)
+{
+    // Удаляем уничтоженный предмет из списка
+    items.RemoveAll(t => t == destroyedItem.transform);
+    
+    temp_size = destroyedItem.transform.localScale;
+    if (destroyedItem.IsTakedByPlayer && !IsHolding)
     {
-        temp_size = destroyedItem.transform.localScale;
-        if (destroyedItem.IsTakedByPlayer && !IsHolding)
-        {
-            StartChasingPlayer();
-        }
-
-        else if (destroyedItem.IsTakedByPlayer && IsHolding)
-        {
-            MoveAwayFromPlayer();
-            StartCoroutine(ResetAfterEscape());
-        }
+        StartChasingPlayer();
     }
-
-    private void StartChasingPlayer()
+    else if (destroyedItem.IsTakedByPlayer && IsHolding)
     {
-        isChasingPlayer = true;
-        chaseTimer = 0f;
-        currentTarget = Player;
-        m_agent.SetDestination(Player.position);
+        IsHolding = false;
+        MoveAwayFromPlayer();
+        StartCoroutine(ResetAfterEscape());
     }
+}
+
+   private void StartChasingPlayer()
+{
+    if (IsHolding) return;
+
+    isChasingPlayer = true;
+    chaseTimer = 0f;
+    currentTarget = Player; // Устанавливаем цель на игрока
+    m_agent.SetDestination(Player.position);
+    
+    StopAllCoroutines();
+    m_agent.isStopped = false;
+}
+
 
     private void DropItemAndEscape()
     {
@@ -363,9 +405,9 @@ private IEnumerator StealProcess(Transform stolenItem)
         {
             Destroy(stolenItemInstance);
             Instantiate(currentTarget.GetComponent<Item>().i_item.itemPrefab, 
-                      transform.position, Quaternion.identity);
+                      transform.position, Quaternion.identity, ItemsContainer);
         }
-
+        InitializeItems();
         // Ускоряемся и убегаем
         m_agent.speed = baseSpeed * escapeSpeedMultiplier;
         MoveAwayFromPlayer();
@@ -448,32 +490,33 @@ private IEnumerator StealProcess(Transform stolenItem)
         // Движене к предмету
         //
         private void MoveToItem()
-        {
-             m_animator.SetBool("IsWalking", true);
-            if (PlayerHasItems())
-            {
-                currentTarget = Player;
-                m_agent.SetDestination(Player.position);
-            }
+{
+    if (isChasingPlayer || isRunningAway) return;
 
-            else {
-            
-           
-            foreach (Transform item in items)
-            {
-                
-                if (!item.GetComponent<Item>().IsTakedByPlayer && LastItem != item && CanReach(item.position))
-                {
-                    
-                    SetCurrentTarget(item);
-                    return;
-                }
-            }
-                
-                GenerateDropOffPoint();
-                MoveToDrop();
-            }
+    m_animator.SetBool("IsWalking", true);
+    
+    // Удаление всех null-элементов и предметов игрока
+    items.RemoveAll(t => t == null || t.parent == Player);
+    
+    // Приоритет: предметы на карте
+    foreach (Transform item in items)
+    {
+        if (!item.GetComponent<Item>().IsTakedByPlayer && LastItem != item)
+        {
+            SetCurrentTarget(item);
+            return;
         }
+        else if (item.GetComponent<Item>().IsTakedByPlayer)
+        {
+            // Если предмет игрока был подобран, начать преследование
+            StartChasingPlayer();
+        }
+    }
+
+    // Если предметов нет, двигаться к случайной точке
+    GenerateDropOffPoint();
+    MoveToDrop();
+}
         //
         //                          ВСПОМОГАТЕЛЬНАЯ 
         // Установка текущей цели
@@ -489,14 +532,15 @@ private IEnumerator StealProcess(Transform stolenItem)
         }
         
         private bool PlayerHasItems()
+{
+    foreach (Transform slot in quickslotParent)
     {
-        foreach (Transform slot in quickslotParent)
-        {
-            if (slot.GetComponent<InventorySlot>().is_item != null) 
-                return true;
-        }
-        return false;
+        var inventorySlot = slot.GetComponent<InventorySlot>();
+        if (inventorySlot != null && inventorySlot.is_item != null && inventorySlot.amount > 0)
+            return true;
     }
+    return false;
+}
         //
         //Движение от игрока 
         //
@@ -616,12 +660,14 @@ private IEnumerator PickUpProcess()
     currentTarget.SetParent(m_agent.transform);
     currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
     currentTarget.GetComponent<Rigidbody>().isKinematic = true;
+    
+    Vector3 newSize = currentTarget.GetComponent<Item>().size; 
+    currentTarget.localScale = newSize;
+    
     IsHolding = true;
-
-    // Установите состояние "Hold" после aнимации "Take"
     m_animator.SetBool("IsWalkingHold", true);
-    m_animator.SetBool("IsRunning", false); // Прекратить бежать, если поднимается предмет
-    MoveToDrop(); // Двигайтесь к месту сброса, если все правильно
+    m_animator.SetBool("IsRunning", false);
+    MoveToDrop();
 }
         //
         //Движение к дропу
@@ -643,8 +689,9 @@ private IEnumerator PickUpProcess()
 
 private IEnumerator DropProcess()
 {
-    m_animator.SetTrigger("Drop"); 
-
+    m_animator.ResetTrigger("Take"); // Сбросить триггер взятия
+    m_animator.SetTrigger("Drop");
+    
     float timer = 0f;
     while (timer < 1.5f)
     {
@@ -652,29 +699,33 @@ private IEnumerator DropProcess()
         yield return null; 
     }
 
-    currentTarget.SetParent(null);
+    currentTarget.SetParent(ItemsContainer);
     currentTarget.position = DropOffPoint;
     
     IsHolding = false;
     currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
     currentTarget = null;
 
-    // Вернуться к обычному состоянию
+    // Сброс всех параметров удержания
     m_animator.SetBool("IsWalkingHold", false);
-    m_animator.SetBool("IsWalking", true);
-    MoveToItem(); // Перейти к следующему предмету
+    m_animator.SetBool("IsRunningHold", false);
+    m_animator.ResetTrigger("Drop"); // Важно!
+    
+    InitializeItems(); 
+    MoveToItem();
 }
         //Немедленный выброс предмета под себя
         private void ImmediateDropItem()
         {
 
-            currentTarget.SetParent(null);
+            currentTarget.SetParent(ItemsContainer);
             currentTarget.position = m_agent.transform.position;
             IsHolding = false;
             currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
             isSteal = false;
             currentTarget = null;
             DropOffPoint = default;
+            InitializeItems();
             
         }
         
@@ -770,25 +821,14 @@ private IEnumerator DropProcess()
 
         
         private void UpdateMovementAnimations()
-        {
-            bool isMoving = m_agent.velocity.magnitude > 0.1f;
+{
+    bool isMoving = m_agent.velocity.magnitude > 0.1f;
 
-            if (isRunningAway)
-            {
-                m_animator.SetBool("IsRunning", isMoving);
-                m_animator.SetBool("IsWalking", false);
-            }
-            else if (IsHolding)
-            {
-                m_animator.SetBool("IsWalkingHold", isMoving);
-                m_animator.SetBool("IsRunning", false); 
-            }
-            else
-            {
-                m_animator.SetBool("IsWalking", isMoving);
-                m_animator.SetBool("IsRunning", false);
-            }
-        }   
+    m_animator.SetBool("IsWalking", isMoving && !IsHolding && !isRunningAway);
+    m_animator.SetBool("IsRunning", isMoving && !IsHolding && isRunningAway);
+    m_animator.SetBool("IsWalkingHold", isMoving && IsHolding && !isRunningAway);
+    m_animator.SetBool("IsRunningHold", isMoving && IsHolding && isRunningAway);
+}
 
         private IEnumerator CoroutineForTake()
         {
