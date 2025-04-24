@@ -42,7 +42,7 @@ public class CollectingNPC : MonoBehaviour
         private float baseSpeed;
         
         public Transform ItemsContainer;
-
+        public bool CanBeTaken => IsHolding || (GetComponent<Item>() != null);
 
 
         // Время и звуки

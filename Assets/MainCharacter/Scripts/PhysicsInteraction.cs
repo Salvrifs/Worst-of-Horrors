@@ -70,6 +70,7 @@ public class PhysicsInteraction : MonoBehaviour
             CollectingNPC ShaluScript = _hitInfo.collider.gameObject.GetComponent<CollectingNPC>();
             if (ShaluScript != null)
             {
+                DisplayImage(image1);
                 TakeText.SetActive(true);
             }
 
@@ -88,6 +89,7 @@ public class PhysicsInteraction : MonoBehaviour
             else if (_isShooting == false && (_hitInfo.collider.tag == "Monster") && 
                     ( (ShaluScript.IsHolding == true) || (_hitInfo.collider.GetComponent<Sounds_Desk>() != null) ) )
             {
+                TakeText.SetActive(true);
                 DisplayImage(image1);
             }
 

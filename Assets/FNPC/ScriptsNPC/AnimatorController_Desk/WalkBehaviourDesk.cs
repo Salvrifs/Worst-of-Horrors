@@ -7,7 +7,6 @@ public class WalkBehaviourDesk : StateMachineBehaviour
 {
     private NavMeshAgent agent;
     private Transform player;
-    private Transform[] waypoints;
     private int currentWaypointIndex;
     List<Transform> m_points = new List<Transform>();
     private float timer;
@@ -22,11 +21,15 @@ public class WalkBehaviourDesk : StateMachineBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         
         // Инициализация точек патрулирования
-       Transform pointsObjects = GameObject.FindGameObjectWithTag("Points").transform;
+       Transform pointsParent = GameObject.FindGameObjectWithTag("Points")?.transform; // Проверка на null
 
-        foreach (Transform tr in pointsObjects)
+        if (pointsParent != null)
         {
-            m_points.Add(tr);
+            m_points.Clear();
+            foreach (Transform tr in pointsParent)
+            {
+                m_points.Add(tr);
+            }
         }
         currentWaypointIndex = Random.Range(0, m_points.Count);
         
@@ -54,7 +57,7 @@ public class WalkBehaviourDesk : StateMachineBehaviour
         // Проверка достижения точки
         if (agent.remainingDistance <= waypointThreshold && !agent.pathPending)
         {
-            currentWaypointIndex = (currentWaypointIndex) % waypoints.Length;
+            currentWaypointIndex = (currentWaypointIndex + 1) % m_points.Count;
             SetNextDestination();
         }
     }

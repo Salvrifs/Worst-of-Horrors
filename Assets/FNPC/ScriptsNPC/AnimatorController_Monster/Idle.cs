@@ -8,7 +8,7 @@ public class IdleBehaviour : StateMachineBehaviour
     Transform m_player;
     Transform EnemyEye;
     NavMeshAgent m_agent;
-    [Range(0, 360)] float ViewAngle = 130f;
+    [Range(0, 360)] float ViewAngle = 165f;
     float ViewDistance = 75f;
     //float ChaseDist = 5f;
     

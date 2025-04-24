@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using System.Collections;
 public class PatrolBehaviour : StateMachineBehaviour
 {
 
@@ -10,13 +10,12 @@ public class PatrolBehaviour : StateMachineBehaviour
     NavMeshAgent m_agent;
 
     Transform m_player;
-    [Range(0, 360)] float ViewAngle = 130f;
+    [Range(0, 360)] float ViewAngle = 165f;
     float ViewDistance = 75f; 
     Transform EnemyEye;
     Transform currentTarget;
     //float ChaseDist = 5f;
-    [SerializeField] AudioSource intimidate_audioSource;
-    [SerializeField] AudioClip[] intimidate_audioClips;
+    private Monster_Sound monsterSound;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -33,7 +32,7 @@ public class PatrolBehaviour : StateMachineBehaviour
         m_agent.SetDestination(m_Points[0].position);
         m_player = GameObject.FindGameObjectWithTag("Player").transform; 
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
-        intimidate_audioSource = animator.GetComponent<AudioSource>();
+        monsterSound = animator.GetComponent<Monster_Sound>();
 
     }
 
@@ -58,11 +57,11 @@ public class PatrolBehaviour : StateMachineBehaviour
     //float distance = Vector3.Distance(m_agent.transform.position, m_player.transform.position);
 
     if (IsInView())
-    {
-            //Debug.Log("PatrolBeh: преследование началось");
-            animator.SetBool("IsChasing", true); 
+        {
+            monsterSound.PlayIntimidation();
+            animator.SetBool("IsChasing", true);
             animator.SetBool("IsPatrolling", false);
-    }
+        }
 
     
 }
@@ -100,6 +99,7 @@ private bool IsInView()
         }
         return false;
     }
+
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{

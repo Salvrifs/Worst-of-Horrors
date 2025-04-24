@@ -32,7 +32,7 @@ public class GGMoving : MonoBehaviour
 
     [Header("\t==============\n\tMovement Settings\n\t==============")]
     [SerializeField] private float _speed = 5.0f;
-    [SerializeField] private float _gravity = 9.81f;
+   [SerializeField] private float _gravity = 9.81f;
     [SerializeField] private float _jumpPower = 5.0f;
     [SerializeField] private float _speedRun = 10.0f;
     [SerializeField] private float _speedSit = 2.0f;
@@ -49,7 +49,7 @@ public class GGMoving : MonoBehaviour
 
 
     [Header("\t==============\n\tAudio Settings\n\t==============")]
-    AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
     public AudioClip[] WalkSounds;
     public AudioClip jumpSound;
 
@@ -86,14 +86,18 @@ private float stepTimer;
         _characterController = GetComponent<CharacterController>();
         Current_Stamina = MaxStamina;
         StaminaBar.gameObject.SetActive(false);
-        StartCoroutine(InfectionTimer());
+        //StartCoroutine(InfectionTimer());
         infectionEffectImage.color = new Color(1, 0, 0, 0);
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        timerOfPlayerLive += Time.deltaTime;
+        if (audioSource == null)
+        {
+            Debug.Log($"{transform.name}: Audio: {transform.GetComponent<AudioSource>()} ego net");
+        }
+        //timerOfPlayerLive += Time.deltaTime;
 
         //if(timerOfPlayerLive > MaxTimeOfPlay)
         //{
@@ -124,7 +128,7 @@ private float stepTimer;
     private void Walk(Vector3 direction)
     {
         _characterController.Move(direction * _speed * Time.fixedDeltaTime);
-        ChangeSound();
+        //ChangeSound();
     }
     //
     //Гравитация
@@ -141,29 +145,30 @@ private float stepTimer;
     //
     //Прыжок
     //
-   private void Jump(bool canJump)
+private void Jump(bool canJump)
 {
-    if (canJump && !isJumping) // Добавляем проверку на состояние прыжка
+    if (canJump && !isJumping && _characterController.isGrounded)
     {
+        Debug.Log("CanJump");
         isJumping = true;
-        Debug.Log("Jumping");
+        _velocity.y = Mathf.Sqrt(_jumpPower * 3f * _gravity); // Оптимизированная формула
         
         if (regenCoroutine != null)
         {
             StopCoroutine(regenCoroutine);
             regenCoroutine = null;
         }
-
-        audioSource.PlayOneShot(jumpSound);
-        _velocity.y = Mathf.Sqrt(_jumpPower * 2f * _gravity); // Правильная формула прыжка
         Current_Stamina -= jumpCost;
         StartCoroutine(JumpCooldown());
+        isJumping = false;
+        audioSource.PlayOneShot(jumpSound);
+        
     }
 }
 
 private IEnumerator JumpCooldown()
 {
-    yield return new WaitForSeconds(0.5f);
+    yield return new WaitForSeconds(0.3f); 
     isJumping = false;
 }
 
@@ -180,7 +185,7 @@ private IEnumerator JumpCooldown()
         // При приседании
         _characterController.height = Mathf.Lerp(_characterController.height, 1f, Time.deltaTime * 5f);
         _speed = _speedSit;
-        isSprinting = false; // Блокируем спринт
+        isSprinting = false; 
     }
     else if (wantSprint && Current_Stamina >= RunCost)
     {

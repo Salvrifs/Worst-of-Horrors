@@ -16,12 +16,10 @@ public class AttackBehaviour : StateMachineBehaviour
     private float timer = 0f;
     
     Transform EnemyEye;
-    [Range(0, 360)] float ViewAngle = 130f;
+    [Range(0, 360)] float ViewAngle = 165f;
     
     float ViewDistance = 75f;
     bool IsAttackUge;
-    [SerializeField] AudioClip[] intimidateSound; 
-    [SerializeField] AudioSource intimidate_audioSource;
     
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -31,7 +29,6 @@ public class AttackBehaviour : StateMachineBehaviour
         HealthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
         healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
-        intimidate_audioSource = animator.GetComponent<AudioSource>();
         IsAttackUge = false;
         
         
@@ -88,7 +85,7 @@ public class AttackBehaviour : StateMachineBehaviour
             }
         }
 
-        PlayAttack_Sound();
+        //PlayAttack_Sound();
                 
         
         
@@ -145,20 +142,19 @@ private bool IsInView()
 //
 //Звук
 //
-    private void PlayAttack_Sound()
+    /*private void PlayAttack_Sound()
     {
         if (!intimidate_audioSource.isPlaying)
         {
             intimidate_audioSource.PlayOneShot(intimidateSound[Random.Range(0, intimidateSound.Length)]);
         }
-    }
+    }*/
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer = 0f;
         IsAttackUge = false;
-        intimidate_audioSource.Stop();
     }
 
 }

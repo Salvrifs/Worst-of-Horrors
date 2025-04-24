@@ -513,7 +513,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7c27aaa32b2823343aeed787c8a20795, type: 3}
   - {fileID: 8300000, guid: 35df921a46bf50d4da45e802b3b51456, type: 3}
   - {fileID: 8300000, guid: dc4ae9d50d1262b47b2e7d4542a1f001, type: 3}
-  intimidate_audioSource: {fileID: 0}
+  Music_chase: {fileID: 8300000, guid: 8a1a76b949f3f0f42819fe6734740341, type: 3}
+  audioSource: {fileID: 0}
 --- !u!1101 &5980144179228745251
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -578,7 +579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Points: []
-  intimidate_audioSource: {fileID: 0}
+  intimidate_audioSource: {fileID: 3140533356545564164, guid: 72af5dde4b33cc3448288dc9a25de7be, type: 3}
   intimidate_audioClips:
   - {fileID: 8300000, guid: 812b0d4c6c4c42041ba1a89c4e007ee1, type: 3}
   - {fileID: 8300000, guid: 9fd3a33a292c92c42a9defdeab7500c4, type: 3}
