@@ -1,13 +1,14 @@
 using UnityEngine;
 
-public class Flashlight : MonoBehaviour
+public class FlashlightBeh : MonoBehaviour
 {
     [Header("Настройки фонарика")]
     [SerializeField] private Light flashlight; 
-    [SerializeField] private KeyCode toggleKey = KeyCode.F; 
+    [SerializeField] private KeyCode toggleKey = KeyCode.M; 
     [SerializeField] private AudioClip toggleSound; 
-    [SerializeField] private float batteryLife = 60f; 
-    
+    [SerializeField] private AudioClip RechargeSound;
+    [SerializeField] private float batteryLife = 90f; 
+    [SerializeField] private Vector3 offsetPosition = new Vector3(0, 0, 0.5f);
     private AudioSource audioSource;
     private bool isOn;
     private float currentBattery;
@@ -16,10 +17,10 @@ public class Flashlight : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         currentBattery = batteryLife;
-        flashlight.enabled = false; // Выключаем свет при старте
+        flashlight.enabled = false;
     }
 
-    void Update()
+    /*void Update()
     {
         // Включение/выключение по нажатию клавиши
         if (Input.GetKeyDown(toggleKey))
@@ -37,12 +38,13 @@ public class Flashlight : MonoBehaviour
                 TurnOff();
             }
         }
-    }
+    }*/
 
-    void ToggleFlashlight()
+    public void ToggleFlashlight()
     {
         if (currentBattery > 0)
         {
+            
             isOn = !isOn;
             flashlight.enabled = isOn;
             
@@ -57,11 +59,19 @@ public class Flashlight : MonoBehaviour
     {
         isOn = false;
         flashlight.enabled = false;
+        audioSource.PlayOneShot(toggleSound);
     }
 
     // Метод для подзарядки (можно вызывать из других скриптов)
-    public void RechargeBattery(float amount)
+    public void RechargeBattery()
     {
-        currentBattery = Mathf.Clamp(currentBattery + amount, 0, batteryLife);
+        currentBattery = batteryLife;
+        audioSource.PlayOneShot(toggleSound);
+    }
+    public void AttachToPlayer(Transform parent)
+    {
+        transform.SetParent(parent);
+        transform.localPosition = offsetPosition;
+        transform.localRotation = Quaternion.identity;
     }
 }

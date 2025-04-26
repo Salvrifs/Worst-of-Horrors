@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,13 @@ public class QuickSlotPanel : MonoBehaviour
     private Transform player;
      [SerializeField] private Slider HealthBar;
     public Text healthText;
+    private Camera mainCamera;
+    public float reachDistance = 3f;
+    [Header("Flashlight Settings")]
+[SerializeField] private FlashlightBeh flashlight;
+[SerializeField] private Transform flashlightParent;
+   
+    
 
     AudioSource audioSource;
     [SerializeField] AudioClip UseHeal;
@@ -22,11 +30,13 @@ public class QuickSlotPanel : MonoBehaviour
     [SerializeField] AudioClip DropItem;
 
     public static event Action<ItemScriptableObject> OnItemUsed;
+    
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        mainCamera = Camera.main;
     }
 
     void Update()
@@ -107,8 +117,43 @@ public class QuickSlotPanel : MonoBehaviour
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                     }
-                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
-                    
+                    quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false; 
+                }
+
+                else if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemType == ItemType.Lighting)
+{
+    if (flashlight != null)
+    {
+        // Активируем фонарик и устанавливаем позицию
+        if (flashlight != null)
+{
+    flashlight.gameObject.SetActive(true);
+    flashlight.GetComponent<Rigidbody>().isKinematic = true;
+    flashlight.transform.SetParent(flashlightParent);
+    flashlight.transform.localPosition = new Vector3(0.4f, 0.6f, 0.6f); 
+    flashlight.transform.localEulerAngles = new Vector3(-90, 0, 0);  
+    flashlight.ToggleFlashlight();
+}
+    }
+}
+            }
+        }
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, reachDistance))
+        {
+            Rozetka itemInfo = hit.collider.gameObject.GetComponent<Rozetka>();
+            if (itemInfo != null)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemType == ItemType.Lighting)
+                    {
+                        flashlight.gameObject.SetActive(false);
+                        flashlight.RechargeBattery();
+                    }
                 }
             }
         }
@@ -135,7 +180,17 @@ public class QuickSlotPanel : MonoBehaviour
                 }
                 
                 //quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
-                itemObject.GetComponent<Item>().OnDrop();
+                if (itemObject.GetComponent<Item>().i_item.itemType != ItemType.Board)
+                {
+                    itemObject.GetComponent<Item>().OnDrop();
+                }
+                else if (itemObject.GetComponent<Item>().i_item.itemType == ItemType.Board)
+                {
+                    flashlight.gameObject.SetActive(false);
+                    flashlight.GetComponent<Rigidbody>().isKinematic = false;
+                    flashlight.transform.position = player.position + Vector3.up + player.forward;
+                    flashlight.transform.localPosition = player.position + Vector3.up + player.forward;
+                }
             }
         }
     }

@@ -37,37 +37,29 @@ public class InventoryManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) {
             if (Physics.Raycast(ray, out hit, reachDistance))
             {
-                GameObject obj = hit.collider.gameObject;
-                if (obj.GetComponent<Item>() != null)
+                Item itemInfo = hit.collider.gameObject.GetComponent<Item>();
+                if (itemInfo != null && (itemInfo.i_item.itemType == ItemType.Heal) )
                 {
-                    if (obj.GetComponent<Item>().i_item.itemName == "Mushroom")
-                    {
-                        //audioSource.PlayOneShot(TakeBottle);
-                    AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
-                    hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
-                    OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
+                    AddItem(itemInfo.i_item, itemInfo.amount);
+                    itemInfo.i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(itemInfo);
                     Destroy(hit.collider.gameObject);
-                    }
-
-                    else if (obj.GetComponent<Item>().i_item.itemName == "Potion")
-                    {
-                        //audioSource.PlayOneShot(TakeMushrom);
-                    AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
-                    hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
-                    OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
-                    Destroy(hit.collider.gameObject);
-                    }
+                }
+                else if (itemInfo != null && itemInfo.i_item.itemType == ItemType.Lighting)
+                {
+                    AddItem(itemInfo.i_item, itemInfo.amount);
+                    itemInfo.i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(itemInfo);
+                    //hit.collider.gameObject.transform.SetParent(quickSlotPanel);
+                    itemInfo.gameObject.SetActive(false);
                 }
 
-                else if ( obj.GetComponent<CollectingNPC>() != null && 
-                          obj.GetComponent<CollectingNPC>().IsHolding == true)
+                else if (itemInfo != null && itemInfo.i_item.itemType == ItemType.Board)
                 {
-                    Transform ShaluItem = obj.transform.GetChild(2).GetChild(1); 
-                    AddItem(ShaluItem.GetComponent<Item>().i_item, ShaluItem.GetComponent<Item>().amount);
-                    ShaluItem.GetComponent<Item>().i_item.IsTakedByPlayer = true;
-                    OnDestroyItem?.Invoke(ShaluItem.GetComponent<Item>());
-                    Destroy(ShaluItem.gameObject);
-                }
+                    AddItem(itemInfo.i_item, itemInfo.amount);
+                    itemInfo.i_item.IsTakedByPlayer = true;
+                    Destroy(hit.collider.gameObject);
+                } 
             }
         } 
     }

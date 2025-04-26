@@ -69,7 +69,11 @@ public class NewBehaviourScript : MonoBehaviour
         Time.timeScale = 0f;
         cameraController.SetControlEnabled(false);
         AudioListener.pause = activeOrNot;
+        
+        //FindObjectOfType<VolumeSettings>().ToggleMusic(true, 1.6f);
     }
+
+    
 
     //
     //Нажать кнопку "Играть" в главном меню
@@ -77,7 +81,9 @@ public class NewBehaviourScript : MonoBehaviour
     public void PlayPressed()
     {
         //Menu.SetActive(false);
-        SceneManager.LoadScene("SampleScene");
+       
+        SceneManager.LoadScene("Sample");
+        FindObjectOfType<VolumeSettings>().StartMusicFade(0f, 2f);
     }
     //
     //нажать кпопку "Продолжить" в esc
@@ -90,6 +96,7 @@ public class NewBehaviourScript : MonoBehaviour
         Time.timeScale = 1f;
         cameraController.SetControlEnabled(true);
         AudioListener.pause = false;
+        FindObjectOfType<VolumeSettings>().StartMusicFade(0, 1.5f);
     }
     //
     //Нажать кпопку "Настройки" в esc
@@ -106,12 +113,15 @@ public class NewBehaviourScript : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MenuScene");
+        FindObjectOfType<VolumeSettings>().ToggleMusic(true, 1.5f);
     }
     //
     //Нажать кнопку "Выход" в главном меню
     //
     public void ExitPressed()
     {
+        
         Application.Quit();
+        FindObjectOfType<VolumeSettings>().ToggleMusic(true, 1.6f);
     }
 }

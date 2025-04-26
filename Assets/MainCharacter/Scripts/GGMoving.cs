@@ -32,7 +32,7 @@ public class GGMoving : MonoBehaviour
 
     [Header("\t==============\n\tMovement Settings\n\t==============")]
     [SerializeField] private float _speed = 5.0f;
-   [SerializeField] private float _gravity = 9.81f;
+    [SerializeField] private float _gravity = 9.81f;
     [SerializeField] private float _jumpPower = 5.0f;
     [SerializeField] private float _speedRun = 10.0f;
     [SerializeField] private float _speedSit = 2.0f;
@@ -151,7 +151,7 @@ private void Jump(bool canJump)
     {
         Debug.Log("CanJump");
         isJumping = true;
-        _velocity.y = Mathf.Sqrt(_jumpPower * 3f * _gravity); // Оптимизированная формула
+        _velocity.y = _jumpPower; //Mathf.Sqrt(_jumpPower * 3f * _gravity); // Оптимизированная формула
         
         if (regenCoroutine != null)
         {

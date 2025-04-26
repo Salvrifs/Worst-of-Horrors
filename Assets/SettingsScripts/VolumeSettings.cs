@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
-public class Sounds : MonoBehaviour
+public class VolumeSettings : MonoBehaviour
 {
     [SerializeField] private AudioMixer myMixer;
     [SerializeField] private Slider Slider_Main;
@@ -14,12 +14,43 @@ public class Sounds : MonoBehaviour
     [SerializeField] private GameObject Main_Menu;
     [SerializeField] private GameObject Options_Menu;
 
-    
+    private Coroutine _musicFadeCoroutine;
 
     private void Start()
     {
-        //AudioListener.pause = true;
        LoadSoundsOptions(); 
+    }
+
+    public void ToggleMusic(bool play, float fadeDuration = 1f)
+    {
+        float targetVolume = play ? PlayerPrefs.GetFloat("musicVolume", 50) : 0;
+        StartMusicFade(targetVolume, fadeDuration);
+    }
+
+    //  
+    //Корутина
+    //
+    private IEnumerator FadeMusic(float startVolume, float targetVolume, float duration)
+    {
+        float currentTime = 0f;
+        while (currentTime < duration)
+        {
+            currentTime += Time.unscaledDeltaTime;
+            float volume = Mathf.Lerp(startVolume, targetVolume, currentTime / duration);
+            myMixer.SetFloat("music", ConvertToDecibel(volume));
+            yield return null;
+        }
+    }
+    //
+    //Начинает затухание
+    //
+    public void StartMusicFade(float targetVolume, float duration)
+    {
+        if (_musicFadeCoroutine != null)
+        {
+            StopCoroutine(_musicFadeCoroutine);
+        }
+        _musicFadeCoroutine = StartCoroutine(FadeMusic(Slider_Music.value, targetVolume, duration));
     }
 
     //Загрузка данных звуков
@@ -31,14 +62,17 @@ public class Sounds : MonoBehaviour
         LoadPlayerVolume();
         LoadEffectVolume();
     }
-
+    private float ConvertToDecibel(float value)
+    {
+        return Mathf.Clamp(20f * Mathf.Log10(value / 100f), -80f, 0f);
+    }
     //
     //Установка громкости музыки
     //
     public void SetMusicVolume()
     {
         float volume_music = Slider_Music.value;
-        myMixer.SetFloat("music", volume_music);
+        myMixer.SetFloat("music", ConvertToDecibel(volume_music));
         PlayerPrefs.SetFloat("musicVolume", volume_music);
     }
     //
@@ -64,7 +98,7 @@ public class Sounds : MonoBehaviour
     public void SetMonsterVolume()
     {
         float volume_monster = Slider_Monster.value;
-        myMixer.SetFloat("Monster", volume_monster);
+        myMixer.SetFloat("Monster", ConvertToDecibel(volume_monster));
         PlayerPrefs.SetFloat("MonsterVolume", volume_monster);
     }
     //
@@ -90,7 +124,7 @@ public class Sounds : MonoBehaviour
     public void SetPlayerVolume()
     {
         float volume_player = Slider_Player.value;
-        myMixer.SetFloat("Player", volume_player);
+        myMixer.SetFloat("Player", ConvertToDecibel(volume_player));
         PlayerPrefs.SetFloat("PlayerVolume", volume_player);
     } 
     //
@@ -116,7 +150,7 @@ public class Sounds : MonoBehaviour
     public void SetEffectVolume()
     {
         float volume_effect = Slider_Effect.value;
-        myMixer.SetFloat("Effect", volume_effect);
+        myMixer.SetFloat("Effect", ConvertToDecibel(volume_effect));
         PlayerPrefs.SetFloat("EffectVolume", volume_effect);
         
 
@@ -144,7 +178,7 @@ public class Sounds : MonoBehaviour
     public void SetMainVolume()
     {
         float volume_main = Slider_Main.value;
-        myMixer.SetFloat("Master", volume_main);
+        myMixer.SetFloat("Master", ConvertToDecibel(volume_main));
         PlayerPrefs.SetFloat("MainVolume", volume_main);
     } 
     //
@@ -155,7 +189,7 @@ public class Sounds : MonoBehaviour
         if (PlayerPrefs.HasKey("MainVolume"))
         {
             Slider_Main.value = PlayerPrefs.GetFloat("MainVolume");
-            SetPlayerVolume();
+            SetMainVolume();
         }
 
         else
@@ -198,5 +232,10 @@ public class Sounds : MonoBehaviour
         gameObject.SetActive(false);
         Options_Menu.SetActive(true);
     }
+
+    public void MuteAll(bool mute)
+{
+    myMixer.SetFloat("Master", mute ? -80f : ConvertToDecibel(Slider_Main.value));
+}
 
 }

@@ -22,7 +22,7 @@ public class Item : MonoBehaviour
     }
     void Start()
     {
-        size = transform.localScale;
+        size = new Vector3(111, 111, 111);
         OnItemCreated?.Invoke(this);  
         IsTakedByPlayer = false; 
     }

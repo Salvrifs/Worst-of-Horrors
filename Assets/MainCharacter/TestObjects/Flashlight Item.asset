@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7f77321e24395f468e4f3a83f5c8efc, type: 3}
-  m_Name: Desk
+  m_Script: {fileID: 11500000, guid: 2e12a5b3bfef64245860a8c21e6575f8, type: 3}
+  m_Name: Flashlight Item
   m_EditorClassIdentifier: 
-  itemName: Desk
+  itemName: Flashlight
   maximumAmount: 1
   itemDescription: d
-  icon: {fileID: 21300000, guid: 8c7ceb5e9a78aa04d92fa9d0528bb1ec, type: 3}
-  itemPrefab: {fileID: 3031949372687064824, guid: d84acdf9ef8bf0a4595911f1d45fc00d, type: 3}
-  itemType: 2
+  icon: {fileID: 21300000, guid: 1c840c035007ed94391ee096e8035120, type: 3}
+  itemPrefab: {fileID: 905236707367505171, guid: 742b8942edde4ed47828a8f0aa9866a9, type: 3}
+  itemType: 0
   isConsumeable: 0
   changeHealth: 0
   IsTakedByPlayer: 1

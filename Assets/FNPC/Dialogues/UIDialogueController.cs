@@ -12,18 +12,15 @@ public class UIDialogueController : MonoBehaviour
     [SerializeField] private GameObject optionButtonPrefab;
     [SerializeField] private Transform optionsContainer;
     [SerializeField] private GameObject dialoguePanel;
-
+    
     void Awake()
     {
         if(Instance == null)
         {
             Instance = this;
-            dialoguePanel.SetActive(false); // Начальное состояние - выключено
+            dialoguePanel.SetActive(false); 
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        
     }
 
     public void AppendDialogueText(char character)

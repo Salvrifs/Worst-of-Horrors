@@ -3,15 +3,21 @@ using UnityEngine;
 
 public class DialogueLoader : MonoBehaviour
 {
-    public DialogueData LoadDialogue(string fileName)
+    // DialogueLoader.cs
+public DialogueData LoadDialogue(string fileName)
+{
+    TextAsset textAsset = Resources.Load<TextAsset>(fileName);
+    
+    if(textAsset == null)
     {
-        TextAsset textAsset = Resources.Load<TextAsset>(fileName);
-        if(textAsset == null)
-        {
-            Debug.LogError($"Dialogue file {fileName} not found!");
-            return null;
-        }
-
-        return DialogueParser.ParseDialogue(textAsset.text);
+        Debug.LogError($"Файл '{fileName}' не найден в папке Resources!");
+        return null;
     }
+    else
+    {
+        Debug.Log($"Файл '{fileName}' успешно загружен!"); // Лог успеха
+    }
+    
+    return DialogueParser.ParseDialogue(textAsset.text);
+}
 }
