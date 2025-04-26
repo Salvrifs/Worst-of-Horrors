@@ -5,14 +5,21 @@ using System;
 
 public class InventoryManager : MonoBehaviour
 {
+    
     public Transform quickSlotPanel;
     public List<InventorySlot> slots = new List<InventorySlot>();
     private Camera mainCamera;
     public float reachDistance = 3f;
 
+    [SerializeField] AudioClip TakeBottle;
+    [SerializeField] AudioClip TakeMushrom;
+
+    AudioSource audioSource;
+
     public static event Action<Item> OnDestroyItem;
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         mainCamera = Camera.main;
         for (int i = 0; i < quickSlotPanel.childCount; i++) 
         {
@@ -30,13 +37,36 @@ public class InventoryManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) {
             if (Physics.Raycast(ray, out hit, reachDistance))
             {
-                if (hit.collider.gameObject.GetComponent<Item>() != null)
+                GameObject obj = hit.collider.gameObject;
+                if (obj.GetComponent<Item>() != null)
                 {
+                    if (obj.GetComponent<Item>().i_item.itemName == "Mushroom")
+                    {
+                        //audioSource.PlayOneShot(TakeBottle);
                     AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
                     hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
                     OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
                     Destroy(hit.collider.gameObject);
+                    }
 
+                    else if (obj.GetComponent<Item>().i_item.itemName == "Potion")
+                    {
+                        //audioSource.PlayOneShot(TakeMushrom);
+                    AddItem(hit.collider.gameObject.GetComponent<Item>().i_item, hit.collider.gameObject.GetComponent<Item>().amount);
+                    hit.collider.gameObject.GetComponent<Item>().i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(hit.collider.gameObject.GetComponent<Item>());
+                    Destroy(hit.collider.gameObject);
+                    }
+                }
+
+                else if ( obj.GetComponent<CollectingNPC>() != null && 
+                          obj.GetComponent<CollectingNPC>().IsHolding == true)
+                {
+                    Transform ShaluItem = obj.transform.GetChild(2).GetChild(1); 
+                    AddItem(ShaluItem.GetComponent<Item>().i_item, ShaluItem.GetComponent<Item>().amount);
+                    ShaluItem.GetComponent<Item>().i_item.IsTakedByPlayer = true;
+                    OnDestroyItem?.Invoke(ShaluItem.GetComponent<Item>());
+                    Destroy(ShaluItem.gameObject);
                 }
             }
         } 
@@ -68,6 +98,7 @@ public class InventoryManager : MonoBehaviour
                 slot.isEmpty = false;
                 slot.SetIcon(_item.icon);
                 slot.textItemAmount.text = _amount.ToString();
+                
                 break;
             }
         }

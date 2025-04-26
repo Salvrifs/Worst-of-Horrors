@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
+using UnityEditor;
 
 public class AttackBehaviour : StateMachineBehaviour
 {
@@ -15,12 +16,10 @@ public class AttackBehaviour : StateMachineBehaviour
     private float timer = 0f;
     
     Transform EnemyEye;
-    [Range(0, 360)] float ViewAngle = 130f;
+    [Range(0, 360)] float ViewAngle = 165f;
     
     float ViewDistance = 75f;
     bool IsAttackUge;
-    [SerializeField] AudioSource AttackSound;
-    [SerializeField] AudioSource DeathPlayer;
     
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -30,16 +29,16 @@ public class AttackBehaviour : StateMachineBehaviour
         HealthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
         healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
-        
         IsAttackUge = false;
-        AttackSound = GameObject.Find("MonsterAttack").GetComponent<AudioSource>();
-        DeathPlayer = GameObject.Find("DeathPlayer").GetComponent<AudioSource>();
-        AttackSound.Play();
+        
+        
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        
         animator.transform.LookAt(m_player);
         float distance = Vector3.Distance(animator.transform.position, m_player.position);
 
@@ -60,11 +59,7 @@ public class AttackBehaviour : StateMachineBehaviour
                     {
                         timer = 0f;
                         PerformAttack();
-                        if (AttackSound.isPlaying)
-                        {
-                            return;
-                        }
-                        AttackSound.Play();
+                        
                     }
                 }
 
@@ -77,11 +72,7 @@ public class AttackBehaviour : StateMachineBehaviour
                         timer = 0f;
                         PerformAttack();
                         IsAttackUge = true; 
-                        if (AttackSound.isPlaying)
-                        {
-                            return;
-                        }
-                        AttackSound.Play();
+                        
                     }
                 }
             }
@@ -94,6 +85,9 @@ public class AttackBehaviour : StateMachineBehaviour
             }
         }
 
+        //PlayAttack_Sound();
+                
+        
         
 
         
@@ -119,7 +113,7 @@ public class AttackBehaviour : StateMachineBehaviour
 
     private void GameOver()
     {
-        DeathPlayer.Play();
+        
         Debug.Log("Игра окончена!");
         
         // Перезагрузить текущую сцену
@@ -127,8 +121,9 @@ public class AttackBehaviour : StateMachineBehaviour
     
         // SceneManager.LoadScene("GameOverScene"); //Перезагрузить нужную сцену
     }
-
+//
 //Находится ли в поле зрения
+//
 private bool IsInView() 
     {
         float currentAngle = Vector3.Angle(EnemyEye.forward, m_player.position - EnemyEye.position);
@@ -144,16 +139,22 @@ private bool IsInView()
         }
         return false; // Игрок скрыт
     }
+//
+//Звук
+//
+    /*private void PlayAttack_Sound()
+    {
+        if (!intimidate_audioSource.isPlaying)
+        {
+            intimidate_audioSource.PlayOneShot(intimidateSound[Random.Range(0, intimidateSound.Length)]);
+        }
+    }*/
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer = 0f;
         IsAttackUge = false;
-        if (AttackSound.isPlaying)
-        {
-            AttackSound.Stop();
-        }
     }
 
 }

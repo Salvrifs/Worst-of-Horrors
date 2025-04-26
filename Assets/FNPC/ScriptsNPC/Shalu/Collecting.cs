@@ -2,695 +2,855 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-
 using Unity.VisualScripting;
-using UnityEngine.XR;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 public class CollectingNPC : MonoBehaviour
-{
-    //Фундамент
-    private Animator m_animator;
-    private NavMeshAgent m_agent;
-    private Transform Player;
-    private Coroutine escapeCoroutine;
-    private Transform currentTarget = null;
-    private float escapeTimer;
-    private float escapeDist = 15f;
-    private Vector3 DropOffPoint;
-    //private List<Transform> items = new List<Transform>();
-    private HashSet<Transform> active_items = new HashSet<Transform>();
+    {
+        //Фундамент
+        private Animator m_animator;
+        private NavMeshAgent m_agent;
+        private Transform Player;
+        private Coroutine escapeCoroutine;
+        private Transform currentTarget = null;
+        private float escapeTimer;
+        private float escapeDist = 15f;
+        private Vector3 DropOffPoint;
+        private List<Transform> items = new List<Transform>();
 
-    // Параметры для кражи
-    private Transform LastItem;
-    private int RandInd;
-    private bool IsHolding, isSteal, isRunningAway;
-    public Transform quickslotParent;
+        // Параметры для кражи
+        private Transform LastItem;
+        private int RandInd;
+        private bool isSteal, isRunningAway;
+        public bool IsHolding;
+        public Transform quickslotParent;
+        
+        // Настройки обзора
+        [SerializeField] private Transform Eye;
+        private float ViewDistance = 75f;
+        [Range(0, 360)] private float ViewAngle = 130f;
+
+        [Header("Stealing Settings")]
+        [SerializeField] private Transform itemHolderPoint; 
+        [SerializeField] private float stealDetectionRange = 20f;
+        [SerializeField] private float escapeSpeedMultiplier = 2f;
     
-    // Настройки обзора
-    [SerializeField] private Transform Eye;
-    private float ViewDistance = 75f;
-    [Range(0, 360)] private float ViewAngle = 130f;
+        private GameObject stolenItemInstance;
+        private bool isChasingPlayer;
+        private float chaseTimer;
+        private float baseSpeed;
+        
+        public Transform ItemsContainer;
+        public bool CanBeTaken => IsHolding || (GetComponent<Item>() != null);
 
-    // Время и звуки
-    private float timer = 0f;
-    public AudioSource walkSoundS; 
-    //public AudioClip pickUpSound; 
-    //public AudioClip dropSound; 
-    public AudioClip walkSound; 
-    public AudioClip runSound; 
-    public AudioClip jumpSound; 
 
-    [SerializeField] float escapeDuration = 15f;
+        // Время и звуки
+        private float timer = 0f;
+        [SerializeField] private AudioSource Whistle_audioSource;
+        
+    
+    // Existing variables
+    [SerializeField] private AudioClip walkSoundS; 
+    [SerializeField] private AudioClip pickUpSound; 
+    [SerializeField] private AudioClip dropSound; 
+    [SerializeField] private AudioClip walkSound; 
+    [SerializeField] private AudioClip runSound; 
+    [SerializeField] private AudioClip Whistling;
+    
+    private Vector3 temp_size;
+
+    void Awake()
+    {
+        ItemsContainer = GameObject.FindGameObjectWithTag("item").transform;
+    }
 
     void Start()
-    {
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        m_agent = GetComponent<NavMeshAgent>();
-        m_animator = GetComponent<Animator>();
-        InitializeItems();
-        MoveToItem();
-
-        Item.OnItemCreated += HandleItemCreating;
-        InventoryManager.OnDestroyItem += HandleItemDestroy;
-        QuickSlotPanel.OnItemUsed += HandleItemUsed;
-    }
-
-    void Update()
-    {
-       /* if (IsInView())
-        {
-            MoveAwayFromPlayer();
-            return;
-        }*/
-        
-        Debug.Log($"{m_agent.name}: {currentTarget.name}");
-
-        if (currentTarget == null && DropOffPoint == default)
-        {
-            //Debug.Log("Both things don't exist");
-            MoveToItem();
-             
-        }
-
-        if (isRunningAway)
-        {
-            //Debug.Log($"{m_agent.name}: in isRunningAway {currentTarget.name}");
-            escapeTimer += Time.deltaTime;
-            if (escapeTimer >= 10f)
-            {
-                ExecuteEscape();
-                StopCoroutine(escapeCoroutine);
-                isRunningAway = false;
-            }
-            return;
-        }
-
-        // Проверка, принадлежит ли текущая цель игроку
-        /*if (IsHolding && currentTarget.parent.CompareTag("Player"))
-        {
-            //m_animator.SetTrigger("AAA,MAN!!!");
-            //Звук
-            //Debug.Log("it don't be in this way");
-            ResetCurrentTarget();
-            MoveAwayFromPlayer();
-            //MoveToItem();
-            return;
-        }*/
-
-        float Distance = IsHolding 
-            ? Vector3.Distance(m_agent.transform.position, DropOffPoint) 
-            : Vector3.Distance(m_agent.transform.position, currentTarget.position);
-
-        isSteal = currentTarget.GetComponent<Item>().i_item.IsTakedByPlayer;
-
-        if (!IsHolding)
-        {
-            //Debug.Log($"{m_agent.name}: Handle !Holding");
-            HandleItemCollection(Distance);
-        }
-        else
-        {
-            //Debug.Log($"{m_agent.name}: Handle Holding");
-            HandleItemDropping(Distance);
-        }
-        Debug.Log($"currentTarget: {currentTarget.name}");
-        m_agent.SetDestination(currentTarget.position);
-    }
-    void FixedUpdate()
-    {
-        // Обновление анимаций только если не в процессе кражи
-        if (!IsHolding || !isRunningAway)
-        {
-            UpdateMovementAnimations();
-        }
-    }
-    //
-    //Инициализация предметов
-    //
-    private void InitializeItems()
-    {
-        Transform ItemsContainer = GameObject.FindGameObjectWithTag("item")?.transform;
-        if (ItemsContainer != null)
         {
             
-            foreach (Transform tr in ItemsContainer)
-            {
-                //Debug.Log(tr.name);
-                active_items.Add(tr);
-            }
+            //Whistle_audioSource = GetComponent<AudioSource>();
+            Player = GameObject.FindGameObjectWithTag("Player").transform;
+            m_agent = GetComponent<NavMeshAgent>();
+            m_animator = GetComponent<Animator>();
+            InitializeItems();
+            baseSpeed = m_agent.speed;
+            Item.OnItemCreated += OnItemCreatedHandler;
+            InventoryManager.OnDestroyItem += OnItemDestroyedHandler;
+            QuickSlotPanel.OnItemUsed += OnItemUsedHandler;
+            MoveToItem();
         }
+       
+private void OnItemUsedHandler(ItemScriptableObject usedItem)
+{
+    if (isChasingPlayer)
+    {
+        isChasingPlayer = false;
+        chaseTimer = 0f;
+        items.Remove(currentTarget);
+        currentTarget = null;
+
+        // Перейти к случайной точке или к предмету
+        MoveToDrop();
+        return; // Выход из метода, чтобы не продолжать дальнейшие проверки
     }
 
-    //
-    //                          ОСНОВНАЯ
-    //Работа с подбором предметов
-    //
-    private void HandleItemCollection(float Distance)
+    if (IsHolding && stolenItemInstance != null && 
+        stolenItemInstance.GetComponent<Item>().i_item == usedItem)
     {
-        if (m_agent.stoppingDistance >= Distance)
-        {
-            if (isSteal)
+        ImmediateDropItem();
+        MoveAwayFromPlayer();
+    }
+}
+
+    
+        void Update()
+{
+    // Удалить устаревшие Debug.Log
+    PlaySound_Whistling();
+
+    if (currentTarget == null && DropOffPoint == default && !isChasingPlayer)
+    {
+        MoveToItem();
+    }
+    
+    // Обновление пути только если цель - игрок
+    if (isChasingPlayer && currentTarget == Player)
+    {
+        m_agent.SetDestination(Player.position);
+    }
+
+            /*if (isChasingPlayer)
             {
-                Debug.Log($"{m_agent.name}: Norm dist steal for colle");
-                StealItemFromPlayer();
+                chaseTimer += Time.deltaTime;
+                float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
+
+                if (chaseTimer >= 10f && distanceToPlayer > stealDetectionRange)
+                {
+                    DropItemAndEscape();
+                }
+            }*/
+
+            if (isRunningAway)
+            {
+                escapeTimer += Time.deltaTime;
+                if (escapeTimer >= 10f)
+                {
+                    ExecuteEscape();
+                    StopCoroutine(escapeCoroutine);
+                    isRunningAway = false;
+                }
+                return;
             }
+
+            // Проверка, принадлежит ли текущая цель игроку
+            if (IsHolding && currentTarget.parent.CompareTag("Player"))
+            {   
+                ResetCurrentTarget();
+                MoveAwayFromPlayer();
+                
+                return;
+            }
+
+            float Distance = IsHolding 
+                ? Vector3.Distance(m_agent.transform.position, DropOffPoint) 
+                : Vector3.Distance(m_agent.transform.position, currentTarget.position);
+
+            if (currentTarget != null)
+            {
+                isSteal = currentTarget.CompareTag("Player");
+        
+                if (!IsHolding)
+                {   
+                    HandleItemCollection(Distance);
+                }
+            }
+            
             else
             {
-                Debug.Log($"{m_agent.name}: Norm dist not steal for colle");
-                PickUpItem();
+                Debug.Log("Holding");
+                HandleItemDropping(Distance);
+            }
+            if (items.Count > 0)
+            {
+                InitializeItems();
+            }
+            
+            
+            
+        }
+        void FixedUpdate()
+        {
+            // Обновление анимаций только если не в процессе кражи
+            if (!IsHolding || !isRunningAway)
+            {
+                UpdateMovementAnimations();
             }
         }
-        else
+        //
+        //Инициализация предметов
+        //
+        public void InitializeItems()
+{
+    items.Clear();
+    if (ItemsContainer != null)
+    {
+        foreach (Transform tr in ItemsContainer)
         {
-            //Debug.Log($"{m_agent.name}: Distance more than stoppingDist for colle");
-            m_agent.SetDestination(currentTarget.position);
+            if (tr != null && tr.GetComponent<Item>() != null)
+            {
+                items.Add(tr);
+            }
         }
     }
+}
 
-    //
-    //                      ОСНОВНАЯ
-    //Работа со сбросом
-    //
-    private void HandleItemDropping(float Distance)
-    {
-        if (currentTarget.parent == Player)
-        {
-            ResetCurrentTarget();
-            MoveAwayFromPlayer();
-            //MoveToItem();
-        }
-        else
+        //
+        //                          ОСНОВНАЯ
+        //Работа с подбором предметов
+        //
+        private void HandleItemCollection(float Distance)
         {
             if (m_agent.stoppingDistance >= Distance)
             {
-                //Debug.Log($"{m_agent.name}: Norm dist for drop");
-                DropItem();
+                if (currentTarget.CompareTag("Player"))
+                {
+                    Debug.Log("IsSteal");
+                    StealItemFromPlayer();
+                }
+                else
+                {
+                    Debug.Log("!IsSteal");
+                    PickUpItem();
+                }
+            }
+            else if (currentTarget != null)
+            {
+                m_agent.SetDestination(currentTarget.position);
+            }
+        }
+
+        //
+        //                      ОСНОВНАЯ
+        //Работа со сбросом
+        //
+        private void HandleItemDropping(float Distance)
+        {
+            if (currentTarget.parent == Player)
+            {
+                ResetCurrentTarget();
+                MoveAwayFromPlayer();
+                
             }
             else
             {
-                //Debug.Log($"{m_agent.name}: Not Norm dist for drop");
-                m_agent.SetDestination(DropOffPoint);
+                if (m_agent.stoppingDistance >= Distance)
+                {
+                    
+                    DropItem();
+                }
+                else
+                {
+                    
+                    m_agent.SetDestination(DropOffPoint);
+                }
             }
         }
-    }
 
-    //
-    //Удаление текущей цели
-    //
-    private void ResetCurrentTarget()
-    {
-        //m_animator.SetTrigger("Jump!");
         //
-        //Debug.Log($"{m_agent.name} Reset");
-        currentTarget = null;
-        IsHolding = false;
-    }
-
-    //
-    //                          УПРАВЛЯЮЩАЯ МЕТОДАМИ
-    // Кража предмета
-    //
-    private void StealItemFromPlayer()
-    {
-        if (!isSteal  || !CanReach(currentTarget.position) || currentTarget.parent == Player)
+        //Удаление текущей цели
+        //
+        private void ResetCurrentTarget()
         {
-            AttemptRandomSteal();
-            //m_animator.SetBool("AAA,MAN!");
-            MoveAwayFromPlayer();
-        }
-
-        else if (isSteal && currentTarget.parent == Player)
-        {
-            NotifyStealFromPlayer();
-            //m_animator.SetTrigger("AAA,MAN!");
-            MoveAwayFromPlayer();
-        }
-
-    }
-    //
-    //                          ВСПОМОГАТЕЛЬНАЯ к StealItemFromPlayer
-    //Кража случайного предмета
-    //
-    private void AttemptRandomSteal()
-    {
-        int count = 0;
-        //Debug.Log($"{m_agent.name}: Random steal");
-        
-        while (true)
-        {
-            RandInd = Random.Range(0, quickslotParent.childCount);
-            count++;
-
-            if (TryStealItemFromSlot(RandInd))
-            {
-                //MakeVisible();
-                PickUpItem();
-                
-                isSteal = false;
-                return;
-            }
-
-            if (count >= 3)
-            {
-                MoveToItem();
-                return;
-            }
-        }
-    }
-    //
-    //                          ПРОВЕРКА к AttemptStealItem
-    //   Можно ли украсть предмет
-    //
-    private bool TryStealItemFromSlot(int slotIndex)
-    {
-        InventorySlot slot = quickslotParent.GetChild(slotIndex)?.GetComponent<InventorySlot>();
-        if (slot != null && slot.is_item != null && slot.amount > 0)
-        {
-            slot.amount--;
-            slot.textItemAmount.text = slot.amount.ToString();
-            if (slot.amount <= 0)
-            {
-                slot.NullifySlotData();
-            }
             
-            return true;
+            currentTarget = null;
+            IsHolding = false;
         }
-        return false;
-    }
-    //
-    //                              ВСПОМГАТЕЛЬНАЯ
-    //"Обнуление"/Очистка инвентаря
-    //
-    private void NotifyStealFromPlayer()
-    {
-        //Debug.Log($"{m_agent.name}: Steal");
-        MakeVisible();
-        PickUpItem();
-        for (int i = 0; i < quickslotParent.childCount; ++i)
-        {
-            if (quickslotParent.GetChild(i).name == currentTarget.name)
-            {
-                currentTarget.SetParent(m_agent.transform);
-                quickslotParent.GetChild(i).GetComponent<InventorySlot>().NullifySlotData();
-                return;
-            }
-        }
-        //Если своего предмета уже не нашёл взять что-то рандомное
-        //Debug.Log("не нашёл своего беру на рандом");
-        AttemptRandomSteal();
-    }
-    //
-    //Чек Есть ли предмет в инвентаре
-    //
 
-    //
-    // Движене к предмету
-    //
-    private void MoveToItem()
+        //
+        //                          УПРАВЛЯЮЩАЯ МЕТОДАМИ
+        // Кража предмета
+        //
+  // В методе StealItemFromPlayer внесем правки:
+private void StealItemFromPlayer()
+{
+    if (IsHolding) return;
+
+    m_animator.SetTrigger("Take");
+    CoroutineForTake();
+
+    // Поиск первого подходящего предмета
+    InventorySlot targetSlot = quickslotParent.GetComponentsInChildren<InventorySlot>().FirstOrDefault(s => s.amount > 0 && s.is_item != null);
+
+    if (targetSlot != null)
     {
-        //Debug.Log($"{m_agent.name}: WENT TO THE mOVEtOiTEM");
-        foreach (Transform item in active_items)
-        {
-            //Debug.Log($"{m_agent.name}: {item}");
-            if (!item.GetComponent<Item>().IsTaked && LastItem != item && CanReach(item.position))
-            {
-                //Debug.Log($"{m_agent.name}: O kak!");
-                SetCurrentTarget(item);
-                return;
-            }
-        }
-        //Debug.Log($"{m_agent.name}: ne ponyal");
+        // Создаем копию предмета
+        stolenItemInstance = Instantiate(
+            targetSlot.is_item.itemPrefab,
+            itemHolderPoint.position,
+            Quaternion.identity,
+            itemHolderPoint
+        );
+
+        stolenItemInstance.transform.localScale = stolenItemInstance.GetComponent<Item>().size;
+        stolenItemInstance.GetComponent<Rigidbody>().isKinematic = true;
+        // Настройка объекта
+        stolenItemInstance.GetComponent<Item>().IsTakedByPlayer = false;
+        stolenItemInstance.tag = "Untagged"; 
+        targetSlot.amount--;
+
+        // Обновление данных слота
+        if (targetSlot.amount <= 0) 
+            targetSlot.NullifySlotData();
+        else
+            targetSlot.textItemAmount.text = targetSlot.amount.ToString();
+
+        // Переход в режим удержания
+        IsHolding = true;
+        currentTarget = stolenItemInstance.transform;
         GenerateDropOffPoint();
-        MoveToDrop();
+        StartCoroutine(EscapeWithItem());
     }
-    //
-    //                          ВСПОМОГАТЕЛЬНАЯ 
-    // Установка текущей цели
-    //
-    private void SetCurrentTarget(Transform item)
+    else
     {
-        currentTarget = item;
-        LastItem = item;
-        item.GetComponent<Item>().IsTaked = true;
-        isSteal = currentTarget.parent == Player;
-        m_agent.SetDestination(currentTarget.position);
-        //audioSource.PlayOneShot(walkSound);
-        m_animator.SetBool("IsWalking", true);
+        MoveToItem();
+    }
+
+
+}
+
+
+private IEnumerator EscapeWithItem()
+{
+    m_agent.speed *= 1.5f;
+    m_agent.SetDestination(DropOffPoint);
+    
+    while (Vector3.Distance(transform.position, DropOffPoint) > 1f)
+    {
+        yield return null;
     }
     
+    DropItem();
+    m_agent.speed = baseSpeed;
+}
 
-    //
-    //Движение от игрока 
-    //
-    private void MoveAwayFromPlayer()
+
+
+// Новая корутина для обработки кражи
+private IEnumerator StealProcess(Transform stolenItem)
+{
+    
+    yield return new WaitForSeconds(1.5f);
+    
+    // Переносим предмет к NPC
+    stolenItem.SetParent(itemHolderPoint);
+    stolenItem.localPosition = Vector3.zero;
+    
+    // Настраиваем параметры
+    IsHolding = true;
+    currentTarget = stolenItem;
+    
+    // Запускаем побег
+    GenerateDropOffPoint();
+    m_agent.speed *= 1.5f;
+    m_agent.SetDestination(DropOffPoint);
+}
+
+       private void OnItemCreatedHandler(Item newItem)
+{
+    if (!IsHolding && !newItem.IsTakedByPlayer && newItem.transform.parent == ItemsContainer)
     {
-            //StopAllCoroutines();
-            StartCoroutine(EscapeBehavior());
+        items.Add(newItem.transform); 
+        currentTarget = newItem.transform;
+        m_agent.SetDestination(currentTarget.position);
+        isChasingPlayer = false; 
     }
-    //
-    //                                  ВСПОМОГАТЕЛЬНАЯ
-    //Корутина побега 
-   private IEnumerator EscapeBehavior()
+}
+
+   private void OnItemDestroyedHandler(Item destroyedItem)
+{
+    // Удаляем уничтоженный предмет из списка
+    items.RemoveAll(t => t == destroyedItem.transform);
+    
+    temp_size = destroyedItem.transform.localScale;
+    if (destroyedItem.IsTakedByPlayer && !IsHolding)
     {
-        isRunningAway = true;
-        m_animator.SetBool("IsRunning", true);
-        
-        float timer = 0f;
-        while (timer < escapeDuration)
+        StartChasingPlayer();
+    }
+    else if (destroyedItem.IsTakedByPlayer && IsHolding)
+    {
+        IsHolding = false;
+        MoveAwayFromPlayer();
+        StartCoroutine(ResetAfterEscape());
+    }
+}
+
+   private void StartChasingPlayer()
+{
+    if (IsHolding) return;
+
+    isChasingPlayer = true;
+    chaseTimer = 0f;
+    currentTarget = Player; // Устанавливаем цель на игрока
+    m_agent.SetDestination(Player.position);
+    
+    StopAllCoroutines();
+    m_agent.isStopped = false;
+}
+
+
+    private void DropItemAndEscape()
+    {
+        // Сбрасываем предмет
+        if (stolenItemInstance != null)
         {
-            Vector3 escapeDirection = (transform.position - Player.position).normalized;
-            Vector3 targetPosition = transform.position + escapeDirection * 10f;
+            Destroy(stolenItemInstance);
+            Instantiate(currentTarget.GetComponent<Item>().i_item.itemPrefab, 
+                      transform.position, Quaternion.identity, ItemsContainer);
+        }
+        InitializeItems();
+        // Ускоряемся и убегаем
+        m_agent.speed = baseSpeed * escapeSpeedMultiplier;
+        MoveAwayFromPlayer();
+        StartCoroutine(ResetAfterEscape());
+    }
+
+    private IEnumerator ResetAfterEscape()
+    {
+        yield return new WaitForSeconds(5f);
+        m_agent.speed = baseSpeed;
+        isChasingPlayer = false;
+        MoveToItem();
+    }
+
+
+        //
+        //                          
+        //
+        //
+        private void AttemptRandomSteal()
+        {
+            Debug.Log("AttemptSteal xmmm...");
+            int count = 0;
             
+            while (true)
+            {
+                RandInd = Random.Range(0, quickslotParent.childCount);
+                count++;
+
+                if (TryStealItemFromSlot(RandInd))
+                {
+                    
+                    PickUpItem();
+                    
+                    isSteal = false;
+                    return;
+                }
+
+                if (count >= 3)
+                {
+                    MoveToItem();
+                    return;
+                }
+            }
+        }
+        //
+        //                          
+        //   
+        //
+        private bool TryStealItemFromSlot(int slotIndex)
+        {
+            Debug.Log("TryStealItemFromSlot");
+            InventorySlot slot = quickslotParent.GetChild(slotIndex)?.GetComponent<InventorySlot>();
+            if (slot != null && slot.is_item != null && slot.amount > 0)
+            {
+                slot.amount--;
+                slot.textItemAmount.text = slot.amount.ToString();
+                if (slot.amount <= 0)
+                {
+                    slot.NullifySlotData();
+                }
+                
+                return true;
+            }
+            return false;
+        }
+        //
+        //                              
+        //
+        private void NotifyStealFromPlayer()
+        {
+            
+            Debug.Log("Now Notify so has been Instantiate but where?!");
+             IsHolding = true;
+            GenerateDropOffPoint(); 
+            MoveAwayFromPlayer(); 
+        }
+        
+        //
+        // Движене к предмету
+        //
+        private void MoveToItem()
+{
+    if (isChasingPlayer || isRunningAway) return;
+
+    m_animator.SetBool("IsWalking", true);
+    
+    // Удаление всех null-элементов и предметов игрока
+    items.RemoveAll(t => t == null || t.parent == Player);
+    
+    // Приоритет: предметы на карте
+    foreach (Transform item in items)
+    {
+        if (!item.GetComponent<Item>().IsTakedByPlayer && LastItem != item)
+        {
+            SetCurrentTarget(item);
+            return;
+        }
+        else if (item.GetComponent<Item>().IsTakedByPlayer)
+        {
+            // Если предмет игрока был подобран, начать преследование
+            StartChasingPlayer();
+        }
+    }
+
+    // Если предметов нет, двигаться к случайной точке
+    GenerateDropOffPoint();
+    MoveToDrop();
+}
+        //
+        //                          ВСПОМОГАТЕЛЬНАЯ 
+        // Установка текущей цели
+        //
+        private void SetCurrentTarget(Transform item)
+        {
+            currentTarget = item;
+            LastItem = item;
+            item.GetComponent<Item>().IsTakedByPlayer = true;
+            isSteal = currentTarget.parent == Player;
+            m_agent.SetDestination(currentTarget.position);
+            
+        }
+        
+        private bool PlayerHasItems()
+{
+    foreach (Transform slot in quickslotParent)
+    {
+        var inventorySlot = slot.GetComponent<InventorySlot>();
+        if (inventorySlot != null && inventorySlot.is_item != null && inventorySlot.amount > 0)
+            return true;
+    }
+    return false;
+}
+        //
+        //Движение от игрока 
+        //
+        private void MoveAwayFromPlayer()
+        {
+                //StopAllCoroutines();
+                StartCoroutine(EscapeRoutine());
+        }
+        //
+        //                                  ВСПОМОГАТЕЛЬНАЯ
+        //Корутина побега 
+        //
+        private IEnumerator EscapeRoutine()
+    {
+        
+        isRunningAway = true;
+        escapeTimer = 0f;
+        float originalSpeed = m_agent.speed; 
+        m_agent.speed *= 1.5f; 
+        
+        
+
+        while (escapeTimer < 10f && Vector3.Distance(Player.position, m_agent.transform.position) < escapeDist)
+        {
+            // Всегда двигаемся от игрока
+            Vector3 directionAway = (transform.position - Player.position).normalized;
+            Vector3 targetPosition = transform.position + directionAway * 5f; // Увеличиваем дистанцию
+            
+            // Ищем валидную позицию на NavMesh
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, 3f, NavMesh.AllAreas))
             {
                 m_agent.SetDestination(hit.position);
             }
             
-            timer += Time.deltaTime;
+            escapeTimer += Time.deltaTime;
             yield return null;
         }
+
         
-        isRunningAway = false;
-        m_animator.SetBool("IsRunning", false);
-        
-        if (!IsHolding)
+        if (IsHolding && escapeTimer >= 10f && Vector3.Distance(Player.position, m_agent.transform.position) < escapeDist)
         {
-            MoveToItem();
-        }
-    }
-    //
-    //                                  ВСПОМОГАТЕЛЬНАЯ
-    //Выброс предмета/Завершение побега от игрока
-    //
-    private void ExecuteEscape()
-    {
-        currentTarget.parent = null;
-        currentTarget.position = m_agent.transform.position;
-        m_agent.speed *= 3f;
-        currentTarget = null;  
-        MoveAwayFromPlayer(); 
-    }
+            ImmediateDropItem();
+            m_agent.speed *= 2f; 
+            yield return new WaitForSeconds(3f); 
 
-    //
-    //Подбор предмета
-    //
-    private void PickUpItem()
-    {
-        if (currentTarget != null)
-        {
-            StartCoroutine(PickUpAnimationRoutine());
-        }
-    }
-    //
-    //Корутина
-    //
-    private IEnumerator PickUpAnimationRoutine()
-    {
-        m_animator.SetBool("IsPickingUpHash", true);
-        yield return new WaitForSeconds(1f); 
-        
-        currentTarget.SetParent(m_agent.transform);
-        currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
-        currentTarget.GetComponent<Rigidbody>().isKinematic = true;
-        
-        IsHolding = true;
-        m_animator.SetBool("IsPickingUpHash", false);
-
-        if (!isSteal)
-        {
-            //Debug.Log($"{m_agent.name}: PickUpRoutine: If");
-            MoveToDrop();
-        }
-        
-        else
-        {
-            //Debug.Log($"{m_agent.name}: PickUpRoutine: else");
-            MoveAwayFromPlayer();
-        }
-    }
-
-    //
-    //Движение к дропу
-    //
-    private void MoveToDrop()
-    {
-        m_animator.SetBool("IsWalking", true);
-        GenerateDropOffPoint();
-        m_agent.SetDestination(DropOffPoint);
-        //Debug.Log($"{m_agent.name}: Движение к точке сброса на позицию {DropOffPoint}");
-    }
-
-    //
-    //Выброс предмета
-    //
-    private void DropItem()
-    {
-        if (currentTarget != null)
-        {
-            m_animator.SetBool("IsDropping", true);
-            //audioSource.PlayOneShot(dropSound);
-
-            currentTarget.SetParent(null);
-            currentTarget.position = DropOffPoint;
-            IsHolding = false;
-            currentTarget.GetComponent<Item>().IsTaked = false;
-            isSteal = false;
-            currentTarget = null;
-            DropOffPoint = default;
-            StartCoroutine(StopDroppingAnimation());
-            MoveToItem();
-        }
-    }
-    //Немедленный выброс предмета под себя
-    private void ImmediateDropItem()
-    {
-        //m_animator.SetBool("IsDropping", true);
-        //audioSource.PlayOneShot(dropSound);
-
-        currentTarget.SetParent(null);
-        currentTarget.position = m_agent.transform.position;
-        IsHolding = false;
-        currentTarget.GetComponent<Item>().IsTaked = false;
-        isSteal = false;
-        currentTarget = null;
-        DropOffPoint = default;
-        //StartCoroutine(StopDroppingAnimation());
-        //MoveAwayFromPlayer();
-        
-    }
-    
-    //
-    //Генерация позиции
-    //
-    private void GenerateDropOffPoint()
-    {
-
-        Terrain terrain = Terrain.activeTerrain;
-
-        if (terrain == null)
-        {
-            //Debug.LogError("Террайн не найден");
-            return;
-        }
-
-        float terrainWidth = terrain.terrainData.size.x;
-        float terrainHeight = terrain.terrainData.size.z;
-        float groundHeight; 
-        float maxSlopeAngle = 30f;  
-
-        while (true)
-        {
-            float RandomX = Random.Range(0, terrainWidth);
-            float RandomZ = Random.Range(0, terrainHeight);
-            groundHeight = terrain.SampleHeight(new Vector3(RandomX, 0, RandomZ));
-
-            if (IsSlopeAcceptable(RandomX, groundHeight, RandomZ, maxSlopeAngle))
+            if (Vector3.Distance(Player.position, m_agent.transform.position) > escapeDist)
             {
-                DropOffPoint = new Vector3(RandomX, groundHeight, RandomZ);
-                //Debug.Log($"{m_agent.name}: Сгенерирована подходящая точка сброса: {DropOffPoint}");
-                break; 
+                
+                MoveToItem();
             }
             else
             {
-                //Debug.Log($"{m_agent.name}: Выбрана не подходящая точка, повторяем.");
+               
+                MoveAwayFromPlayer();
             }
+
         }
-    }
-    //
-    //                      ВСПОМОГАТЕЛЬНАЯ к DroppOffPoint
-    //Приемлисмость позиции
-    //
-    private bool IsSlopeAcceptable(float RandomX, float groundHeight, float RandomZ, float maxSlopeAngle)
-    {
-        Vector3 normal = Vector3.up; 
-        RaycastHit hit;
+            // Возвращаемся к обычному поведению
+            m_agent.speed = originalSpeed;
+            isRunningAway = false;
+            m_animator.SetBool("IsRunning", false);
+            
+            if (IsHolding)
+            {   
+                MoveToDrop();
+                //yield break;
+            }
 
-        if (Physics.Raycast(new Vector3(RandomX, groundHeight + 100, RandomZ), Vector3.down, out hit, Mathf.Infinity))
-        {
-            normal = hit.normal; 
-        }
-
-        return Vector3.Angle(normal, Vector3.up) <= maxSlopeAngle;
-    }
-
-    //
-    //Обработчик создания предмета 
-    //
-    private void HandleItemCreating(Item new_item)
-    {
-        if (!active_items.Contains(new_item.transform))
-        {
-            active_items.Add(new_item.transform);
-        }
-
-        if (!IsHolding && isSteal && currentTarget.GetComponent<Item>().i_item.itemName == new_item.i_item.itemName)
-        {
-            currentTarget = new_item.transform;
-            m_agent.SetDestination(currentTarget.position);
-        }
-
-
-    }
-
-    //
-    //Обработчик использования предмета
-    //
-    private void HandleItemUsed(ItemScriptableObject used_item)
-    {
-        if (active_items.Contains(used_item.itemPrefab.transform))
-        {
-            active_items.Remove(used_item.itemPrefab.transform);
-        }
-
-        if (!isRunningAway && 
-            currentTarget.GetComponent<Item>().i_item.itemName == used_item.itemName &&
-            Vector3.Distance(Player.transform.position, m_agent.transform.position) < 40f)
-        {
-            //m_animator.SetTrigger("AAA,MAN!!!");
-            //AudioSource.Play("AAA");
-            //yield return new WaitForSeconds(1.6f);
-
-            StartCoroutine(EscapeBehavior());
-        }
-
-        else
-        {
-            m_agent.SetDestination(Player.position);
-        }
-    }
-    //
-    //Управление разрушением предмета
-    //
-    private void HandleItemDestroy(Item Destroyed_item)
-    {
-        if (currentTarget.name == Destroyed_item.transform.name)
-        {
-            currentTarget = Player;
-            isSteal = true;
-            m_agent.SetDestination(Player.position);
-        }
-        else
-        {
-            m_agent.SetDestination(currentTarget.position);
-        }
-    }
-
-    //
-    //Уничтожение предмета
-    //
-    void OnDestroy()
-    {
-        Item.OnItemCreated -= HandleItemCreating;
-        QuickSlotPanel.OnItemUsed -= HandleItemUsed;
-    }
-
-
-
-
-
-
-
-    //
-    //Сделать Видимым
-    //
-    private void MakeVisible()
-    {
-        Renderer itemRender = currentTarget.GetComponent<Renderer>();
-        if (itemRender != null)
-        {
-            itemRender.enabled = true;
-        }
-
-        Collider itemCollider = currentTarget.GetComponent<Collider>();
-        if (itemCollider != null)
-        {
-            itemCollider.enabled = true;
-        }
-
-        currentTarget.GetComponent<Rigidbody>().isKinematic = false;
-    }
-
-    //
-    //Возможно ли достичь объекта NPC
-    //
-    private bool CanReach(Vector3 targetPosition)
-    {
-        NavMeshHit hit;
-        return NavMesh.SamplePosition(targetPosition, out hit, 100.0f, NavMesh.AllAreas);
-    }
-
-    //
-    //Находится ли в поле зрения
-    //
-    /*private bool IsInView()
-    {
-        float realAngle = Vector3.Angle(Eye.forward, Player.position - Eye.position);
-        RaycastHit hit;
-        
-        if (Physics.Raycast(Eye.position, Player.position - Eye.position, out hit, ViewDistance))
-        {
-            if (realAngle < ViewAngle / 2f && Vector3.Distance(Eye.position, Player.position) <= ViewDistance && hit.transform == Player.transform)
+            else
             {
-                return true;
+              
+                MoveToItem();
             }
+        
+        
+        
+    }
+        //
+        //Задание направления от игрока
+        //
+        
+        private void ExecuteEscape()
+{
+    currentTarget.parent = null;
+    currentTarget.position = m_agent.transform.position;
+    m_agent.speed *= 3f;
+    currentTarget = null;  
+    MoveAwayFromPlayer(); 
+
+    // Убедитесь, что анимация сбрасывается
+    m_animator.SetBool("IsWalkingHold", false);
+    m_animator.SetBool("IsRunning", false);
+}
+
+        //
+        //Подбор предмета
+        //
+       private void PickUpItem()
+{
+    if (currentTarget != null)
+    {
+        StartCoroutine(PickUpProcess());
+    }
+}
+
+private IEnumerator PickUpProcess()
+{
+    m_animator.SetTrigger("Take");
+    
+    float timer = 0f;
+    while (timer < 1.5f)
+    {
+        timer += Time.deltaTime;
+        yield return null; 
+    }
+    
+    currentTarget.SetParent(m_agent.transform);
+    currentTarget.localPosition = new Vector3(0, m_agent.transform.localScale.y + 5f, 0);
+    currentTarget.GetComponent<Rigidbody>().isKinematic = true;
+    
+    Vector3 newSize = currentTarget.GetComponent<Item>().size; 
+    currentTarget.localScale = newSize;
+    
+    IsHolding = true;
+    m_animator.SetBool("IsWalkingHold", true);
+    m_animator.SetBool("IsRunning", false);
+    MoveToDrop();
+}
+        //
+        //Движение к дропу
+        //
+        private void MoveToDrop()
+        {
+            m_animator.SetBool("IsWalking", true);
+            GenerateDropOffPoint();
+            m_agent.SetDestination(DropOffPoint);
         }
-        return false;
-    }*/
 
-    //
-    //КОРУТИНЫ
-    //
-    /*private IEnumerator StopPickingUpAnimation()
-    {
-        yield return new WaitForSeconds(1.5f);
-        m_animator.SetBool("IsPickingUpHash", false);
-        //m_animator.SetBool("IsWalking", false);
-    }*/
+        //
+        //Выброс предмета
+        //
+        private void DropItem()
+        {
+            StartCoroutine(DropProcess());
+        }
 
-    private IEnumerator StopDroppingAnimation()
+private IEnumerator DropProcess()
+{
+    m_animator.ResetTrigger("Take"); // Сбросить триггер взятия
+    m_animator.SetTrigger("Drop");
+    
+    float timer = 0f;
+    while (timer < 1.5f)
     {
-        yield return new WaitForSeconds(10.5f);
-        m_animator.SetBool("IsDropping", false);
+        timer += Time.deltaTime;
+        yield return null; 
     }
 
+    currentTarget.SetParent(ItemsContainer);
+    currentTarget.position = DropOffPoint;
     
-    private void UpdateMovementAnimations()
+    IsHolding = false;
+    currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
+    currentTarget = null;
+
+    // Сброс всех параметров удержания
+    m_animator.SetBool("IsWalkingHold", false);
+    m_animator.SetBool("IsRunningHold", false);
+    m_animator.ResetTrigger("Drop"); // Важно!
+    
+    InitializeItems(); 
+    MoveToItem();
+}
+        //Немедленный выброс предмета под себя
+        private void ImmediateDropItem()
+        {
+
+            currentTarget.SetParent(ItemsContainer);
+            currentTarget.position = m_agent.transform.position;
+            IsHolding = false;
+            currentTarget.GetComponent<Item>().IsTakedByPlayer = false;
+            isSteal = false;
+            currentTarget = null;
+            DropOffPoint = default;
+            InitializeItems();
+            
+        }
+        
+        //
+        //Генерация позиции
+        //
+        private void GenerateDropOffPoint()
+        {
+
+            Terrain terrain = Terrain.activeTerrain;
+
+            if (terrain == null)
+            {
+               
+                return;
+            }
+
+            float terrainWidth = terrain.terrainData.size.x;
+            float terrainHeight = terrain.terrainData.size.z;
+            float groundHeight; 
+            float maxSlopeAngle = 30f;  
+
+            while (true)
+            {
+                float RandomX = Random.Range(0, terrainWidth);
+                float RandomZ = Random.Range(0, terrainHeight);
+                groundHeight = terrain.SampleHeight(new Vector3(RandomX, 0, RandomZ));
+
+                if (IsSlopeAcceptable(RandomX, groundHeight, RandomZ, maxSlopeAngle))
+                {
+                    DropOffPoint = new Vector3(RandomX, groundHeight, RandomZ);
+                   
+                    break; 
+                }
+                else
+                {
+                   
+                }
+            }
+        }
+        //
+        //                      ВСПОМОГАТЕЛЬНАЯ к DroppOffPoint
+        //  Приемлисмость позиции
+        //
+        private bool IsSlopeAcceptable(float RandomX, float groundHeight, float RandomZ, float maxSlopeAngle)
+        {
+            Vector3 normal = Vector3.up; 
+            RaycastHit hit;
+
+            if (Physics.Raycast(new Vector3(RandomX, groundHeight + 100, RandomZ), Vector3.down, out hit, Mathf.Infinity))
+            {
+                normal = hit.normal; 
+            }
+
+            return Vector3.Angle(normal, Vector3.up) <= maxSlopeAngle;
+        }
+
+        //
+        //Сделать Видимым
+        //
+        private void MakeVisible()
+        {
+            Renderer itemRender = currentTarget.GetComponent<Renderer>();
+            if (itemRender != null)
+            {
+                itemRender.enabled = true;
+            }
+
+            Collider itemCollider = currentTarget.GetComponent<Collider>();
+            if (itemCollider != null)
+            {
+                itemCollider.enabled = true;
+            }
+
+            currentTarget.GetComponent<Rigidbody>().isKinematic = false;
+        }
+
+        //
+        //Возможно ли достичь объекта NPC
+        //
+        private bool CanReach(Vector3 targetPosition)
+        {
+            NavMeshHit hit;
+            return NavMesh.SamplePosition(targetPosition, out hit, 100.0f, NavMesh.AllAreas);
+        }
+
+        
+        private IEnumerator StopDroppingAnimation()
+        {
+            yield return new WaitForSeconds(10.5f);
+            m_animator.SetBool("IsDropping", false);
+        }
+
+        
+        private void UpdateMovementAnimations()
 {
     bool isMoving = m_agent.velocity.magnitude > 0.1f;
-    
-    // Приоритет анимации бега
-    if (isRunningAway)
-    {
-        m_animator.SetBool("IsRunning", isMoving);
-        m_animator.SetBool("IsWalking", false);
-    }
-    else
-    {
-        m_animator.SetBool("IsWalking", isMoving);
-        m_animator.SetBool("IsRunning", false);
-    }
+
+    m_animator.SetBool("IsWalking", isMoving && !IsHolding && !isRunningAway);
+    m_animator.SetBool("IsRunning", isMoving && !IsHolding && isRunningAway);
+    m_animator.SetBool("IsWalkingHold", isMoving && IsHolding && !isRunningAway);
+    m_animator.SetBool("IsRunningHold", isMoving && IsHolding && isRunningAway);
 }
 
+        private IEnumerator CoroutineForTake()
+        {
+            yield return new WaitForSeconds(1.5f);
+            m_animator.SetTrigger("Take");
+            m_animator.SetBool("IsWalkingHold", true);
+        }
 
+        private IEnumerator CoroutineForDrop()
+        {
+            yield return new WaitForSeconds(1.5f);
+            m_animator.SetTrigger("Drop");
+            m_animator.SetBool("IsWalkingHold", false);
+            m_animator.SetBool("IsWalking", true);
+        }
+
+        private void PlaySound_Whistling()
+        {
+            if (!Whistle_audioSource.isPlaying)
+            {
+                Whistle_audioSource.Play();
+            }
+        }
 }
+

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class NewBehaviourScript : MonoBehaviour
 {
+    [SerializeField] GameObject MainMenu;
     public GameObject Menu;
     public GGCameraMoving cameraController;
     public GameObject infoPanel;
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject SoundPanel;
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -20,23 +23,31 @@ public class NewBehaviourScript : MonoBehaviour
                 if (!Menu.activeSelf && !SettingsPanel.activeSelf && !SoundPanel.activeSelf)
                 {
                     MenuActivate(!Menu.activeSelf);
+                    AudioListener.pause = true;
                 }
 
                 else if (!Menu.activeSelf && SettingsPanel.activeSelf && !SoundPanel.activeSelf)
                 {
                     SettingsPanel.SetActive(false);
                     MenuActivate(!Menu.activeSelf);
+                    //AudioListener.pause = true;
                 }
 
                 else if (!Menu.activeSelf && !SettingsPanel.activeSelf && SoundPanel.activeSelf)
                 {
                     SoundPanel.SetActive(false);
                     MenuActivate(!Menu.activeSelf);
+                    //AudioListener.pause = true;
                 }
 
                 else 
                 {
-                    MenuActivate(!Menu.activeSelf);
+                    Menu.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                    Time.timeScale = 1f;
+                    cameraController.SetControlEnabled(true);
+                    AudioListener.pause = false;
                 }
             }
         }
@@ -57,6 +68,7 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.visible = true;
         Time.timeScale = 0f;
         cameraController.SetControlEnabled(false);
+        AudioListener.pause = activeOrNot;
     }
 
     //
@@ -64,6 +76,7 @@ public class NewBehaviourScript : MonoBehaviour
     //
     public void PlayPressed()
     {
+        //Menu.SetActive(false);
         SceneManager.LoadScene("SampleScene");
     }
     //
@@ -76,6 +89,7 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.visible = false;
         Time.timeScale = 1f;
         cameraController.SetControlEnabled(true);
+        AudioListener.pause = false;
     }
     //
     //Нажать кпопку "Настройки" в esc

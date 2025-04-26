@@ -22,4 +22,14 @@ public class ItemScriptableObject : ScriptableObject
     [Header("Consumable Characteristics")]
     public float changeHealth;
     public bool IsTakedByPlayer = false;
+
+    public override bool Equals(object other)
+    {
+        return this == other as ItemScriptableObject;
+    }
+
+    public override int GetHashCode()
+    {
+        return itemName.GetHashCode();
+    }
 }

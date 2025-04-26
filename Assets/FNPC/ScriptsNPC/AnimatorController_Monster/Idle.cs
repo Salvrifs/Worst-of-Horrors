@@ -8,11 +8,12 @@ public class IdleBehaviour : StateMachineBehaviour
     Transform m_player;
     Transform EnemyEye;
     NavMeshAgent m_agent;
-    [Range(0, 360)] float ViewAngle = 130f;
+    [Range(0, 360)] float ViewAngle = 165f;
     float ViewDistance = 75f;
     //float ChaseDist = 5f;
     
-    [SerializeField] AudioSource IdleSound;
+    //[SerializeField] AudioClip[] Idle;
+    //AudioSource IdleSound;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -23,8 +24,7 @@ public class IdleBehaviour : StateMachineBehaviour
         m_player = GameObject.FindGameObjectWithTag("Player").transform; 
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         //Debug.Log($"Idle: {player.name}"); 
-        IdleSound = GameObject.Find("MonsterIDLE").GetComponent<AudioSource>();
-        IdleSound.Play();
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -46,21 +46,15 @@ public class IdleBehaviour : StateMachineBehaviour
                 animator.SetBool("IsChasing", true);
         }
 
-        if (IdleSound.isPlaying)
-        {
-            return;
-        }
-        IdleSound.Play();
+        //PlayIdle_Sound();
         
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (IdleSound.isPlaying)
-        {
-            IdleSound.Stop();
-        }
+        //IdleSound.Stop();
+        
     }
 
 //Находится ли в поле зрения
@@ -77,6 +71,18 @@ private bool IsInView()
         }
         return false;
     }
+//
+//Звук
+//
+    /*private void PlayIdle_Sound()
+    {
+        if (IdleSound.isPlaying)
+        {
+            return;
+        }
+        IdleSound.PlayOneShot(Idle[Random.Range(0, Idle.Length)]);
+    }*/
+
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

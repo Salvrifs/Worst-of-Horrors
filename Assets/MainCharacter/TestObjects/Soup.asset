@@ -20,4 +20,5 @@ MonoBehaviour:
   itemType: 1
   isConsumeable: 1
   changeHealth: 20
+  IsTakedByPlayer: 0
   healAmount: 20

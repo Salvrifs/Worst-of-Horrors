@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class PhysicsInteraction : MonoBehaviour
     [SerializeField] private Image image1;
     [SerializeField] private Image image2;
     public GameObject TakeText;
+    private AudioListener al;
 
     private Rigidbody _hitRigidbody;
     private bool _isShooting;
@@ -19,6 +21,7 @@ public class PhysicsInteraction : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     private void Start()
     {
+        al = GetComponent<AudioListener>();
         image1.gameObject.SetActive(false);
         image2.gameObject.SetActive(false);
         _empty = new GameObject();
@@ -64,7 +67,14 @@ public class PhysicsInteraction : MonoBehaviour
                 TakeText.SetActive(true);
             }
 
-            if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster"))
+            CollectingNPC ShaluScript = _hitInfo.collider.gameObject.GetComponent<CollectingNPC>();
+            if (ShaluScript != null)
+            {
+                DisplayImage(image1);
+                TakeText.SetActive(true);
+            }
+
+            if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster") && _hitInfo.collider.gameObject.GetComponentInParent<CollectingNPC>() == null)
             {
                 _hitRigidbody = _hitInfo.collider.GetComponent<Rigidbody>();
                 MoveEmpty(_hitInfo.point);
@@ -75,6 +85,14 @@ public class PhysicsInteraction : MonoBehaviour
             {
                 DisplayImage(image1);        
             }
+
+            else if (_isShooting == false && (_hitInfo.collider.tag == "Monster") && 
+                    ( (ShaluScript.IsHolding == true) || (_hitInfo.collider.GetComponent<Sounds_Desk>() != null) ) )
+            {
+                TakeText.SetActive(true);
+                DisplayImage(image1);
+            }
+
             else HideImage(image1);
 
             if (!_hitInfo.collider.GetComponent<Rigidbody>()) HideImage(image1);

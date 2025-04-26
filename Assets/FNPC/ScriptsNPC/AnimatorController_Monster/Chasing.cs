@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,25 +10,36 @@ public class RunBehaviour : StateMachineBehaviour
     float AttackRadius = 6f;
     //float ChasingRadius = 5f;
     Transform EnemyEye;
-    [Range(0, 360)] float ViewAngle = 130f;
+    [Range(0, 360)] float ViewAngle = 165f;
     [SerializeField] float ViewDistance = 75f;
-    [SerializeField] AudioSource ChasingSound;
+    private Monster_Sound monsterSound;
+    private Coroutine intimidateCoroutine;
+    private float lastSeenTime;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        
         m_agent = animator.GetComponent<NavMeshAgent>();
 
         m_player = GameObject.FindGameObjectWithTag("Player").transform;
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
-        //Debug.Log($"Run: {player.name}");
-        ChasingSound = GameObject.Find("MonsterChasing").GetComponent<AudioSource>();
-        ChasingSound.Play();
+        monsterSound = animator.GetComponent<Monster_Sound>();
+        monsterSound.PlayChaseMusic();
+        intimidateCoroutine = monsterSound.StartChaseIntimidate();
+       
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+       if(IsInView()) lastSeenTime = Time.time;
+
+        if(Time.time - lastSeenTime > 3f) 
+        {
+            animator.SetBool("IsChasing", false);
+        }
+
         m_agent.SetDestination(m_player.position);
 
         float distance = Vector3.Distance(m_player.position, animator.transform.position);
@@ -51,25 +63,20 @@ public class RunBehaviour : StateMachineBehaviour
             animator.SetBool("IsChasing", false);
             
         }
-
-        if (ChasingSound.isPlaying)
-        {
-            return;
-        }
-        ChasingSound.Play();
+    
+    
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (ChasingSound.isPlaying)
-        {
-            ChasingSound.Stop();
-        }
         m_agent.SetDestination(m_agent.transform.position);
-        
+        monsterSound.StopChaseMusic(false);
+        if(intimidateCoroutine != null) 
+            monsterSound.StopChaseIntimidate(intimidateCoroutine);
     }
 
+    
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{

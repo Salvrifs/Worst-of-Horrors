@@ -19,20 +19,20 @@ public class GGMoving : MonoBehaviour
     [SerializeField] [Range(0, 1)] private float maxDoubleVision = 0.4f;
 
     [Header("Infection Settings")]
-    [SerializeField] private float infectionDuration = 0.3f * 60f; // 15 minutes
-    [SerializeField] private float npcAvoidanceDuration = 0.5f * 60f; 
-    [SerializeField] private float mutationDuration = 0.7f * 60f; 
+    [SerializeField] private float infectionDuration = 15f * 60f; // 15 minutes
+    [SerializeField] private float npcAvoidanceDuration = 5f * 60f; 
+    [SerializeField] private float mutationDuration = 10f * 60f; 
     private bool isInfected = false;
     private bool isMutated = false;
     private float originalSpeed;
     private float originalJumpPower;
-    public LowHealthDirectAccess shaderAccessScript;
-    public LowHealthController shaderControllerScript;
+    //public LowHealthDirectAccess shaderAccessScript;
+    //public LowHealthController shaderControllerScript;
     [SerializeField] private Image infectionEffectImage;
 
     [Header("\t==============\n\tMovement Settings\n\t==============")]
     [SerializeField] private float _speed = 5.0f;
-    [SerializeField] private float _gravity = 9.81f;
+   [SerializeField] private float _gravity = 9.81f;
     [SerializeField] private float _jumpPower = 5.0f;
     [SerializeField] private float _speedRun = 10.0f;
     [SerializeField] private float _speedSit = 2.0f;
@@ -49,16 +49,20 @@ public class GGMoving : MonoBehaviour
 
 
     [Header("\t==============\n\tAudio Settings\n\t==============")]
-    public AudioSource WalkSound1;
-    public AudioSource WalkSound2;
-    public AudioSource WalkSound3;
-    public AudioSource jumpSound;
+    [SerializeField] private AudioSource audioSource;
+    public AudioClip[] WalkSounds;
+    public AudioClip jumpSound;
 
     [Header("\t==============\n\tPlayer Life Settings\n\t==============")]
     public float timerOfPlayerLive;
     //[SerializeField] private Text healthCount;
     [SerializeField] private float MaxTimeOfPlay = 6000f;
-
+    
+[Header("Step Settings")]
+[SerializeField] private float walkStepInterval = 0.5f;
+[SerializeField] private float runStepInterval = 0.3f;
+[SerializeField] private float crouchStepInterval = 0.7f;
+private float stepTimer;
 
     private float wakingUp1;
 	private float wakingUp2;
@@ -77,24 +81,29 @@ public class GGMoving : MonoBehaviour
 
     void Start()
     {
-        shaderControllerScript.SetPlayerHealthSmoothly(1f, 1f); // 40% здоровья
+        //shaderControllerScript.SetPlayerHealthSmoothly(1f, 1f); // 40% здоровья
         _speedWalk = _speed;
         _characterController = GetComponent<CharacterController>();
         Current_Stamina = MaxStamina;
         StaminaBar.gameObject.SetActive(false);
-        StartCoroutine(InfectionTimer());
+        //StartCoroutine(InfectionTimer());
         infectionEffectImage.color = new Color(1, 0, 0, 0);
+        //audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        timerOfPlayerLive += Time.deltaTime;
-
-        if(timerOfPlayerLive > MaxTimeOfPlay)
+        if (audioSource == null)
         {
-            transform.tag = "noPlayerMore";
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Debug.Log($"{transform.name}: Audio: {transform.GetComponent<AudioSource>()} ego net");
         }
+        //timerOfPlayerLive += Time.deltaTime;
+
+        //if(timerOfPlayerLive > MaxTimeOfPlay)
+        //{
+         //   transform.tag = "noPlayerMore";
+        //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //}
 
         float horizontal_input = Input.GetAxis("Horizontal");
         float vertical_input = Input.GetAxis("Vertical");
@@ -104,13 +113,14 @@ public class GGMoving : MonoBehaviour
         HandleStamina();
         UpdateStaminaUI();    
         Jump(_characterController.isGrounded && Input.GetKey(KeyCode.Space) && Current_Stamina >= jumpCost);
-        ChangeMoveSpeed(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.LeftControl));   
+        ChangeMoveSpeed();
     }
 
     private void FixedUpdate()
     {
         Walk(_walkDirection);
         Gravity(_characterController.isGrounded);
+        ChangeSound();
     }
     //
     //Игрок идёт
@@ -118,59 +128,80 @@ public class GGMoving : MonoBehaviour
     private void Walk(Vector3 direction)
     {
         _characterController.Move(direction * _speed * Time.fixedDeltaTime);
-        ChangeSound();
+        //ChangeSound();
     }
     //
     //Гравитация
     //
     private void Gravity(bool isGrounded)
+{
+    if (isGrounded && _velocity.y < 0)
     {
-        if (isGrounded && _velocity.y < 0)
-        {
-            _velocity.y = -1f;
-        }
-        _velocity.y -= _gravity * Time.fixedDeltaTime;
-        _characterController.Move(_velocity * Time.fixedDeltaTime);
+        _velocity.y = -1f;
     }
+    _velocity.y -= _gravity * Time.fixedDeltaTime;
+    _characterController.Move(_velocity * Time.fixedDeltaTime);
+}
     //
     //Прыжок
     //
-    private void Jump(bool canJump)
+private void Jump(bool canJump)
+{
+    if (canJump && !isJumping && _characterController.isGrounded)
     {
-        if (canJump)
+        Debug.Log("CanJump");
+        isJumping = true;
+        _velocity.y = Mathf.Sqrt(_jumpPower * 3f * _gravity); // Оптимизированная формула
+        
+        if (regenCoroutine != null)
         {
-            if (regenCoroutine != null)
-            {
-                StopCoroutine(regenCoroutine);
-                regenCoroutine = null;
-            }
-
-            jumpSound.Play();
-            _velocity.y = _jumpPower;
-            Current_Stamina -= jumpCost;
+            StopCoroutine(regenCoroutine);
+            regenCoroutine = null;
         }
-
-
+        Current_Stamina -= jumpCost;
+        StartCoroutine(JumpCooldown());
+        isJumping = false;
+        audioSource.PlayOneShot(jumpSound);
+        
     }
+}
+
+private IEnumerator JumpCooldown()
+{
+    yield return new WaitForSeconds(0.3f); 
+    isJumping = false;
+}
+
     //
     //Скорость движения
     //
-    private void ChangeMoveSpeed(bool changeMoveSpeed)
+    private void ChangeMoveSpeed()
+{
+    bool isCrouching = Input.GetKey(KeyCode.LeftControl);
+    bool wantSprint = Input.GetKey(KeyCode.LeftShift);
+
+    if (isCrouching)
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            StaminaBar.enabled = true;
-            _speed = (changeMoveSpeed && isSprinting) ? _speedRun : _speedWalk;
-            isSprinting = true;
-        }
-        
-        else
-        {
-            _characterController.height = changeMoveSpeed ? 1f : 2f;
-            _speed = changeMoveSpeed ? _speedSit : _speedWalk;
-            isSprinting = false;
-        }
-    }           
+        // При приседании
+        _characterController.height = Mathf.Lerp(_characterController.height, 1f, Time.deltaTime * 5f);
+        _speed = _speedSit;
+        isSprinting = false; 
+    }
+    else if (wantSprint && Current_Stamina >= RunCost)
+    {
+        // Только если не присели и есть стамина
+        _characterController.height = Mathf.Lerp(_characterController.height, 2f, Time.deltaTime * 5f);
+        _speed = _speedRun;
+        isSprinting = true;
+    }
+    else
+    {
+        // Обычное состояние
+        _characterController.height = Mathf.Lerp(_characterController.height, 2f, Time.deltaTime * 5f);
+        _speed = _speedWalk;
+        isSprinting = false;
+    }
+}          
     //
     //Выносливость
     //
@@ -245,38 +276,31 @@ public class GGMoving : MonoBehaviour
     //Звуки
     //
     private void ChangeSound()
+{
+    bool isMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || 
+                   Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D);
+
+    if (isMoving && _characterController.isGrounded)
     {
-        NumOfSound = NumOfSound==1 ? 2 : 1;
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) ||
-            Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        float currentInterval = isSprinting ? runStepInterval : 
+                              (Input.GetKey(KeyCode.LeftControl) ? crouchStepInterval : walkStepInterval);
+
+        stepTimer -= Time.deltaTime;
+        
+        if (stepTimer <= 0)
         {
-            switch (NumOfSound)
-            {
-                case 1:
-                {
-                    if (WalkSound1.isPlaying || WalkSound2.isPlaying || WalkSound3.isPlaying)
-                    {
-                        return;
-                    }
-
-                    WalkSound1.Play();
-                    break;
-                }
-
-                case 2:
-                {
-                    if (WalkSound1.isPlaying || WalkSound2.isPlaying || WalkSound3.isPlaying)
-                    {
-                        return;
-                    }
-
-                    WalkSound2.Play();
-                    break;
-                }
-
-            }
+            audioSource.pitch = isSprinting ? 1.2f : 
+                               (Input.GetKey(KeyCode.LeftControl) ? 0.8f : 1f);
+            audioSource.PlayOneShot(WalkSounds[UnityEngine.Random.Range(0, WalkSounds.Length)]);
+            stepTimer = currentInterval;
         }
     }
+    else
+    {
+        stepTimer = 0;
+        if (!audioSource.isPlaying) audioSource.Stop();
+    }
+}
     //
     //таймер инфекции
     //
@@ -301,7 +325,7 @@ public class GGMoving : MonoBehaviour
     isInfected = true;
     _speed *= 0.75f;
     _jumpPower *= 0.75f; 
-    shaderControllerScript.SetPlayerHealthSmoothly(0.4f, 1f); // 40% здоровья
+    //shaderControllerScript.SetPlayerHealthSmoothly(0.4f, 1f); // 40% здоровья
     StartCoroutine(NPCAvoidanceTimer());
 }
     //
@@ -312,7 +336,7 @@ public class GGMoving : MonoBehaviour
     yield return new WaitForSeconds(npcAvoidanceDuration);
     
     Debug.Log($"Time: {timerOfPlayerLive} Avoidance 20f");
-    shaderControllerScript.SetPlayerHealthSmoothly(0.2f, 1f); // 20% здоровья
+    //shaderControllerScript.SetPlayerHealthSmoothly(0.2f, 1f); // 20% здоровья
     transform.tag = "noPlayerMore";
     StartCoroutine(MutationTimer());
 }
@@ -333,7 +357,7 @@ public class GGMoving : MonoBehaviour
     private void PerformMutation()
 {
     isMutated = true;
-    shaderControllerScript.SetPlayerHealthSmoothly(0.1f, 1f); // 10% здоровья
+    //shaderControllerScript.SetPlayerHealthSmoothly(0.1f, 1f); // 10% здоровья
 
 
 
@@ -379,22 +403,22 @@ public class GGMoving : MonoBehaviour
         private IEnumerator ApplyInfectionEffects()
     {
         float elapsedTime = 0f;
-        float startVision = shaderAccessScript.visionLossEffect;
-        float startDetail = shaderAccessScript.detailLossEffect;
-        float startColor = shaderAccessScript.colorLossEffect;
-        float startDouble = shaderAccessScript.doubleVisionEffect;
+        //float startVision = shaderAccessScript.visionLossEffect;
+        //float startDetail = shaderAccessScript.detailLossEffect;
+        //float startColor = shaderAccessScript.colorLossEffect;
+        //float startDouble = shaderAccessScript.doubleVisionEffect;
 
         while (elapsedTime < infectionDuration)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / infectionDuration;
 
-            shaderAccessScript.visionLossEffect = Mathf.Lerp(startVision, maxVisionLoss, t);
-            shaderAccessScript.detailLossEffect = Mathf.Lerp(startDetail, maxDetailLoss, t);
-            shaderAccessScript.colorLossEffect = Mathf.Lerp(startColor, maxColorLoss, t);
-            shaderAccessScript.doubleVisionEffect = Mathf.Lerp(startDouble, maxDoubleVision, t);
+            //shaderAccessScript.visionLossEffect = Mathf.Lerp(startVision, maxVisionLoss, t);
+            //shaderAccessScript.detailLossEffect = Mathf.Lerp(startDetail, maxDetailLoss, t);
+            //shaderAccessScript.colorLossEffect = Mathf.Lerp(startColor, maxColorLoss, t);
+            //shaderAccessScript.doubleVisionEffect = Mathf.Lerp(startDouble, maxDoubleVision, t);
             
-            shaderAccessScript.UpdateShaderProperties();
+            //shaderAccessScript.UpdateShaderProperties();
             yield return null;
         }
     }
