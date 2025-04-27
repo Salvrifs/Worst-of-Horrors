@@ -214,12 +214,12 @@ private void OnItemUsedHandler(ItemScriptableObject usedItem)
             {
                 if (currentTarget.CompareTag("Player"))
                 {
-                    Debug.Log("IsSteal");
+                    //Debug.Log("IsSteal");
                     StealItemFromPlayer();
                 }
                 else
                 {
-                    Debug.Log("!IsSteal");
+                    //Debug.Log("!IsSteal");
                     PickUpItem();
                 }
             }

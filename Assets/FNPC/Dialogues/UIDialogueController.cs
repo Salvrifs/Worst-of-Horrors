@@ -1,18 +1,16 @@
-// UIDialogueController.cs
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
+using TMPro;
 public class UIDialogueController : MonoBehaviour
 {
     public static UIDialogueController Instance { get; private set; }
 
     [Header("References")]
     [SerializeField] private Text dialogueText;
-    [SerializeField] private GameObject optionButtonPrefab;
+    public GameObject optionButtonPrefab; 
     [SerializeField] private Transform optionsContainer;
     [SerializeField] private GameObject dialoguePanel;
-    
     void Awake()
     {
         if(Instance == null)
@@ -46,19 +44,37 @@ public class UIDialogueController : MonoBehaviour
     }
 
     public void ShowOptions(List<DialogueOption> options)
+{
+    if (optionButtonPrefab == null || optionsContainer == null)
     {
-        ClearOptions();
-        dialoguePanel.SetActive(true);
-
-        foreach(var option in options)
-        {
-            GameObject button = Instantiate(optionButtonPrefab, optionsContainer);
-            button.GetComponentInChildren<Text>().text = option.text;
-            button.GetComponent<Button>().onClick.AddListener(() => 
-                DialogueManager.Instance.SelectOption(option.targetNodeID));
-        }
+        Debug.LogError("Не назначены префаб или контейнер!");
+        return;
     }
 
+    ClearOptions();
+    dialoguePanel.SetActive(true);
+    optionsContainer.gameObject.SetActive(true);
+
+    foreach (var option in options)
+    {
+        GameObject button = Instantiate(optionButtonPrefab, optionsContainer);
+        
+        // Для TextMeshPro
+        TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+        if (buttonText != null)
+        {
+            buttonText.text = option.text;
+        }
+        else
+        {
+            Debug.LogError("Компонент Text не найден!");
+        }
+
+        Button btn = button.GetComponent<Button>();
+        btn.onClick.AddListener(() => DialogueManager.Instance.SelectOption(option.targetNodeID));
+        
+    }
+}
     public void HideDialogue()
     {
         dialoguePanel.SetActive(false);
