@@ -12,6 +12,9 @@ TagManager:
   - noPlayerMore
   - PanelUI
   - FlyPoints
+  - Frog
+  - EyeFrog
+  - PointsFrog
   layers:
   - Default
   - TransparentFX
