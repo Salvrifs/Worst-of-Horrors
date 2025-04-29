@@ -1,18 +1,28 @@
-using UnityEngine;
+/*using UnityEngine;
 
 
 public class NPCInteraction : MonoBehaviour
 {
     [SerializeField] private string dialogueFile;
     
-    public void OnInteract()
+    // NPCInteraction.cs
+public void OnInteract()
+{
+    Debug.Log("Interact called!"); 
+    
+    DialogueLoader loader = FindObjectOfType<DialogueLoader>();
+    if(loader != null)
     {
-        // Используйте существующий DialogueLoader
-        DialogueLoader loader = FindObjectOfType<DialogueLoader>();
-        if(loader != null)
+        DialogueData data = loader.LoadDialogue(dialogueFile);
+        if(data != null)
         {
-            DialogueData data = loader.LoadDialogue(dialogueFile);
+            Debug.Log("Dialogue data loaded!"); 
             DialogueManager.Instance.StartDialogue(data);
+        }
+        else
+        {
+            Debug.LogError("Failed to load dialogue data!");
         }
     }
 }
+}*/

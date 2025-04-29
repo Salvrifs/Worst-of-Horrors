@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,4 +6,4 @@ using UnityEngine;
 public class DialogueData
 {
     public List<DialogueNode> nodes = new List<DialogueNode>();
-}
+}*/

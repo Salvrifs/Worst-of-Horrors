@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Desk
   maximumAmount: 1
-  itemDescription: 
+  itemDescription: d
   icon: {fileID: 21300000, guid: 8c7ceb5e9a78aa04d92fa9d0528bb1ec, type: 3}
   itemPrefab: {fileID: 3031949372687064824, guid: d84acdf9ef8bf0a4595911f1d45fc00d, type: 3}
   itemType: 2
