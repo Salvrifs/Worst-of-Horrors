@@ -90,14 +90,13 @@ public class DialogueWindow : MonoBehaviour
     }
 
     public void MakeChoice()
+{
+    if (!CanContinueTONextLine || !IsPlaying) 
     {
-        if (CanContinueTONextLine == false)
-        {
-            return;
-        }
-
-        IsStatusAnswer = false;
+        return;
     }
+    IsStatusAnswer = false;
+}
 
     public IEnumerator DisplayLine(Story story)
     {

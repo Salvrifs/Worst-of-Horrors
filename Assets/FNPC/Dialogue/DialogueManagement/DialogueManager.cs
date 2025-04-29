@@ -60,12 +60,16 @@ public class DialogueManager : MonoBehaviour
     }
 
     private void ContinueStory()
+{
+    if (currentStory.canContinue == false)
     {
-        if (currentStory.canContinue == false)
+        if (displayLineCoroutine != null)
         {
-            StopCoroutine(ExitDialogueMode());
-            return;
+            StopCoroutine(displayLineCoroutine);
         }
+        StartCoroutine(ExitDialogueMode());
+        return;
+    }
 
         if (displayLineCoroutine != null)
         {
@@ -86,9 +90,16 @@ public class DialogueManager : MonoBehaviour
     }
 
     public void MakeChoice(int choiceIndex)
+{
+    // Проверка на валидность индекса
+    if (choiceIndex < 0 || choiceIndex >= currentStory.currentChoices.Count)
     {
-        _dialogueWindow.MakeChoice();
-        currentStory.ChooseChoiceIndex(choiceIndex);
-        ContinueStory();
+        Debug.LogError($"Invalid choice index: {choiceIndex}");
+        return;
     }
+
+    _dialogueWindow.MakeChoice();
+    currentStory.ChooseChoiceIndex(choiceIndex);
+    ContinueStory();
+}
 }

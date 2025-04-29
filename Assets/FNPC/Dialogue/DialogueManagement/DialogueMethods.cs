@@ -8,8 +8,11 @@ using System.ComponentModel.Design;
 
 public class DialogueMethods : MonoBehaviour
 {
-    public void ExitForGame()
+    public void ExitForGame() => Application.Quit();
+
+    // Новый метод для обработки тега <method:ChangeField(5)>
+    public void ChangeField(int value)
     {
-        Application.Quit();
+        Debug.Log($"Field changed to: {value}");
     }
 }
