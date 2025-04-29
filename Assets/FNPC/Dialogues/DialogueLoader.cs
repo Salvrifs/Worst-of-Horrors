@@ -1,5 +1,5 @@
 // DialogueLoader.cs
-using UnityEngine;
+/*using UnityEngine;
 
 public class DialogueLoader : MonoBehaviour
 {
@@ -20,4 +20,4 @@ public DialogueData LoadDialogue(string fileName)
     
     return DialogueParser.ParseDialogue(textAsset.text);
 }
-}
+}*/

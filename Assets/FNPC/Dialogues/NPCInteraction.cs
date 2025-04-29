@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 
 public class NPCInteraction : MonoBehaviour
@@ -25,4 +25,4 @@ public void OnInteract()
         }
     }
 }
-}
+}*/

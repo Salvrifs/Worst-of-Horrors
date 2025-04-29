@@ -1,5 +1,5 @@
 // DialogueParser.cs
-using System.Text.RegularExpressions;
+/*using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class DialogueParser
@@ -67,4 +67,4 @@ public static class DialogueParser
         Debug.Log($"Парсинг завершен. Узлов: {data.nodes.Count}");
         return data;
     }
-}
+}*/
