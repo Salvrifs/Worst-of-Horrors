@@ -92,11 +92,11 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
 {
     // Проверка на валидность индекса
-    if (choiceIndex < 0 || choiceIndex >= currentStory.currentChoices.Count)
+    /*if (choiceIndex < 0 || choiceIndex >= currentStory.currentChoices.Count)
     {
         Debug.LogError($"Invalid choice index: {choiceIndex}");
         return;
-    }
+    }*/
 
     _dialogueWindow.MakeChoice();
     currentStory.ChooseChoiceIndex(choiceIndex);
