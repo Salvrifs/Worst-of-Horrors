@@ -12,6 +12,9 @@ public class DialogueManager : MonoBehaviour
     private DialogueTag _dialogueTag;
     public Story currentStory {get; private set;}
     private Coroutine displayLineCoroutine;
+    [SerializeField] private GGCameraMoving cameraMoving;
+    
+    private float previousTimeScale;
 
     void Awake()
     {
@@ -30,9 +33,9 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (_dialogueWindow.IsStatusAnswer == true || 
-            _dialogueWindow.IsPlaying == false ||
-            _dialogueWindow.CanContinueTONextLine == false)
+        if (_dialogueWindow.IsStatusAnswer || 
+            !_dialogueWindow.IsPlaying ||
+            !_dialogueWindow.CanContinueTONextLine)
             {
                 return;
             }   
@@ -42,10 +45,16 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void EnterDialogueMode(TextAsset inkJson)
+     public void EnterDialogueMode(TextAsset inkJson)
     {
-        currentStory = new Story(inkJson.text);
+        previousTimeScale = Time.timeScale;
+        Time.timeScale = 0f;
 
+        cameraMoving.SetControlEnabled(false);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        currentStory = new Story(inkJson.text);
         _dialogueWindow.SetActive(true);
 
         ContinueStory();
@@ -53,10 +62,15 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator ExitDialogueMode()
     {
-        yield return new WaitForSeconds(_dialogueWindow.CoolDownNextLetter);
+        yield return new WaitForSecondsRealtime(_dialogueWindow.CoolDownNextLetter);
 
         _dialogueWindow.SetActive(false);
         _dialogueWindow.ClearText();
+
+        cameraMoving.SetControlEnabled(true);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Time.timeScale = previousTimeScale;
     }
 
     private void ContinueStory()

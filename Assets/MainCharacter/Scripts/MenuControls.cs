@@ -13,6 +13,7 @@ public class NewBehaviourScript : MonoBehaviour
     public GameObject infoPanel;
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject SoundPanel;
+    [SerializeField] private AudioSource audioSource;
     
     private void Update()
     {
@@ -69,7 +70,7 @@ public class NewBehaviourScript : MonoBehaviour
         Time.timeScale = 0f;
         cameraController.SetControlEnabled(false);
         AudioListener.pause = activeOrNot;
-        
+        audioSource.ignoreListenerPause = true;
         //FindObjectOfType<VolumeSettings>().ToggleMusic(true, 1.6f);
     }
 
