@@ -11,6 +11,7 @@ TagManager:
   - item
   - noPlayerMore
   - PanelUI
+  - quest
   layers:
   - Default
   - TransparentFX

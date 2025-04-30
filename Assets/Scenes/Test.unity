@@ -1101,11 +1101,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2b3fa1580f7764c979eb2f4e7f06ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move_speed: 5
-  nitro: 2
-  max_endurance: 100
-  endurance: 100
-  energy_speed: 10
+  maxVisionLoss: 0.7
+  maxDetailLoss: 0.5
+  maxColorLoss: 1
+  maxDoubleVision: 0.4
+  infectionDuration: 900
+  npcAvoidanceDuration: 300
+  mutationDuration: 600
+  infectionEffectImage: {fileID: 0}
+  _speed: 5
+  _gravity: 9.81
+  _jumpPower: 5
+  _speedRun: 10
+  _speedSit: 2
+  RunCost: 2
+  jumpCost: 4
+  MaxStamina: 50
+  StaminaRegenDelay: 2
+  StaminaRegenRate: 5
+  StaminaBar: {fileID: 0}
+  StaminaFill: {fileID: 0}
+  Current_Stamina: 0
+  WalkSound1: {fileID: 0}
+  WalkSound2: {fileID: 0}
+  WalkSound3: {fileID: 0}
+  jumpSound: {fileID: 0}
+  timerOfPlayerLive: 0
+  MaxTimeOfPlay: 6000
 --- !u!143 &1338193606
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1234,9 +1256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxGrabDistance: 5
-  maxEmptyDistance: 10
   throwForce: 10
-  emptyMoveSpeed: 0
   image1: {fileID: 706161752}
   image2: {fileID: 799169917}
   TakeText: {fileID: 817224991}
@@ -1526,6 +1546,158 @@ PrefabInstance:
       insertIndex: 2
       addedObject: {fileID: 1590089640}
   m_SourcePrefab: {fileID: 100100000, guid: af6f81b0e4db42f4dba3c73fdcfcfd99, type: 3}
+--- !u!1 &1698714429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1698714433}
+  - component: {fileID: 1698714432}
+  - component: {fileID: 1698714431}
+  - component: {fileID: 1698714430}
+  - component: {fileID: 1698714434}
+  - component: {fileID: 1698714435}
+  m_Layer: 0
+  m_Name: Pot
+  m_TagString: quest
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!136 &1698714430
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698714429}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5000001
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!23 &1698714431
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698714429}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1698714432
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698714429}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1698714433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698714429}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.23, y: -99.42, z: 10.6}
+  m_LocalScale: {x: 1, y: 0.58, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1698714434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698714429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6edc5bfc5230c6844b83472ac3b3bb95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventory: {fileID: 1994932409}
+  requiredItems:
+  - Mushroom
+  - Potion
+--- !u!54 &1698714435
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698714429}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1826216799 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2287084635513264825, guid: af6f81b0e4db42f4dba3c73fdcfcfd99, type: 3}
@@ -1786,6 +1958,7 @@ MonoBehaviour:
   currentQuickslotID: 0
   selectedSprite: {fileID: 21300000, guid: 39d245b4c01cb1542ae1140dfae759a9, type: 3}
   notSelectedSprite: {fileID: 21300000, guid: 015612898b7e9f741ae1a87d2cb873e8, type: 3}
+  HealthBar: {fileID: 0}
   healthText: {fileID: 212181050}
 --- !u!114 &1994932410
 MonoBehaviour:
@@ -2297,3 +2470,4 @@ SceneRoots:
   - {fileID: 120147231}
   - {fileID: 4336754986096759251}
   - {fileID: 465736467}
+  - {fileID: 1698714433}

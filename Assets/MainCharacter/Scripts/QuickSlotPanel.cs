@@ -142,4 +142,12 @@ public class QuickSlotPanel : MonoBehaviour
         quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
         OnItemUsed?.Invoke(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item);
     }
+
+    public void RemoveItem() 
+    {
+        if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
+        {
+            quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
+        }
+    }
 }
