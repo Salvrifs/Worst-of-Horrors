@@ -11,6 +11,8 @@ TagManager:
   - item
   - noPlayerMore
   - PanelUI
+  - PatrolPoints
+  - NPCgrib
   layers:
   - Default
   - TransparentFX
