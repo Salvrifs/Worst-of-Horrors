@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 public class ChasingStop : StateMachineBehaviour
 {
     float timer;
@@ -42,12 +43,56 @@ public class ChasingStop : StateMachineBehaviour
         }
         
         // RaycastHit hit;
-        // if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7) && Input.GetKeyDown(KeyCode.E) && QuickSlotPanel.CheckItem())
+        // if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7) && Input.GetKeyDown(KeyCode.E))
         // {
-        //     animator.SetBool("IsChasing", false);
-        //     animator.SetBool("IsApp", true);
+        //     GameObject obj = hit.collider.gameObject;
+        //     if (obj.CompareTag("NPCgrib"))
+        //     {
+        //         GameObject quickslot = GameObject.Find("QuickSlotPanel");
+        //         int ind = 1;
+        //         var s = quickslot.transform;
+        //         InventorySlot slot = quickslot.transform.GetChild(ind)?.GetComponent<InventorySlot>();
+        //         if (slot != null && slot.is_item != null && slot.amount > 0)
+        //         {
+        //             slot.amount--;
+        //             slot.textItemAmount.text = slot.amount.ToString();
+        //             if (slot.amount <= 0)
+        //             {
+        //                 slot.NullifySlotData();
+        //                 animator.SetBool("ChasingStop", false);
+        //                 animator.SetBool("IsChasing", false);
+        //                 animator.SetBool("IsApp", true);
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // RaycastHit hit;
+        // if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7) && Input.GetKeyDown(KeyCode.E))
+        // {
+        //     GameObject obj = hit.collider.gameObject;
+        //     if (obj.CompareTag("NPCgrib"))
+        //     {
+        //         if (inventory.quickslotParent.GetChild(inventory.currentQuickslotID).GetComponent<InventorySlot>()
+        //                 .is_item != null)
+        //         {
+        //             if (inventory.quickslotParent.GetChild(inventory.currentQuickslotID).GetComponent<InventorySlot>()
+        //                     .is_item.isConsumeable &&
+        //                 inventory.quickslotParent.GetChild(inventory.currentQuickslotID).GetComponent<Image>().sprite ==
+        //                 inventory.selectedSprite)
+        //             {
+        //
+        //                 inventory.RemoveItem();
+        //                 animator.SetBool("ChasingStop", false);
+        //                 animator.SetBool("IsChasing", false);
+        //                 animator.SetBool("IsApp", true);
+        //
+        //             }
+        //         }
+        //     }
         // }
     }
+    
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

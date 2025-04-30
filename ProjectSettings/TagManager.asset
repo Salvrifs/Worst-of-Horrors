@@ -16,6 +16,8 @@ TagManager:
   - EyeFrog
   - PointsFrog
   - quest
+  - PatrolPoints
+  - NPCgrib
   layers:
   - Default
   - TransparentFX

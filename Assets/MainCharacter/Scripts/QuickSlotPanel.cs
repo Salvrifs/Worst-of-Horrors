@@ -21,9 +21,7 @@ public class QuickSlotPanel : MonoBehaviour
     [Header("Flashlight Settings")]
 [SerializeField] private FlashlightBeh flashlight;
 [SerializeField] private Transform flashlightParent;
-   
-    
-
+    public Animator GribAnimator;
     AudioSource audioSource;
     [SerializeField] AudioClip UseHeal;
     [SerializeField] AudioClip[] FallOfItem;
@@ -190,6 +188,48 @@ public class QuickSlotPanel : MonoBehaviour
                     flashlight.GetComponent<Rigidbody>().isKinematic = false;
                     flashlight.transform.position = player.position + Vector3.up + player.forward;
                     flashlight.transform.localPosition = player.position + Vector3.up + player.forward;
+                }
+            }
+        }
+        
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7))
+        {
+            GameObject obj = hit.collider.gameObject;
+            if (obj.CompareTag("NPCgrib") && GribAnimator.GetBool("IsChasing"))
+            {
+                // GameObject GribText = GameObject.Find("GribTextApologize");
+                // GribText.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
+                    {
+                        if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item
+                                .isConsumeable &&
+                            quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == selectedSprite)
+                        {
+                            GribAnimator.SetBool("IsChasing", false);
+                            GribAnimator.SetBool("ChasingStop", false);
+                            GribAnimator.SetBool("IsApp", true);
+
+                            if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
+                            {
+                                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>()
+                                    .NullifySlotData();
+                            }
+                            else
+                            {
+                                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount--;
+                                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>()
+                                    .textItemAmount.text = quickslotParent.GetChild(currentQuickslotID)
+                                    .GetComponent<InventorySlot>().amount.ToString();
+                            }
+
+                            quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item
+                                .IsTakedByPlayer = false;
+
+                        }
+                    }
                 }
             }
         }

@@ -3,12 +3,10 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Patrol : StateMachineBehaviour
 {
-
     float timer;
     [SerializeField] private List<Transform> m_Points = new List<Transform>();
     NavMeshAgent m_agent;
     Transform currentTarget;
-    //float ChaseDist = 5f;
     [SerializeField] AudioSource Slap_audioSource;
     [SerializeField] AudioClip[] SlapSound;
     private Camera mainCamera;
@@ -18,7 +16,7 @@ public class Patrol : StateMachineBehaviour
     {
         timer = 0;
         Transform pointsObjects = GameObject.FindGameObjectWithTag("PatrolPoints").transform;
-
+        
         foreach (Transform tr in pointsObjects)
         {
             m_Points.Add(tr);
@@ -50,15 +48,20 @@ public class Patrol : StateMachineBehaviour
 
         
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7) && Input.GetKeyDown(KeyCode.E))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7))
         {
             GameObject obj = hit.collider.gameObject;
             if (obj.CompareTag("NPCgrib"))
             {
-                animator.SetBool("IsPatrol", false);
-                animator.SetBool("IsSlapped", true);
-                animator.SetBool("IsChasing", true);
-                PlaySlap_Sound();
+                // GameObject GribText = GameObject.Find("GribTextSlap");
+                // GribText.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    animator.SetBool("IsSlapped", true);
+                    animator.SetBool("IsPatrol", false);
+                    animator.SetBool("IsChasing", true);
+                    PlaySlap_Sound();
+                }
             }
         }
     

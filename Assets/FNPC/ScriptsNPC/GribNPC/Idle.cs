@@ -3,7 +3,6 @@ using UnityEngine.AI;
 
 public class Idle : StateMachineBehaviour
 {
-
     float timer;
     Transform m_player;
     NavMeshAgent m_agent;
@@ -18,10 +17,10 @@ public class Idle : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer = 0f;
-
         m_agent = animator.GetComponent<NavMeshAgent>();
         m_player = GameObject.FindGameObjectWithTag("Player").transform; 
         Slap_audioSource = animator.GetComponent<AudioSource>();
+        animator.SetBool("IsApp", false);
         //Debug.Log($"Idle: {player.name}"); 
         
     }
@@ -39,16 +38,21 @@ public class Idle : StateMachineBehaviour
         }
         
        float distance = Vector3.Distance(m_agent.transform.position, m_player.transform.position);
+       
        RaycastHit hit;
-       if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7) && Input.GetKeyDown(KeyCode.E))
+       if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7))
        {
            GameObject obj = hit.collider.gameObject;
            if (obj.CompareTag("NPCgrib"))
            {
-               animator.SetBool("IsPatrol", false);
-               animator.SetBool("IsSlapped", true);
-               animator.SetBool("IsChasing", true);
-               PlaySlap_Sound();
+               // GameObject GribText = GameObject.Find("GribTextSlap");
+               // GribText.SetActive(true);
+               if (Input.GetKeyDown(KeyCode.E))
+               {
+                   animator.SetBool("IsSlapped", true);
+                   animator.SetBool("IsChasing", true);
+                   PlaySlap_Sound();
+               }
            }
        }
 
