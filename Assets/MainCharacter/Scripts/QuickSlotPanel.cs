@@ -192,7 +192,7 @@ public class QuickSlotPanel : MonoBehaviour
             }
         }
         
-        RaycastHit hit;
+        //RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7))
         {
             GameObject obj = hit.collider.gameObject;
