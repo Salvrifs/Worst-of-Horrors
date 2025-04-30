@@ -61,8 +61,10 @@ public class DialogueManager : MonoBehaviour
 
     private void ContinueStory()
 {
+    Debug.Log("ContinueStory");
     if (currentStory.canContinue == false)
     {
+        Debug.Log("can continue == false");
         if (displayLineCoroutine != null)
         {
             StopCoroutine(displayLineCoroutine);
@@ -70,7 +72,7 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(ExitDialogueMode());
         return;
     }
-
+Debug.Log("can continue == true");
         if (displayLineCoroutine != null)
         {
             StopCoroutine(displayLineCoroutine);
@@ -87,19 +89,22 @@ public class DialogueManager : MonoBehaviour
         {
             Debug.LogError(ex.Message);
         }
+
+        
     }
 
-    public void MakeChoice(int choiceIndex)
+    // DialogueManager.cs
+public void MakeChoice(int choiceIndex)
 {
-    // Проверка на валидность индекса
-    /*if (choiceIndex < 0 || choiceIndex >= currentStory.currentChoices.Count)
-    {
-        Debug.LogError($"Invalid choice index: {choiceIndex}");
-        return;
-    }*/
-
+    Debug.Log("Choice was made!");
     _dialogueWindow.MakeChoice();
+    for (int i = 0; i < currentStory.currentChoices.ToArray().Length; ++i)
+    {
+        Debug.Log("Choice: " + currentStory.currentChoices[i]);
+    }
     currentStory.ChooseChoiceIndex(choiceIndex);
+    _dialogueWindow.DialogueOption.HideOptions(); 
+    currentStory.Continue(); // Запускает следующий узел
     ContinueStory();
 }
 }

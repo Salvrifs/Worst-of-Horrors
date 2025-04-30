@@ -12,7 +12,7 @@ public class ButtonTrigger : MonoBehaviour
         Story story = new Story(_inkJSON.text);
 
         story.variablesState["nameField"] = value;
-        Debug.Log(story.variablesState["nameField"]);
+        Debug.Log("nameField? " + story.variablesState["nameField"]);
 
     }
 }

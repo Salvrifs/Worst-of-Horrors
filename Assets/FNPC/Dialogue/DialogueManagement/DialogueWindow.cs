@@ -17,7 +17,7 @@ public class DialogueWindow : MonoBehaviour
     [SerializeField, Range(0,20)] private float _cooldownNextLetter;
 
     private DialogueOption _dialogueOption;
-
+public DialogueOption DialogueOption => _dialogueOption;
     public bool IsStatusAnswer {get; private set;}
     public bool IsPlaying {get; private set;}
     public bool CanContinueTONextLine {get; private set;}
@@ -95,47 +95,40 @@ public class DialogueWindow : MonoBehaviour
     {
         return;
     }
-    IsStatusAnswer = false;
+    IsStatusAnswer = true;
 }
 
-    public IEnumerator DisplayLine(Story story)
+    // DialogueWindow.cs
+public IEnumerator DisplayLine(Story story)
+{
+    //Debug.Log("DisplayLine" + $"CanContinue? {story.canContinue} currentChoices: {story.currentChoices.ToArray()[0]}, {story.currentChoices.ToArray()[1]}, {story.currentChoices.ToArray()[2]}");
+    string line = story.Continue();
+    ClearText();
+    CanContinueTONextLine = false;
+    IsStatusAnswer = false; // Сбросить статус перед новой строкой
+
+    bool isAddingRichText = false;
+
+    foreach (char letter in line.ToCharArray())
     {
-        string line = story.Continue();
-
-        ClearText();
-
-        CanContinueTONextLine = false;
-        bool isAddingRichText = false;
-        
-        yield return new WaitForSeconds(0.001f);
-
-        foreach (char letter in line.ToCharArray())
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                SetText(line);
-                break;
-
-            }
-
-            isAddingRichText = letter == '<' || isAddingRichText;
-
-            if (letter == '>')
-            {
-                isAddingRichText = false;
-            }
-
-            Add(letter);
-
-            if (isAddingRichText == false)
-            {
-                yield return new WaitForSeconds(_cooldownNextLetter);
-            }
+            SetText(line);
+            break;
         }
 
-        CanContinueTONextLine = true;
-        IsStatusAnswer = _dialogueOption.DisplayOptions(story);
+        isAddingRichText = letter == '<' || isAddingRichText;
+        if (letter == '>') isAddingRichText = false;
+
+        Add(letter);
+        if (!isAddingRichText)
+            yield return new WaitForSeconds(_cooldownNextLetter);
     }
+
+    CanContinueTONextLine = true;
+    Debug.Log("story: " + story.currentText + " story: ");
+    IsStatusAnswer = _dialogueOption.DisplayOptions(story); // Показать кнопки после текста
+}
 
 
 }
