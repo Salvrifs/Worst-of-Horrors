@@ -15,6 +15,7 @@ TagManager:
   - Frog
   - EyeFrog
   - PointsFrog
+  - quest
   layers:
   - Default
   - TransparentFX

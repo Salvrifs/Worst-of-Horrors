@@ -37,6 +37,11 @@ public class InventoryManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) {
             if (Physics.Raycast(ray, out hit, reachDistance))
             {
+                if (hit.collider.TryGetComponent(out Pot_quest Pot))
+                {
+                    Pot.GiveItem();
+                }
+                
                 Item itemInfo = hit.collider.gameObject.GetComponent<Item>();
                 if (itemInfo != null && (itemInfo.i_item.itemType == ItemType.Heal) )
                 {

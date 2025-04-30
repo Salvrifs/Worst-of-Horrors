@@ -212,6 +212,14 @@ public class QuickSlotPanel : MonoBehaviour
         OnItemUsed?.Invoke(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item);
     }
 
+    public void RemoveItem() 
+    {
+        if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
+        {
+            quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().NullifySlotData();
+        }
+    }
+
     private IEnumerator waitOfFall()
     {
         yield return new WaitForSeconds(1.5f);
