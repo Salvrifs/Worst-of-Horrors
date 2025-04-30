@@ -6,7 +6,7 @@ public class ChasingFrogBehaviour: StateMachineBehaviour
 {
     NavMeshAgent m_agent;
     Transform m_player;
-    float AttackRadius = 6f;
+    float AttackRadius = 4f;
     //float ChasingRadius = 5f;
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 130f;
