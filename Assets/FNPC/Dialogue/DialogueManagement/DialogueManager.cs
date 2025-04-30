@@ -33,9 +33,9 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (_dialogueWindow.IsStatusAnswer || 
-            !_dialogueWindow.IsPlaying ||
-            !_dialogueWindow.CanContinueTONextLine)
+        if (_dialogueWindow.IsStatusAnswer == true || 
+            _dialogueWindow.IsPlaying == false ||
+            _dialogueWindow.CanContinueTONextLine == false)
             {
                 return;
             }   
@@ -47,9 +47,6 @@ public class DialogueManager : MonoBehaviour
 
      public void EnterDialogueMode(TextAsset inkJson)
     {
-        previousTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
-
         cameraMoving.SetControlEnabled(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -58,6 +55,8 @@ public class DialogueManager : MonoBehaviour
         _dialogueWindow.SetActive(true);
 
         ContinueStory();
+
+        
     }
 
     private IEnumerator ExitDialogueMode()
@@ -70,7 +69,6 @@ public class DialogueManager : MonoBehaviour
         cameraMoving.SetControlEnabled(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Time.timeScale = previousTimeScale;
     }
 
     private void ContinueStory()
@@ -89,9 +87,10 @@ public class DialogueManager : MonoBehaviour
 Debug.Log("can continue == true");
         if (displayLineCoroutine != null)
         {
+            Debug.Log("ne display stop coroutine");
             StopCoroutine(displayLineCoroutine);
         }
-
+Debug.Log("display non-stop coroutine");
         displayLineCoroutine = StartCoroutine(_dialogueWindow.DisplayLine(currentStory));
 
         try

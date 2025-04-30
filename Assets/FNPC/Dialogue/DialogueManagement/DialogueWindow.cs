@@ -95,12 +95,13 @@ public DialogueOption DialogueOption => _dialogueOption;
     {
         return;
     }
-    IsStatusAnswer = true;
+    IsStatusAnswer = false;
 }
 
     // DialogueWindow.cs
 public IEnumerator DisplayLine(Story story)
 {
+    Debug.Log("Display");
     //Debug.Log("DisplayLine" + $"CanContinue? {story.canContinue} currentChoices: {story.currentChoices.ToArray()[0]}, {story.currentChoices.ToArray()[1]}, {story.currentChoices.ToArray()[2]}");
     string line = story.Continue();
     ClearText();

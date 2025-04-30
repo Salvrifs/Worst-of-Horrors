@@ -87,7 +87,7 @@ private float stepTimer;
         Current_Stamina = MaxStamina;
         StaminaBar.gameObject.SetActive(false);
         //StartCoroutine(InfectionTimer());
-        infectionEffectImage.color = new Color(1, 0, 0, 0);
+        //infectionEffectImage.color = new Color(1, 0, 0, 0);
         //audioSource = GetComponent<AudioSource>();
     }
 
