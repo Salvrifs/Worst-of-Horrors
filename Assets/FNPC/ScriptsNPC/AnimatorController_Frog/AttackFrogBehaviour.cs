@@ -11,7 +11,7 @@ public class AttackFrogBehaviour: StateMachineBehaviour
     private Text healthCount;
     private Slider HealthBar;
     //private Slider StaminaBar;
-
+    //[SerializeField] float pushDistance = 5f; // Расстояние оттолкновения
     [SerializeField] private float AttackRadius = 6f; 
     private int damageAmount = 5; 
     private float timer = 0f;
@@ -102,6 +102,15 @@ public class AttackFrogBehaviour: StateMachineBehaviour
 
         if (int.Parse(healthCount.text) - damageAmount > 0)
         {
+
+            //Vector3 attackDirection = (m_player.position - EnemyEye.position).normalized;
+            //var main_p = GameObject.FindGameObjectWithTag("PlayerMain").transform;
+            //main_p.position += attackDirection * pushDistance;
+
+            //m_player.position += attackDirection * pushDistance;
+            //m_camera.position += attackDirection * pushDistance;
+
+
             timer = 0f;
             float new_health = int.Parse(healthCount.text) - damageAmount;
             HealthBar.value = new_health;
