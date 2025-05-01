@@ -7,7 +7,7 @@ public class Chase : StateMachineBehaviour
     NavMeshAgent m_agent;
     Transform m_player;
     float stopRadius = 5f;
-    float resumeRadius = 7f; // Дистанция для возобновления преследования
+    float resumeRadius = 7f; 
     private float speedPlus = 2.5f;
     [SerializeField] AudioClip[] intimidateSound; 
     [SerializeField] AudioSource intimidate_audioSource;
