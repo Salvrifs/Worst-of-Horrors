@@ -537,6 +537,10 @@ MonoBehaviour:
   quickSlotPanel: {fileID: 1994932408}
   slots: []
   reachDistance: 3
+  TakeBottle: {fileID: 0}
+  TakeMushrom: {fileID: 0}
+  TakeFlashlight: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!114 &243781768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1122,12 +1126,14 @@ MonoBehaviour:
   StaminaBar: {fileID: 0}
   StaminaFill: {fileID: 0}
   Current_Stamina: 0
-  WalkSound1: {fileID: 0}
-  WalkSound2: {fileID: 0}
-  WalkSound3: {fileID: 0}
+  audioSource: {fileID: 0}
+  WalkSounds: []
   jumpSound: {fileID: 0}
   timerOfPlayerLive: 0
   MaxTimeOfPlay: 6000
+  walkStepInterval: 0.5
+  runStepInterval: 0.3
+  crouchStepInterval: 0.7
 --- !u!143 &1338193606
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1671,6 +1677,7 @@ MonoBehaviour:
   requiredItems:
   - Mushroom
   - Potion
+  placedItems: []
 --- !u!54 &1698714435
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1694,7 +1701,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1960,6 +1967,13 @@ MonoBehaviour:
   notSelectedSprite: {fileID: 21300000, guid: 015612898b7e9f741ae1a87d2cb873e8, type: 3}
   HealthBar: {fileID: 0}
   healthText: {fileID: 212181050}
+  reachDistance: 3
+  flashlight: {fileID: 0}
+  flashlightParent: {fileID: 0}
+  GribAnimator: {fileID: 0}
+  UseHeal: {fileID: 0}
+  FallOfItem: []
+  DropItem: {fileID: 0}
 --- !u!114 &1994932410
 MonoBehaviour:
   m_ObjectHideFlags: 0

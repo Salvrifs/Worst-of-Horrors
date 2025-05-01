@@ -1,8 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Pot_quest : MonoBehaviour
 {
+
+    public GameObject End_scene;
+    public GGCameraMoving cameraController;
+
     public QuickSlotPanel inventory;
     public List<string> requiredItems;
     private List<string> placedItems = new List<string>();
@@ -47,6 +52,11 @@ public class Pot_quest : MonoBehaviour
 
     private void EndGame()
     {
-        Debug.Log(" вест завершен.");
+        //Debug.Log(" вест завершен.");
+        End_scene.SetActive(true);
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        cameraController.SetControlEnabled(false);
     }
 }
