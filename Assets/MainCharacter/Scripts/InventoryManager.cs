@@ -10,11 +10,11 @@ public class InventoryManager : MonoBehaviour
     public List<InventorySlot> slots = new List<InventorySlot>();
     private Camera mainCamera;
     public float reachDistance = 3f;
-
     [SerializeField] AudioClip TakeBottle;
     [SerializeField] AudioClip TakeMushrom;
+    [SerializeField] AudioClip TakeFlashlight;
 
-    AudioSource audioSource;
+    [SerializeField] AudioSource audioSource;
 
     public static event Action<Item> OnDestroyItem;
     void Start()
@@ -45,6 +45,7 @@ public class InventoryManager : MonoBehaviour
                 Item itemInfo = hit.collider.gameObject.GetComponent<Item>();
                 if (itemInfo != null && (itemInfo.i_item.itemType == ItemType.Heal) )
                 {
+                    PlaySoundTakingItem(itemInfo.i_item.name);
                     AddItem(itemInfo.i_item, itemInfo.amount);
                     itemInfo.i_item.IsTakedByPlayer = true;
                     OnDestroyItem?.Invoke(itemInfo);
@@ -98,6 +99,41 @@ public class InventoryManager : MonoBehaviour
                 
                 break;
             }
+        }
+    }
+
+    //
+    //Проигрывание звука подбора соответствующего предмета
+    //
+    private void PlaySoundTakingItem(string itemName)
+    {
+        //
+        //Гриб
+        //
+        if (itemName == "Mushroom")
+        {
+            Debug.Log("Sound of taking mush");
+            audioSource.PlayOneShot(TakeMushrom);
+        }
+        //
+        //Зелье
+        //
+        else if (itemName == "Potion")
+        {
+            Debug.Log("Sound of taking bottle");
+            audioSource.PlayOneShot(TakeBottle);
+        }
+        //
+        //Фонарик
+        //
+        else if (itemName == "Flashlight")
+        {
+            Debug.Log("Sound of taking dab");
+            audioSource.PlayOneShot(TakeFlashlight);
+        }
+        else
+        {
+            Debug.Log("no sound? Why?");
         }
     }
 }

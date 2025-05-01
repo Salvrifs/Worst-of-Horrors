@@ -103,7 +103,7 @@ public class QuickSlotPanel : MonoBehaviour
             {
                 if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.isConsumeable && quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == selectedSprite)
                 {
-                    //audioSource.PlayOneShot(UseHeal);
+                    audioSource.PlayOneShot(UseHeal);
                     ChangeCharacteristics();
                    
                     if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
@@ -119,21 +119,21 @@ public class QuickSlotPanel : MonoBehaviour
                 }
 
                 else if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemType == ItemType.Lighting)
-{
-    if (flashlight != null)
-    {
-        // Активируем фонарик и устанавливаем позицию
-        if (flashlight != null)
-{
-    flashlight.gameObject.SetActive(true);
-    flashlight.GetComponent<Rigidbody>().isKinematic = true;
-    flashlight.transform.SetParent(flashlightParent);
-    flashlight.transform.localPosition = new Vector3(0.4f, 0.6f, 0.6f); 
-    flashlight.transform.localEulerAngles = new Vector3(-90, 0, 0);  
-    flashlight.ToggleFlashlight();
-}
-    }
-}
+                {
+                    Debug.Log("Nu fonarik derezhish");
+                    // Активируем фонарик и устанавливаем позицию
+                    if (flashlight != null)
+                    {
+                        Debug.Log("flashKKKAAAA");
+                        flashlight.gameObject.SetActive(true);
+                        flashlight.GetComponent<Rigidbody>().isKinematic = true;
+                        flashlight.transform.SetParent(flashlightParent);
+                        flashlight.transform.localPosition = new Vector3(0.4f, 0.6f, 0.6f); 
+                        flashlight.transform.localEulerAngles = new Vector3(-90, 0, 0);  
+                        flashlight.ToggleFlashlight();
+                    }
+                
+                }
             }
         }
 
@@ -163,9 +163,9 @@ public class QuickSlotPanel : MonoBehaviour
                 Transform itemsContainer = GameObject.FindGameObjectWithTag("item").transform;
                 GameObject itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity, itemsContainer);
                 
-                //audioSource.PlayOneShot(DropItem);
-                //StartCoroutine(waitOfFall());
-                //audioSource.PlayOneShot(FallOfItem[UnityEngine.Random.Range(0, FallOfItem.Length)]);
+                audioSource.PlayOneShot(DropItem);
+                StartCoroutine(waitOfFall());
+                audioSource.PlayOneShot(FallOfItem[UnityEngine.Random.Range(0, FallOfItem.Length)]);
 
                 if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)
                 {
