@@ -9,12 +9,13 @@ public class PhysicsInteraction : MonoBehaviour
     [SerializeField] private Image image1;
     [SerializeField] private Image image2;
     public GameObject TakeText;
+    public GameObject HitGribText;
+    public GameObject HaveDialog;
     private AudioListener al;
 
     private Rigidbody _hitRigidbody;
     private bool _isShooting;
     private RaycastHit _hitInfo;
-
     private GameObject _empty;
     private Rigidbody _emptyRb;
 
@@ -35,6 +36,10 @@ public class PhysicsInteraction : MonoBehaviour
     {
         if (TakeText.activeSelf)
             TakeText.SetActive(false);
+        if (HitGribText.activeSelf)
+            HitGribText.SetActive(false);
+        if (HaveDialog.activeSelf)
+            HaveDialog.SetActive(false);
 
         ShootRaycast();
 
@@ -63,10 +68,28 @@ public class PhysicsInteraction : MonoBehaviour
 
             Item itemInfo = _hitInfo.collider.GetComponent<Item>();
             CollectingNPC ShaluScript = _hitInfo.collider.GetComponent<CollectingNPC>();
-            if (itemInfo != null || (ShaluScript != null && ShaluScript.IsHolding ))
+            //
+            //Предмет или шалушай
+            //
+            if (itemInfo != null || (ShaluScript != null && ShaluScript.IsHolding))
             {
                 TakeText.SetActive(true);
             }
+            //
+            //Диалог
+            //
+            else if (_hitInfo.collider.GetComponent<NPCTrigger>())
+            {
+                HaveDialog.SetActive(true);
+            }
+            //
+            //Ударить гриб по ж***
+            //
+            else if (_hitInfo.collider.gameObject.CompareTag("NPCgrib"))
+            {
+                HitGribText.SetActive(true);
+            }
+
 
             if (Input.GetMouseButtonDown(0) && (_hitInfo.collider.tag != "Monster"))
             {

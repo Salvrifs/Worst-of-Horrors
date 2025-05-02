@@ -48,6 +48,10 @@ public class InventoryManager : MonoBehaviour
                 }
 
                 Item itemInfo = hit.collider.gameObject.GetComponent<Item>();
+                CollectingNPC ShaluScript = hit.collider.gameObject.GetComponent<CollectingNPC>();
+                //
+                //Подбор Хила
+                //
                 if (itemInfo != null && (itemInfo.i_item.itemType == ItemType.Heal) )
                 {
                     PlaySoundTakingItem(itemInfo.i_item.name);
@@ -56,6 +60,9 @@ public class InventoryManager : MonoBehaviour
                     OnDestroyItem?.Invoke(itemInfo);
                     Destroy(hit.collider.gameObject);
                 }
+                //
+                //Подбор Фонарик
+                //
                 else if (itemInfo != null && itemInfo.i_item.itemType == ItemType.Lighting)
                 {
                     AddItem(itemInfo.i_item, itemInfo.amount);
@@ -64,13 +71,27 @@ public class InventoryManager : MonoBehaviour
                     //hit.collider.gameObject.transform.SetParent(quickSlotPanel);
                     itemInfo.gameObject.SetActive(false);
                 }
-
+                //
+                //Подбор Доска
+                //
                 else if (itemInfo != null && itemInfo.i_item.itemType == ItemType.Board)
                 {
                     AddItem(itemInfo.i_item, itemInfo.amount);
                     itemInfo.i_item.IsTakedByPlayer = true;
                     Destroy(hit.collider.gameObject);
                 } 
+                //
+                //Отбор у шалушая
+                //
+                else if (itemInfo != null && 
+                        ShaluScript != null &&
+                        ShaluScript.IsHolding)
+                        {
+                            AddItem(itemInfo.i_item, itemInfo.amount);
+                            ShaluScript.IsHolding = false;
+                            OnDestroyItem?.Invoke(ShaluScript.currentTarget.GetComponent<Item>());
+                            Destroy(ShaluScript.currentTarget.GetComponent<Item>().gameObject);
+                        }
             }
         } 
     }
@@ -138,7 +159,7 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("no sound? Why?");
+            Debug.Log($"no sound? Why? {itemName}");
         }
     }
 }

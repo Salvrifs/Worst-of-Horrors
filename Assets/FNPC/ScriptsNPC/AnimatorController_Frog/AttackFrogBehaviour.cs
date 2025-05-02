@@ -23,7 +23,7 @@ public class AttackFrogBehaviour: StateMachineBehaviour
     bool IsAttackUge;
     [SerializeField] AudioClip[] intimidateSound; 
     [SerializeField] AudioSource intimidate_audioSource;
-    
+    [SerializeField] GameObject menuOfDeath;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -34,7 +34,7 @@ public class AttackFrogBehaviour: StateMachineBehaviour
         EnemyEye = GameObject.FindGameObjectWithTag("EyeFrog").transform;
         intimidate_audioSource = animator.GetComponent<AudioSource>();
         IsAttackUge = false;
-        
+        menuOfDeath = GameObject.Find("Canvas").transform.GetChild(2).transform.GetChild(5).gameObject;
         
         
     }
@@ -128,9 +128,14 @@ public class AttackFrogBehaviour: StateMachineBehaviour
     {
         
         Debug.Log("Игра окончена!");
-        
+        PerformAttack();
         // Перезагрузить текущую сцену
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Debug.Log($"{menuOfDeath.name}");
+        menuOfDeath.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
     
         // SceneManager.LoadScene("GameOverScene"); //Перезагрузить нужную сцену
     }

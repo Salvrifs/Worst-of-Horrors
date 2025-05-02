@@ -13,7 +13,7 @@ public class CollectingNPC : MonoBehaviour
         private NavMeshAgent m_agent;
         private Transform Player;
         private Coroutine escapeCoroutine;
-        private Transform currentTarget = null;
+        public Transform currentTarget = null;
         private float escapeTimer;
         private float escapeDist = 15f;
         private Vector3 DropOffPoint;

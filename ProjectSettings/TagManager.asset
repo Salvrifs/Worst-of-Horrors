@@ -18,6 +18,7 @@ TagManager:
   - quest
   - PatrolPoints
   - NPCgrib
+  - MenuOfDeath
   layers:
   - Default
   - TransparentFX

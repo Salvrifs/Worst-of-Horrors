@@ -15,6 +15,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GGCameraMoving cameraMoving;
     
     private float previousTimeScale;
+    public static event Action OnDialogueEnd;
 
     void Awake()
     {
@@ -69,6 +70,8 @@ public class DialogueManager : MonoBehaviour
         cameraMoving.SetControlEnabled(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        OnDialogueEnd?.Invoke();
     }
 
     private void ContinueStory()

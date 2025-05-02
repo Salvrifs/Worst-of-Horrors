@@ -12,7 +12,7 @@ public class AttackBehaviour : StateMachineBehaviour
     private Slider HealthBar;
     //private Slider StaminaBar;
     private float AttackRadius = 6f; 
-    private int damageAmount = 5; 
+    private int damageAmount = 50; 
     private float timer = 0f;
 
     Transform EnemyEye;
@@ -20,6 +20,8 @@ public class AttackBehaviour : StateMachineBehaviour
     
     float ViewDistance = 75f;
     bool IsAttackUge;
+
+    [SerializeField] GameObject menuOfDeath;
 
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -30,7 +32,7 @@ public class AttackBehaviour : StateMachineBehaviour
         healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         IsAttackUge = false;
-
+        menuOfDeath = GameObject.Find("Canvas").transform.GetChild(2).transform.GetChild(5).gameObject;
 
 
     }
@@ -115,9 +117,15 @@ public class AttackBehaviour : StateMachineBehaviour
     {
 
         Debug.Log("Игра окончена!");
-
+        PerformAttack();
         // Перезагрузить текущую сцену
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Debug.Log($"{menuOfDeath.name}");
+        menuOfDeath.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
         // SceneManager.LoadScene("GameOverScene"); //Перезагрузить нужную сцену
     }

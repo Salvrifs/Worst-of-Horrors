@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Frog_Sound : MonoBehaviour
 {
-    //[SerializeField] private AudioClip Attack;
     [SerializeField] private AudioClip Jump;
-    //[SerializeField] private AudioClip intimidation;
-    //[SerializeField] private AudioClip[] idle;
     [SerializeField] private AudioClip idle;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] float chanceToQuack = 0.5f;

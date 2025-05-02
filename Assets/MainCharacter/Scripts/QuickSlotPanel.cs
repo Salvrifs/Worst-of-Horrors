@@ -158,11 +158,36 @@ public class QuickSlotPanel : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
+            
             if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
             {
-                Transform itemsContainer = GameObject.FindGameObjectWithTag("item").transform;
-                GameObject itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity, itemsContainer);
+                GameObject itemObject;
+                //
+                //Выброс доски
+                //
+                if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemType == ItemType.Board)
+                {
+                    itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
+                }
+                //
+                //Выброс фонарика
+                //
+                else if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemType == ItemType.Lighting)
+                {
+                    Transform itemsContainer = GameObject.FindGameObjectWithTag("item").transform;
+                    itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity, itemsContainer);
+                    flashlight.gameObject.SetActive(false);
+                }
+                //
+                //Выьрос хила 
+                //
+                else
+                {
+                    Transform itemsContainer = GameObject.FindGameObjectWithTag("item").transform;
+                    itemObject = Instantiate(quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity, itemsContainer);
+                }
                 
+
                 audioSource.PlayOneShot(DropItem);
                 StartCoroutine(waitOfFall());
                 audioSource.PlayOneShot(FallOfItem[UnityEngine.Random.Range(0, FallOfItem.Length)]);
@@ -177,7 +202,7 @@ public class QuickSlotPanel : MonoBehaviour
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().textItemAmount.text = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount.ToString();
                 }
                 
-                //quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
+                quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item.IsTakedByPlayer = false;
                 if (itemObject.GetComponent<Item>().i_item.itemType != ItemType.Board)
                 {
                     itemObject.GetComponent<Item>().OnDrop();
