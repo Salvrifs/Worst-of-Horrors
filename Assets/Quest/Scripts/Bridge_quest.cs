@@ -1,15 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Pot_quest : MonoBehaviour
+public class Bridge_quest : MonoBehaviour
 {
 
     public GameObject End_scene;
+    public List<GameObject> Bridge;
     public GGCameraMoving cameraController;
 
     public QuickSlotPanel inventory;
-    public List<string> requiredItems;
-    private List<string> placedItems = new List<string>();
+    public int activeBoard = 0;
     public void GiveItem()
     {
         ItemScriptableObject activeItem = inventory.quickslotParent.GetChild(inventory.currentQuickslotID).GetComponent<InventorySlot>().is_item;
@@ -20,17 +24,21 @@ public class Pot_quest : MonoBehaviour
             return;
         }
 
-        if (requiredItems.Contains(activeItem.itemName))
+        if ((activeItem.itemName == "Desk") && (activeBoard != Bridge.Count))
         {
-            placedItems.Add(activeItem.itemName);
+
+            Bridge[activeBoard].GetComponent<Collider>().enabled = true;
+            Bridge[activeBoard].SetActive(true);
+
+            activeBoard++;
 
             inventory.RemoveItem();
 
             Debug.Log($"Положил: {activeItem.itemName}");
 
-            if (IsQuestCompleted())
+            if (activeBoard == (Bridge.Count))
             {
-                EndGame();
+                Debug.Log("Квест завершен.");
             }
         }
         else
@@ -39,17 +47,7 @@ public class Pot_quest : MonoBehaviour
         }
     }
 
-    private bool IsQuestCompleted()
-    {
-        foreach (var itemName in requiredItems)
-        {
-            if (!placedItems.Contains(itemName))
-                return false;
-        }
-        return true;
-    }
-
-    private void EndGame()
+    private void OnTriggerEnter()
     {
         //Debug.Log("Квест завершен.");
         End_scene.SetActive(true);

@@ -14,13 +14,13 @@ public class AttackBehaviour : StateMachineBehaviour
     private float AttackRadius = 6f; 
     private int damageAmount = 5; 
     private float timer = 0f;
-    
+
     Transform EnemyEye;
     [Range(0, 360)] float ViewAngle = 165f;
     
     float ViewDistance = 75f;
     bool IsAttackUge;
-    
+
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -30,9 +30,9 @@ public class AttackBehaviour : StateMachineBehaviour
         healthCount = GameObject.Find("HealthCount").GetComponent<Text>();
         EnemyEye = GameObject.FindGameObjectWithTag("Eye").transform;
         IsAttackUge = false;
-        
-        
-        
+
+
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -113,12 +113,12 @@ public class AttackBehaviour : StateMachineBehaviour
 
     private void GameOver()
     {
-        
+
         Debug.Log("Игра окончена!");
-        
+
         // Перезагрузить текущую сцену
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    
+
         // SceneManager.LoadScene("GameOverScene"); //Перезагрузить нужную сцену
     }
 //

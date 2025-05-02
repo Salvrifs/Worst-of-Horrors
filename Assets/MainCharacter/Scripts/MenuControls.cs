@@ -10,7 +10,7 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] GameObject MainMenu;
     public GameObject Menu;
     public GGCameraMoving cameraController;
-    public GameObject infoPanel;
+    public GameObject questPanel;
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject SoundPanel;
     
@@ -52,9 +52,9 @@ public class NewBehaviourScript : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.J))
         {
-            infoPanel.SetActive(!infoPanel.activeSelf);
+            questPanel.SetActive(!questPanel.activeSelf);
         }
     }
 
