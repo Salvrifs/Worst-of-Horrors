@@ -123,4 +123,17 @@ public class NewBehaviourScript : MonoBehaviour
         Application.Quit();
         FindObjectOfType<VolumeSettings>().ToggleMusic(true, 1.6f);
     }
+    //
+    //Нажать кнопку "Выход" в меню смерти
+    //
+    public void Reload()
+    {
+        StartCoroutine(LoadSceneAsync());
+    }
+    private IEnumerator LoadSceneAsync() {
+    AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    while (!asyncLoad.isDone) {
+        yield return null; // Ожидание завершения
+    }
+}
 }

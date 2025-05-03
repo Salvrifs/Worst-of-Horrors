@@ -117,7 +117,7 @@ public class AttackBehaviour : StateMachineBehaviour
     {
 
         Debug.Log("Игра окончена!");
-        PerformAttack();
+        //PerformAttack();
         // Перезагрузить текущую сцену
         Debug.Log($"{menuOfDeath.name}");
         menuOfDeath.SetActive(true);

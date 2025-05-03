@@ -13,7 +13,7 @@ public class HighlightController : MonoBehaviour
     void Start()
     {
         //_dialogueManager = DialogueManager.Instance;
-        DialogueManager.OnDialogueEnd += ActivateHighlights;
+        //DialogueManager.OnDialogueEnd += ActivateHighlights;
         gameObject.SetActive(false);
     }
 

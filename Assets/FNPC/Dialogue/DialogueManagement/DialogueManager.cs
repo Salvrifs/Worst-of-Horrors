@@ -15,7 +15,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GGCameraMoving cameraMoving;
     
     private float previousTimeScale;
-    public static event Action OnDialogueEnd;
+    public static event Action<bool, bool> OnDialogueEnd;
 
     void Awake()
     {
@@ -45,7 +45,9 @@ public class DialogueManager : MonoBehaviour
             ContinueStory();
         }
     }
-
+    //
+    //Вход в диалог
+    //
      public void EnterDialogueMode(TextAsset inkJson)
     {
         cameraMoving.SetControlEnabled(false);
@@ -59,7 +61,9 @@ public class DialogueManager : MonoBehaviour
 
         
     }
-
+    //
+    //Окончание диалога
+    //
     private IEnumerator ExitDialogueMode()
     {
         yield return new WaitForSecondsRealtime(_dialogueWindow.CoolDownNextLetter);
@@ -71,8 +75,25 @@ public class DialogueManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        OnDialogueEnd?.Invoke();
+        bool chosePotion = false;
+        bool choseBridge = false;
+
+        if (currentStory != null)
+    {
+        chosePotion =  GetInkVariable("chosePotion", false);
+        choseBridge =  GetInkVariable("chosePotion", false);
     }
+        OnDialogueEnd?.Invoke(chosePotion, choseBridge);
+    }
+
+    private bool GetInkVariable(string variableName, bool defaultValue)
+{
+    if (currentStory.variablesState[variableName] != null)
+    {
+        return (bool)currentStory.variablesState[variableName];
+    }
+    return defaultValue;
+}
 
     private void ContinueStory()
 {

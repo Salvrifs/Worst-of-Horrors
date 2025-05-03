@@ -6,28 +6,33 @@ using System.Collections.Generic;
 
 public class TargetPointer : MonoBehaviour
 {
-     public List<TargetData> targets = new List<TargetData>();
     public Sprite pointerIcon;
     public Sprite outOfScreenIcon;
     public float interfaceScale = 100f;
     public string distanceFormat = "0.0 m";
     public Vector2 textOffset = new Vector2(30f, 0f);
-
+    
     private Camera mainCamera;
     private bool isActive;
     private Rect screenRect;
 
+    [Header("Target Lists")]
+    public List<TargetData> potionTargets = new List<TargetData>();
+    public List<TargetData> bridgeTargets = new List<TargetData>();
+    
+    private List<TargetData> activeTargets = new List<TargetData>();
+
     private void Awake()
     {
         mainCamera = Camera.main;
-        DialogueManager.OnDialogueEnd += ActivatePointers;
+        DialogueManager.OnDialogueEnd += HandleDialogueEnd;
         SetPointersActive(false);
         screenRect = new Rect(0, 0, Screen.width, Screen.height);
     }
 
     private void OnDestroy()
     {
-        DialogueManager.OnDialogueEnd -= ActivatePointers;
+        DialogueManager.OnDialogueEnd -= HandleDialogueEnd;
     }
 
     private void ActivatePointers()
@@ -36,10 +41,21 @@ public class TargetPointer : MonoBehaviour
         SetPointersActive(true);
     }
 
+    private void HandleDialogueEnd(bool chosePotion, bool choseBridge)
+    {
+        activeTargets.Clear();
+        
+        if (chosePotion) activeTargets = potionTargets;
+        else if (choseBridge) activeTargets = bridgeTargets;
+        Debug.Log($"ChosePotion {chosePotion}, ChoseBridge: {choseBridge}");
+        ActivatePointers();
+    }
+
     private void SetPointersActive(bool state)
     {
-        foreach (var targetData in targets)
+        foreach (var targetData in activeTargets)
         {
+            Debug.Log($"targetData: {targetData}\ttargetData: {targetData.name}");
             if (targetData.pointerUI != null)
                 targetData.pointerUI.gameObject.SetActive(state);
             
@@ -52,7 +68,7 @@ public class TargetPointer : MonoBehaviour
     {
         if (!isActive) return;
 
-        foreach (var targetData in targets)
+        foreach (var targetData in activeTargets)
         {
             if (targetData.target == null) continue;
 
