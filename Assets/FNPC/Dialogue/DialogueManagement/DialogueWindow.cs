@@ -21,6 +21,7 @@ public DialogueOption DialogueOption => _dialogueOption;
     public bool IsStatusAnswer {get; private set;}
     public bool IsPlaying {get; private set;}
     public bool CanContinueTONextLine {get; private set;}
+    public DialogueManager _dialogueManager;
 
     public float CoolDownNextLetter
     {
@@ -103,7 +104,10 @@ public IEnumerator DisplayLine(Story story)
 {
     Debug.Log("Display");
     //Debug.Log("DisplayLine" + $"CanContinue? {story.canContinue} currentChoices: {story.currentChoices.ToArray()[0]}, {story.currentChoices.ToArray()[1]}, {story.currentChoices.ToArray()[2]}");
-    string line = story.Continue();
+    string line = story.ToString();
+    Debug.Log(line);
+    line = story.Continue();
+    Debug.Log(line);
     ClearText();
     CanContinueTONextLine = false;
     IsStatusAnswer = false; // Сбросить статус перед новой строкой
@@ -129,6 +133,10 @@ public IEnumerator DisplayLine(Story story)
     CanContinueTONextLine = true;
     Debug.Log("story: " + story.currentText + " story: ");
     IsStatusAnswer = _dialogueOption.DisplayOptions(story); // Показать кнопки после текста
+    if (!IsStatusAnswer && story.canContinue && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))) 
+    {
+        _dialogueManager.ContinueStory();
+    }
 }
 
 

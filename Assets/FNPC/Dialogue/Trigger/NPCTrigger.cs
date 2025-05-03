@@ -1,55 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 
+[RequireComponent(typeof(SphereCollider))] // Добавляем автоматически Sphere Collider
 public class NPCTrigger : MonoBehaviour
 {
+    [Header("Dialogue Settings")]
     [SerializeField] private TextAsset _inkJson;
-
-    private bool IsPlayerEnter;
+    [SerializeField] private float interactionRadius = 3f; // Радиус взаимодействия
+    
+    [Header("Debug")]
+    [SerializeField] private bool showGizmos = true; // Визуализация в сцене
 
     private DialogueManager _dialogueManager;
-    private DialogueWindow _dialogueWindow;
+    private bool _isPlayerInRange;
+
+    private void Awake()
+    {
+        // Настройка коллайдера
+        SphereCollider collider = GetComponent<SphereCollider>();
+        collider.radius = interactionRadius;
+        collider.isTrigger = true;
+    }
 
     private void Start()
     {
-        IsPlayerEnter = false;
-
         _dialogueManager = FindObjectOfType<DialogueManager>();
-        _dialogueWindow = FindObjectOfType<DialogueWindow>();
     }
 
     private void Update()
     {
-        if (_dialogueWindow.IsPlaying || IsPlayerEnter == false)
-        {
-            return;
-        }   
-
+        if (!_isPlayerInRange || _dialogueManager.IsDialoguingPlayer) return;
+        
         if (Input.GetKeyDown(KeyCode.P))
         {
             _dialogueManager.EnterDialogueMode(_inkJson);
         }
     }
 
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter(Collider other)
     {
-        GameObject obj = collider.gameObject;
-
-        if (obj.GetComponent<GGMoving>() != null)
+        if (other.CompareTag("Player"))
         {
-            IsPlayerEnter = true;
+            _isPlayerInRange = true;
         }
     }
 
-    private void OnTriggerExit(Collider collider)
+    private void OnTriggerExit(Collider other)
     {
-        GameObject obj = collider.gameObject;
-
-        if (obj.GetComponent<GGMoving>() != null)
+        if (other.CompareTag("Player"))
         {
-            IsPlayerEnter = false;
+            _isPlayerInRange = false;
         }
+    }
+
+    // Визуализация радиуса в редакторе
+    private void OnDrawGizmosSelected()
+    {
+        if (!showGizmos) return;
+        
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }

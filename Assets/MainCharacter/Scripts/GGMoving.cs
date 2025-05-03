@@ -77,7 +77,7 @@ private float stepTimer;
     private bool isJumping = false;
     private Coroutine regenCoroutine;
 
-    
+    private bool isMovementAllowed = true;
 
     void Start()
     {
@@ -93,6 +93,8 @@ private float stepTimer;
 
     void Update()
     {
+        if (!isMovementAllowed) return;
+
         if (audioSource == null)
         {
             Debug.Log($"{transform.name}: Audio: {transform.GetComponent<AudioSource>()} ego net");
@@ -201,7 +203,12 @@ private IEnumerator JumpCooldown()
         _speed = _speedWalk;
         isSprinting = false;
     }
-}          
+}       
+
+public void SetMovementAllowed(bool allowed)
+    {
+        isMovementAllowed = allowed;
+    }
     //
     //Выносливость
     //

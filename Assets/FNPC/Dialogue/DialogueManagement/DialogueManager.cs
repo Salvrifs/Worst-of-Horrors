@@ -8,6 +8,10 @@ using Ink.Runtime;
 [RequireComponent(typeof(DialogueWindow), typeof(DialogueTag))]
 public class DialogueManager : MonoBehaviour
 {
+    private bool isDialoguing = false;
+    
+    // И это свойство для доступа извне
+    public bool IsDialoguingPlayer => isDialoguing;
     private DialogueWindow _dialogueWindow;
     private DialogueTag _dialogueTag;
     public Story currentStory {get; private set;}
@@ -16,7 +20,7 @@ public class DialogueManager : MonoBehaviour
     
     private float previousTimeScale;
     public static event Action<bool, bool> OnDialogueEnd;
-
+    [SerializeField] private GGMoving playerMovement;
     void Awake()
     {
         _dialogueTag = GetComponent<DialogueTag>();
@@ -44,18 +48,23 @@ public class DialogueManager : MonoBehaviour
         {
             ContinueStory();
         }
+
     }
     //
     //Вход в диалог
     //
      public void EnterDialogueMode(TextAsset inkJson)
     {
+        isDialoguing = true; // Добавить здесь
+
+        playerMovement.SetMovementAllowed(false);
         cameraMoving.SetControlEnabled(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
         currentStory = new Story(inkJson.text);
         _dialogueWindow.SetActive(true);
+        
 
         ContinueStory();
 
@@ -74,16 +83,19 @@ public class DialogueManager : MonoBehaviour
         cameraMoving.SetControlEnabled(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
+        playerMovement.SetMovementAllowed(true);
+        
         bool chosePotion = false;
         bool choseBridge = false;
 
         if (currentStory != null)
     {
         chosePotion =  GetInkVariable("chosePotion", false);
-        choseBridge =  GetInkVariable("chosePotion", false);
+        choseBridge =  GetInkVariable("choseBridge", false);
     }
+    isDialoguing = false;
         OnDialogueEnd?.Invoke(chosePotion, choseBridge);
+         GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
     }
 
     private bool GetInkVariable(string variableName, bool defaultValue)
@@ -95,7 +107,7 @@ public class DialogueManager : MonoBehaviour
     return defaultValue;
 }
 
-    private void ContinueStory()
+    public void ContinueStory()
 {
     Debug.Log("ContinueStory");
     if (currentStory.canContinue == false)

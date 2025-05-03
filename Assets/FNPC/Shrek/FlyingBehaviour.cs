@@ -25,11 +25,14 @@ public class FlyingBehaviour : StateMachineBehaviour
         SetRandomDestination();
     }
 
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        if (m_agent.isOnNavMesh && m_agent.remainingDistance <= m_agent.stoppingDistance)
-            animator.SetBool("IsLanding", true);
-    }
+   override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+{
+    var reactionController = animator.GetComponent<NPCReactionController>();
+    if (reactionController != null && reactionController.IsReacting) return;
+
+    if (m_agent.isOnNavMesh && m_agent.remainingDistance <= m_agent.stoppingDistance)
+        animator.SetBool("IsLanding", true);
+}
 
     private void SetRandomDestination()
     {
