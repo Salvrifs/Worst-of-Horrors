@@ -11,6 +11,8 @@ public class Patrol : StateMachineBehaviour
     [SerializeField] AudioClip[] SlapSound;
     private Camera mainCamera;
     public float reachDistance = 3f;
+    [SerializeField] private float interactionDistance = 5f;
+private bool isPlayerLooking;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

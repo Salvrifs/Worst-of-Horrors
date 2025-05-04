@@ -106,6 +106,13 @@ public class NewBehaviourScript : MonoBehaviour
         Menu.SetActive(false);
     }
     //
+    //Нажать кпопку "Настройки" в ГМ
+    //
+    public void SettingsPressedMainMenu()
+    {
+        SettingsPanel.SetActive(true);
+    }
+    //
     //Нажать кнопку "Выход" в esc
     //
     public void ExitToMainPressed()

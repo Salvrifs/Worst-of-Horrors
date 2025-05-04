@@ -279,7 +279,8 @@ private void StealItemFromPlayer()
     CoroutineForTake();
 
     // Поиск первого подходящего предмета
-    InventorySlot targetSlot = quickslotParent.GetComponentsInChildren<InventorySlot>().FirstOrDefault(s => s.amount > 0 && s.is_item != null);
+    InventorySlot targetSlot = quickslotParent.GetComponentsInChildren<InventorySlot>()
+        .FirstOrDefault(s => s.amount > 0 && s.is_item != null);
 
     if (targetSlot != null)
     {
@@ -293,16 +294,39 @@ private void StealItemFromPlayer()
 
         stolenItemInstance.transform.localScale = stolenItemInstance.GetComponent<Item>().size;
         stolenItemInstance.GetComponent<Rigidbody>().isKinematic = true;
+        
         // Настройка объекта
         stolenItemInstance.GetComponent<Item>().IsTakedByPlayer = false;
         stolenItemInstance.tag = "Untagged"; 
+        
+        // Уменьшаем количество и обновляем слот
         targetSlot.amount--;
+        
+        // Особое обращение с фонариком
+        if (targetSlot.is_item.itemType == ItemType.Lighting)
+        {
+            // Деактивируем оригинальный фонарик у игрока
+            var playerFlashlight = FindObjectOfType<FlashlightBeh>();
+            if (playerFlashlight != null && playerFlashlight.gameObject.activeSelf)
+            {
+                playerFlashlight.gameObject.SetActive(false);
+            }
+        }
 
         // Обновление данных слота
         if (targetSlot.amount <= 0) 
+        {
             targetSlot.NullifySlotData();
+            // Если это фонарик - удаляем его из квик-слота
+            if (targetSlot.is_item.itemType == ItemType.Lighting)
+            {
+                Destroy(targetSlot.transform.GetChild(0).gameObject); // Удаляем иконку
+            }
+        }
         else
+        {
             targetSlot.textItemAmount.text = targetSlot.amount.ToString();
+        }
 
         // Переход в режим удержания
         IsHolding = true;
@@ -314,8 +338,6 @@ private void StealItemFromPlayer()
     {
         MoveToItem();
     }
-
-
 }
 
 

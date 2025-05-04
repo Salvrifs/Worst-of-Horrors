@@ -132,8 +132,7 @@ public class QuickSlotPanel : MonoBehaviour
                         flashlight.transform.localEulerAngles = new Vector3(-90, 0, 0);  
                         flashlight.ToggleFlashlight();
                     }
-                
-                }
+                } 
             }
         }
 
@@ -227,7 +226,9 @@ public class QuickSlotPanel : MonoBehaviour
                 // GribText.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
+                    TryCalmNPC();
+
+                    /*if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item != null)
                     {
                         if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().is_item
                                 .isConsumeable &&
@@ -254,7 +255,7 @@ public class QuickSlotPanel : MonoBehaviour
                                 .IsTakedByPlayer = false;
 
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -289,4 +290,34 @@ public class QuickSlotPanel : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
     }
+
+    private bool TryCalmNPC()
+{
+    RaycastHit hit;
+    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 7f))
+    {
+        if (hit.collider.CompareTag("NPCgrib"))
+        {
+            InventorySlot slot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
+            if (slot.is_item != null && slot.is_item.isConsumeable)
+            {
+                slot.amount--;
+                audioSource.PlayOneShot(UseHeal);
+                
+                if (slot.amount <= 0) 
+                    slot.NullifySlotData();
+                else
+                    slot.textItemAmount.text = slot.amount.ToString();
+
+                GribAnimator.SetBool("IsChasing", false);
+                GribAnimator.SetBool("IsApp", true);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+    return false;
 }
+}
+

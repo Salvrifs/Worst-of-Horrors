@@ -32,10 +32,13 @@ public class NPCTrigger : MonoBehaviour
 {
     if (!_isPlayerInRange || _dialogueManager.IsDialoguingPlayer) return;
     
-    if (Input.GetKeyDown(KeyCode.X))
+
+    if (Input.GetKeyDown(KeyCode.P))
     {
         _dialogueManager.EnterDialogueMode(_inkJson, npcController);
     }
+
+    
 }
 
     private void OnTriggerEnter(Collider other)

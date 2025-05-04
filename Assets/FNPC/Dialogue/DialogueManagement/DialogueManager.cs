@@ -38,12 +38,14 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
+
         if (_dialogueWindow.IsStatusAnswer == true || 
             _dialogueWindow.IsPlaying == false ||
             _dialogueWindow.CanContinueTONextLine == false)
             {
                 return;
-            }   
+            } 
+
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(0))
         {
             ContinueStory();
@@ -108,6 +110,8 @@ public void EnterDialogueMode(TextAsset inkJson, NPCReactionController npc)
         OnDialogueEnd?.Invoke(chosePotion, choseBridge);
          GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
     }
+
+    
 
     private bool GetInkVariable(string variableName, bool defaultValue)
 {

@@ -82,7 +82,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.24999994
   m_TransitionOffset: 0
   m_ExitTime: 0.0009990397
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -107,7 +107,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.75
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -274,7 +274,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.2500001
   m_TransitionOffset: 0.002076214
   m_ExitTime: 0.0000000033984295
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -296,6 +296,7 @@ MonoBehaviour:
   SlapSound:
   - {fileID: 8300000, guid: 64e27206cf81e9d4684e67a99472c31c, type: 3}
   reachDistance: 3
+  interactionDistance: 5
 --- !u!114 &2823508587512980155
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -340,7 +341,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0.00612726
   m_ExitTime: 0.012177108
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -394,7 +395,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25000018
   m_TransitionOffset: 0
   m_ExitTime: 0
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -419,7 +420,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.090156235
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -473,7 +474,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25000003
   m_TransitionOffset: 0.007277751
   m_ExitTime: 0.0097271325
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -514,7 +515,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.05954493
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -566,7 +567,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.24999964
   m_TransitionOffset: 0
   m_ExitTime: 0.6221845
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

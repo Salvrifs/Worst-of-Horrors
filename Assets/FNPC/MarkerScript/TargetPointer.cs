@@ -20,6 +20,7 @@ public class TargetPointer : MonoBehaviour
     public List<TargetData> potionTargets = new List<TargetData>();
     public List<TargetData> bridgeTargets = new List<TargetData>();
     
+     private NewBehaviourScript menuController;
     private List<TargetData> activeTargets = new List<TargetData>();
 
     private void Awake()
@@ -28,6 +29,8 @@ public class TargetPointer : MonoBehaviour
         DialogueManager.OnDialogueEnd += HandleDialogueEnd;
         SetPointersActive(false);
         screenRect = new Rect(0, 0, Screen.width, Screen.height);
+
+        menuController = FindObjectOfType<NewBehaviourScript>();
     }
 
     private void OnDestroy()
@@ -66,6 +69,12 @@ public class TargetPointer : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (menuController != null && menuController.Menu.activeSelf)
+        {
+            SetPointersActive(false);
+            return;
+        }
+
         if (!isActive) return;
 
         foreach (var targetData in activeTargets)

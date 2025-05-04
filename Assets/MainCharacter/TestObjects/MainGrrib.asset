@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac72a16674f0d846a16661d55c0ced4, type: 3}
+  m_Name: MainGrrib
+  m_EditorClassIdentifier: 
+  itemName: MainRedGrib
+  maximumAmount: 1
+  itemDescription: Question
+  icon: {fileID: 21300000, guid: 89d8b02707f42874186888338ce7f976, type: 3}
+  itemPrefab: {fileID: 7902091310207049314, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
+  itemType: 2
+  isConsumeable: 0
+  changeHealth: 0
+  IsTakedByPlayer: 0
+  healAmount: 0
