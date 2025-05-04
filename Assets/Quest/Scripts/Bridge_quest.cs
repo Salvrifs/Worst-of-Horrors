@@ -47,13 +47,16 @@ public class Bridge_quest : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(" вест завершен.");
-        End_scene.SetActive(true);
-        Time.timeScale = 0f;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        cameraController.SetControlEnabled(false);
+        if (other.CompareTag("Player"))
+        {
+            //Debug.Log(" вест завершен.");
+            End_scene.SetActive(true);
+            Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            cameraController.SetControlEnabled(false);
+        }
     }
 }
