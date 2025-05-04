@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PhysicsInteraction : MonoBehaviour
 {
-    [SerializeField] private float maxGrabDistance = 20f;
+    [SerializeField] private float maxGrabDistance = 10f;
     [SerializeField] private float throwForce = 10.0f;
     [SerializeField] private Image image1;
     [SerializeField] private Image image2;

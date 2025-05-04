@@ -13,7 +13,7 @@ public class AttackFrogBehaviour: StateMachineBehaviour
     //private Slider StaminaBar;
     //[SerializeField] float pushDistance = 5f; // Расстояние оттолкновения
     [SerializeField] private float AttackRadius = 6f; 
-    private int damageAmount = 5; 
+    private int damageAmount = 15; 
     private float timer = 0f;
     
     Transform EnemyEye;

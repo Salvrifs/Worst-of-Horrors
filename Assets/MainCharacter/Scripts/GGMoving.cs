@@ -38,8 +38,8 @@ public class GGMoving : MonoBehaviour
     [SerializeField] private float _speedSit = 2.0f;
 
     [Header("\t==============\n\tStamina Settings\n\t==============")]
-    [SerializeField] private float RunCost = 2f;
-    [SerializeField] private float jumpCost = 4f;
+    [SerializeField] private float RunCost = 0.5f;
+    [SerializeField] private float jumpCost = 1.5f;
     [SerializeField] private float MaxStamina = 50f;
     [SerializeField] private float StaminaRegenDelay = 2f;
     [SerializeField] private float StaminaRegenRate = 5f;
@@ -64,11 +64,11 @@ public class GGMoving : MonoBehaviour
 [SerializeField] private float crouchStepInterval = 0.7f;
 private float stepTimer;
 
-    private float wakingUp1;
+    /*private float wakingUp1;
 	private float wakingUp2;
 	private float takingDamage;
     private float beingDizzy;
-    private float NumOfSound;
+    private float NumOfSound;*/
     private Vector3 _walkDirection;
     private Vector3 _velocity;
     private float _speedWalk;
@@ -103,7 +103,7 @@ private float stepTimer;
 
         if (audioSource == null)
         {
-            Debug.Log($"{transform.name}: Audio: {transform.GetComponent<AudioSource>()} ego net");
+            //Debug.Log($"{transform.name}: Audio: {transform.GetComponent<AudioSource>()} ego net");
         }
         //timerOfPlayerLive += Time.deltaTime;
 
