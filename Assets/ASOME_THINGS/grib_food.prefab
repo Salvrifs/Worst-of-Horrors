@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1759223290629690397}
   - component: {fileID: 3760281754735185919}
   - component: {fileID: 1071807692926258641}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: grib_food
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6357559018117851948}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.061000004, y: 0.07700001, z: 0.064}

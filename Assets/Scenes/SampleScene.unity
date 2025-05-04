@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.16137162, g: 0.110786, b: 0.15114579, a: 1}
+  m_IndirectSpecularColor: {r: 0.16135341, g: 0.11078181, b: 0.1511403, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -451,6 +451,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 38.86548
@@ -513,6 +517,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -366.5691
@@ -575,6 +583,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 41.471558
@@ -699,6 +711,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (18)
@@ -2209,6 +2225,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -253.24088
@@ -2709,6 +2729,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.697937
@@ -2771,6 +2795,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -325.98636
@@ -2895,6 +2923,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.098389
@@ -3751,8 +3783,16 @@ PrefabInstance:
       value: Food_06 (2)
       objectReference: {fileID: 0}
     - target: {fileID: 5294542192182121627, guid: 633dca2d2047e074ebf00763cd0f7ff4, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5294542192182121627, guid: 633dca2d2047e074ebf00763cd0f7ff4, type: 3}
       propertyPath: m_TagString
       value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 7188251399909728296, guid: 633dca2d2047e074ebf00763cd0f7ff4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4374,6 +4414,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (15)
@@ -4850,7 +4894,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 152701436}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.063, y: 0.10700001, z: 0.063}
@@ -5921,6 +5965,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (23)
@@ -5983,6 +6031,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 35.5213
@@ -6215,6 +6267,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (16)
@@ -6459,6 +6515,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -17.746277
@@ -6524,6 +6584,10 @@ PrefabInstance:
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_TagString
@@ -6740,6 +6804,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -168.11078
@@ -7241,7 +7309,7 @@ GameObject:
   - component: {fileID: 253159572}
   - component: {fileID: 253159574}
   - component: {fileID: 253159577}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7668,6 +7736,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (19)
@@ -7730,6 +7802,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (17)
@@ -7981,6 +8057,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -361.14618
@@ -8630,6 +8710,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -321.30185
@@ -10068,6 +10152,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (22)
@@ -10323,6 +10411,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 36.980713
@@ -11229,6 +11321,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (9)
@@ -11291,6 +11387,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -461.24472
@@ -11549,6 +11649,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.5598755
@@ -11708,6 +11812,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.932495
@@ -11770,6 +11878,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -297.85638
@@ -12048,6 +12160,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (10)
@@ -13436,6 +13552,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -330.50995
@@ -13572,6 +13692,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -348.81534
@@ -17149,6 +17273,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.479675
@@ -17211,6 +17339,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (21)
@@ -17502,6 +17634,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (20)
@@ -17967,6 +18103,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -443.59872
@@ -18158,6 +18298,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -465.88504
@@ -19263,6 +19407,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -315.66168
@@ -19602,6 +19750,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -405.23782
@@ -20968,6 +21120,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -36.57013
@@ -21035,6 +21191,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -358.19083
@@ -21475,6 +21635,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.0070801
@@ -22753,6 +22917,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -186.07446
@@ -22962,6 +23130,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.580872
@@ -23377,6 +23549,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -187.28528
@@ -23572,6 +23748,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -358.69922
@@ -25002,6 +25182,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -339.6573
@@ -25131,6 +25315,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -38.28131
@@ -25503,6 +25691,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (11)
@@ -26481,6 +26673,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -145.7926
@@ -26605,6 +26801,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (6)
@@ -28237,6 +28437,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -360.28894
@@ -29079,6 +29283,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (7)
@@ -30646,6 +30854,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 29.737732
@@ -31313,6 +31525,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -277.75143
@@ -31982,6 +32198,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.8327026
@@ -32044,6 +32264,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (3)
@@ -34265,6 +34489,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -341.24203
@@ -34532,6 +34760,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlashLight
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eac6c5be6c729554ebce5ef461bbf9ad, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -34768,6 +35000,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -388.41064
@@ -34830,6 +35066,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -426.29266
@@ -35000,6 +35240,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (25)
@@ -35839,6 +36083,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -310.77414
@@ -36102,6 +36350,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -345.98825
@@ -38349,6 +38601,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -396.97464
@@ -39366,6 +39622,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -428.35938
@@ -39741,6 +40001,10 @@ PrefabInstance:
       value: Bottle_01 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -40044,9 +40308,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4237517483046682220, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_LocalPosition.x
@@ -40232,6 +40504,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 659809102793452875, guid: 43a2c776338fcb84ca02d902bbfd0a20, type: 3}
   m_PrefabInstance: {fileID: 1382592055}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1386143868 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1617245395008562633, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
+  m_PrefabInstance: {fileID: 5173516135027885859}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1388833263
 GameObject:
   m_ObjectHideFlags: 0
@@ -40276,6 +40553,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -198.80591
@@ -40560,6 +40841,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.0029297
@@ -41986,6 +42271,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -401.8567
@@ -42813,6 +43102,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -169.83917
@@ -44007,6 +44300,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -293.9438
@@ -44605,6 +44902,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 30.714539
@@ -45391,6 +45692,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 62.029724
@@ -45453,6 +45758,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (1)
@@ -45668,6 +45977,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -394.42404
@@ -45806,6 +46119,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -366.41785
@@ -45967,6 +46284,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -250.77353
@@ -46544,7 +46865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ad4068c9f714c4429bfecfa8e94b548, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 52.3
+      value: 13.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ad4068c9f714c4429bfecfa8e94b548, type: 3}
       propertyPath: m_LocalPosition.z
@@ -46686,6 +47007,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -344.78094
@@ -47978,6 +48303,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (12)
@@ -48408,6 +48737,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (13)
@@ -49614,6 +49947,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -471.22327
@@ -49826,6 +50163,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -165.29736
@@ -50253,6 +50594,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -162.5011
@@ -50377,6 +50722,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -180.19232
@@ -50858,6 +51207,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01
@@ -51402,6 +51755,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (2)
@@ -53460,6 +53817,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -27.132141
@@ -53731,6 +54092,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (5)
@@ -54108,6 +54473,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -348.83508
@@ -54338,6 +54707,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (27)
@@ -54555,6 +54928,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -377.4408
@@ -55240,6 +55617,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7931844004157207602, guid: 74890eee6cce7224c80efee0721205ab, type: 3}
   m_PrefabInstance: {fileID: 1898042294}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1900948842 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6550526799331982542, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
+  m_PrefabInstance: {fileID: 5551380812220209641}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1905185796
 GameObject:
   m_ObjectHideFlags: 0
@@ -55674,6 +56056,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (8)
@@ -55869,6 +56255,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -39.601868
@@ -56062,6 +56452,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -348.23108
@@ -56840,6 +57234,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (14)
@@ -58342,6 +58740,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -461.40244
@@ -58656,6 +59058,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (24)
@@ -58718,6 +59124,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -34.72351
@@ -58802,6 +59212,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (4)
@@ -59040,6 +59454,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (26)
@@ -59102,6 +59520,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -362.55133
@@ -59643,6 +60065,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -145.3404
@@ -59705,6 +60131,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -438.13266
@@ -59838,6 +60268,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -373.27875
@@ -60831,6 +61265,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -185.02466
@@ -61609,9 +62047,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1529798608366319995, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_Name
       value: Bottle_01 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3568398053166638294, guid: b6f9b587034166549809f3a9c6c33262, type: 3}
       propertyPath: m_TagString
@@ -61881,6 +62327,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1243997355}
     m_Modifications:
+    - target: {fileID: 1071807692926258641, guid: 16495e74e155f154989895490b2db6c2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5523134581813528774, guid: 16495e74e155f154989895490b2db6c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -188.8789
@@ -61994,6 +62444,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainGribGray
       objectReference: {fileID: 0}
+    - target: {fileID: 4653583231143592756, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8819242643658522906, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
       propertyPath: i_item
       value: 
@@ -62003,19 +62457,43 @@ PrefabInstance:
     - {fileID: 6206257580192455416, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1617245395008562633, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5173516135027885861}
   m_SourcePrefab: {fileID: 100100000, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
 --- !u!114 &5173516135027885860 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -3180239435999856045, guid: aa53b9ecab669ed47bf34272e97f5f39, type: 3}
   m_PrefabInstance: {fileID: 5173516135027885859}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1386143868}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9dd07f145b157ff4cbeeec599ab78a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &5173516135027885861
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386143868}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.12214987, y: 0.15316488, z: 0.12843579}
+  m_Center: {x: -0.0002147723, y: 0.076188035, z: -0.0006619096}
 --- !u!1001 &5551380812220209641
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62024,6 +62502,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8737389770865891061, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5491946873714895978, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
       propertyPath: target
       value: 
@@ -62036,6 +62518,10 @@ PrefabInstance:
       propertyPath: distanceText
       value: 
       objectReference: {fileID: 1531336799}
+    - target: {fileID: 5770559346180981203, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
+      propertyPath: amount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5770559346180981203, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
       propertyPath: i_item
       value: 
@@ -62084,17 +62570,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainLightGrib
       objectReference: {fileID: 0}
+    - target: {fileID: 6550526799331982542, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6550526799331982542, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5551380812220209644}
   m_SourcePrefab: {fileID: 100100000, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
 --- !u!114 &5551380812220209642 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5491946873714895978, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
   m_PrefabInstance: {fileID: 5551380812220209641}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1900948842}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9dd07f145b157ff4cbeeec599ab78a34, type: 3}
@@ -62105,6 +62598,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5882815770897655412, guid: c61b42792dda82849ae2f41a61f112de, type: 3}
   m_PrefabInstance: {fileID: 5551380812220209641}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &5551380812220209644
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900948842}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.023862902, y: 0.023863845, z: 0.029062765}
+  m_Center: {x: -0.00008836855, y: -0.000045280434, z: 0.014531382}
 --- !u!1001 &6461757650477687940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62275,6 +62789,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1165232494858426602, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
+      propertyPath: amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165232494858426602, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
       propertyPath: i_item
       value: 
       objectReference: {fileID: 11400000, guid: 0f327147c15d7e44b8c9beed5b688181, type: 2}
@@ -62322,6 +62840,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainGrib
       objectReference: {fileID: 0}
+    - target: {fileID: 7902091310207049314, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 9004119407452551986, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
       propertyPath: pointerUI
       value: 
@@ -62337,6 +62859,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7902091310207049314, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7499595735890693473}
+    - targetCorrespondingSourceObject: {fileID: 7902091310207049314, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7499595735890693474}
   m_SourcePrefab: {fileID: 100100000, guid: f2a4f5d52f24bed478b0e036cee9414e, type: 3}
 --- !u!1 &7499595735890693471 stripped
 GameObject:
@@ -62361,7 +62886,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7499595735890693471}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.16700001, y: 0.143, z: 0.177}
@@ -62370,6 +62895,27 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -0.002, y: 0.125, z: 0.004}
   m_TimeToStationary: 0.5
+--- !u!65 &7499595735890693474
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499595735890693471}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.33420056, y: 0.2859373, z: 0.35413405}
+  m_Center: {x: -0.002418138, y: 0.12496347, z: 0.0038491488}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

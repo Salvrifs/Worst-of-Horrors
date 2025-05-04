@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4470026361320049256}
   - component: {fileID: 8472425677461480245}
   - component: {fileID: 1529798608366319995}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bottle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,8 +122,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   i_item: {fileID: 11400000, guid: aa64db810826a764a825991822787b3a, type: 2}
   amount: 1
-  IsTaked: 0
   IsTakedByPlayer: 0
+  size: {x: 0, y: 0, z: 0}
 --- !u!54 &8472425677461480245
 Rigidbody:
   m_ObjectHideFlags: 0
