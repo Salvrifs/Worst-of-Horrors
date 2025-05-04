@@ -93,7 +93,13 @@ private float stepTimer;
 
     void Update()
     {
-        if (!isMovementAllowed) return;
+       if (!isMovementAllowed)
+    {
+        // Полный сброс ввода
+        _walkDirection = Vector3.zero;
+        //Input.ResetInputAxes();
+        return;
+    }
 
         if (audioSource == null)
         {
@@ -119,7 +125,14 @@ private float stepTimer;
     }
 
     private void FixedUpdate()
+{
+    if (!isMovementAllowed)
     {
+        // Принудительная остановка физики
+        _characterController.Move(Vector3.zero);
+        _velocity = Vector3.zero;
+        return;
+    }
         Walk(_walkDirection);
         Gravity(_characterController.isGrounded);
         ChangeSound();
@@ -206,9 +219,22 @@ private IEnumerator JumpCooldown()
 }       
 
 public void SetMovementAllowed(bool allowed)
+{
+    isMovementAllowed = allowed;
+    
+    if(!allowed)
     {
-        isMovementAllowed = allowed;
+        // Сбрасываем все параметры движения
+        _walkDirection = Vector3.zero;
+        _velocity = Vector3.zero;
+        _characterController.Move(Vector3.zero);
+        
+        // Принудительно останавливаем анимации звуков
+        /*stepTimer = 0;
+        if(audioSource.isPlaying) 
+            audioSource.Stop();*/
     }
+}
     //
     //Выносливость
     //
@@ -431,4 +457,3 @@ public void SetMovementAllowed(bool allowed)
     }
     
 }
-

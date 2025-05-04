@@ -81,7 +81,7 @@ public class NewBehaviourScript : MonoBehaviour
     {
         //Menu.SetActive(false);
        
-        SceneManager.LoadScene("Sample");
+        SceneManager.LoadScene("SampleScene");
         FindObjectOfType<VolumeSettings>().StartMusicFade(0f, 2f);
     }
     //
@@ -95,7 +95,7 @@ public class NewBehaviourScript : MonoBehaviour
         Time.timeScale = 1f;
         cameraController.SetControlEnabled(true);
         AudioListener.pause = false;
-        FindObjectOfType<VolumeSettings>().StartMusicFade(0, 1.5f);
+//        FindObjectOfType<VolumeSettings>().StartMusicFade(0, 1.5f);
     }
     //
     //Нажать кпопку "Настройки" в esc

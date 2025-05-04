@@ -53,23 +53,27 @@ public class DialogueManager : MonoBehaviour
     //
     //Вход в диалог
     //
-     public void EnterDialogueMode(TextAsset inkJson)
-    {
-        isDialoguing = true; // Добавить здесь
+public void EnterDialogueMode(TextAsset inkJson, NPCReactionController npc)
+{
+    isDialoguing = true;
+    
+    // Блокируем движение игрока
+    playerMovement.SetMovementAllowed(false);
+    
+    cameraMoving.SetControlEnabled(false);
+    
+    // Сохраняем и блокируем NPC
+    NPCReactionController currentNPC = npc;
+    currentNPC.InterruptReaction();
 
-        playerMovement.SetMovementAllowed(false);
-        cameraMoving.SetControlEnabled(false);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+    Cursor.visible = true;
+    Cursor.lockState = CursorLockMode.None;
 
-        currentStory = new Story(inkJson.text);
-        _dialogueWindow.SetActive(true);
-        
-
-        ContinueStory();
-
-        
-    }
+    currentStory = new Story(inkJson.text);
+    _dialogueWindow.SetActive(true);
+    
+    ContinueStory();
+}
     //
     //Окончание диалога
     //
@@ -77,13 +81,20 @@ public class DialogueManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(_dialogueWindow.CoolDownNextLetter);
 
+        NPCReactionController currentNPC = FindObjectOfType<NPCTrigger>().GetComponent<NPCReactionController>();
+        if(currentNPC != null)
+        {
+            currentNPC.ResumePatrol();
+        }
+
         _dialogueWindow.SetActive(false);
         _dialogueWindow.ClearText();
-
+        
+        playerMovement.SetMovementAllowed(true);
         cameraMoving.SetControlEnabled(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        playerMovement.SetMovementAllowed(true);
+        
         
         bool chosePotion = false;
         bool choseBridge = false;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Ink.Runtime;
+using UnityEngine.Rendering.HighDefinition;
 
 [RequireComponent(typeof(SphereCollider))] // Добавляем автоматически Sphere Collider
 public class NPCTrigger : MonoBehaviour
@@ -13,7 +14,7 @@ public class NPCTrigger : MonoBehaviour
 
     private DialogueManager _dialogueManager;
     private bool _isPlayerInRange;
-
+    [SerializeField] private NPCReactionController npcController;
     private void Awake()
     {
         // Настройка коллайдера
@@ -27,15 +28,15 @@ public class NPCTrigger : MonoBehaviour
         _dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
-    private void Update()
+   private void Update()
+{
+    if (!_isPlayerInRange || _dialogueManager.IsDialoguingPlayer) return;
+    
+    if (Input.GetKeyDown(KeyCode.X))
     {
-        if (!_isPlayerInRange || _dialogueManager.IsDialoguingPlayer) return;
-        
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            _dialogueManager.EnterDialogueMode(_inkJson);
-        }
+        _dialogueManager.EnterDialogueMode(_inkJson, npcController);
     }
+}
 
     private void OnTriggerEnter(Collider other)
     {
